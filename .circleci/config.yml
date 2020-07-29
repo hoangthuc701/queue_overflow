@@ -13,7 +13,7 @@ jobs:
             - run: npm install
             - run: cd ..
             - run: npm install surge
-            - run: surge --project ./ --domain queueoverflow.surge.sh
+            - run: ./node_modules/surge/lib/cli.js --project ./ --domain queueoverflow.surge.sh
 workflows:
     build-and-test:
       jobs:
