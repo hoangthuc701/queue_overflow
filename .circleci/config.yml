@@ -12,12 +12,8 @@ jobs:
             - run: cd server
             - run: npm install
             - run: cd ..
-  deployment:
-    steps:
-      - checkout
-      - run: npm install surge
-      - run: surge --project ./ --domain queueoverflow.surge.sh
-
+            - run: npm install surge
+            - run: surge --project ./ --domain queueoverflow.surge.sh
 workflows:
     build-and-test:
       jobs:
