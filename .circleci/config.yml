@@ -5,7 +5,7 @@ jobs:
       - image: circleci/node:12.16.0
     steps:
       - checkout
-      - run: cd server/
+      - run: cd server
       - run: ls -l
       - run: npm install
       - run: sudo npm install -g eslint 
