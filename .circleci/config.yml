@@ -11,11 +11,11 @@ jobs:
           steps:
             - run: cd server
             - run: npm install
-            - run: npm eslint
+            - run: npm run eslint
             - run: cd ..
             - run: cd client
             - run: npm install
-            - run: cd eslint
+            - run: cd run eslint
             - run: cd ..
 workflows:
     build-and-test:
