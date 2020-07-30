@@ -1,7 +1,23 @@
 version: 2.1
 orbs:
-  heroku: circleci/heroku@0.0.10
+  node: circleci/node@1.1.6
+jobs:
+  build-and-test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - run: cd server
+            - run: npm install
+            - run: npm eslint
+            - run: cd ..
+            - run: cd client
+            - run: npm install
+            - run: cd eslint
+            - run: cd ..
 workflows:
-  heroku_deploy:
-    jobs:
-      - heroku/deploy-via-git
+    build-and-test:
+      jobs:
+        - build-and-test 
