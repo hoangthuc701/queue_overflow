@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  node: circleci/node@1.1.6
+  node: circleci/node@12.18.2
 jobs:
   build-and-test:
     executor:
@@ -12,10 +12,11 @@ jobs:
             - run: cd server
             - run: npm install
             - run: npm run eslint
+            - run: echo pwd
             - run: cd ..
             - run: cd client
             - run: npm install
-            - run: cd run eslint
+            - run: npm run eslint
             - run: cd ..
 workflows:
     build-and-test:
