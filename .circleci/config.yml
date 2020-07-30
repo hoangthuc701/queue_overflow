@@ -7,8 +7,8 @@ jobs:
       - checkout
       - run: cd server
       - run: npm install
+      - run: sudo npm install -g eslint 
       - run: npm run eslint
-      - run: echo pwd
       - run: cd ..
       - run: cd client
       - run: npm install
