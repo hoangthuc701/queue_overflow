@@ -12,9 +12,6 @@ const composeEnhancers =
       })
     : compose;
 
-var x;
-
-
 const configureStore = () => {
   const middleware = [thunk, logger];
   const enhancers = [applyMiddleware(...middleware)];
