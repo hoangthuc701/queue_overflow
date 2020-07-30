@@ -11,6 +11,7 @@ jobs:
           steps:
             - run: cd server
             - run: npm install
+            - run: npm install eslint -g
             - run: npm run eslint
             - run: echo pwd
             - run: cd ..
