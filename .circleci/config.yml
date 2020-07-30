@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  node: twuni/nodejs@12.10.0
+  node: circleci/node@10.22.0
 jobs:
   build-and-test:
     executor:
