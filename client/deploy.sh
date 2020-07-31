@@ -1,1 +1,1 @@
-surge . queueoverflow.surge.sh
+surge ./build queueoverflow.surge.sh
