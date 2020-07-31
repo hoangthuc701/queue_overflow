@@ -7,7 +7,8 @@ jobs:
     steps:
       - checkout
       - run: pwd
-      - run: npm install 
+      - run: npm install
+      - run: sudo npm install eslint -g  
       - run: pwd
       - run: npm run lint
       - run: pwd
