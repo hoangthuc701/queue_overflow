@@ -48,10 +48,10 @@ workflows:
         - build-and-test-server
         - build-and-test-client
         - deploy-client:
-          filters:
-            branches:
-              only:
-                - master
+            filters:
+              branches:
+                only:
+                  - master
                   
 
         
