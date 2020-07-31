@@ -6,10 +6,10 @@ jobs:
     steps:
       - checkout
       - run: 
-          working_directory: /server
+          working_directory: /home/circleci/project/server
           command: npm install 
       - run: 
-          working_directory: /server
+          working_directory: /home/circleci/project/server
           command: npm run
   build-and-test-client:
     docker:
