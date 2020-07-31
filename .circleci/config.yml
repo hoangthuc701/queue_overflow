@@ -1,24 +1,57 @@
-version: 2.1
+version: 2
+
 orbs:
-  node: circleci/node@3.0.1
+  heroku: circleci/heroku@0.0.10. # Invoke the Heroku orb
+
 jobs:
-  build-and-test:
-    executor:
-      name: node/default
+  build-and-test-server:
+    docker:
+      - image: circleci/node:12.16.0
     steps:
       - checkout
-      - node/with-cache:
-          steps:
-            - run: cd server
-            - run: npm install
-            - run: npm run eslint
-            - run: echo pwd
-            - run: cd ..
-            - run: cd client
-            - run: npm install
-            - run: npm run eslint
-            - run: cd ..
+      - run: 
+          working_directory: /home/circleci/project/server
+          command: npm install 
+      - run: 
+          working_directory: /home/circleci/project/server
+          command: npm run lint
+  build-and-test-client:
+    docker:
+      - image: circleci/node:12.16.0
+    steps:
+      - checkout
+      - run: 
+          working_directory: /home/circleci/project/client
+          command: npm install 
+      - run: 
+          working_directory: /home/circleci/project/client
+          command: npm run lint
+  deploy-client:
+    docker:
+      - image: circleci/node:12.16.0
+    steps:
+      - checkout
+      - run: 
+          working_directory: /home/circleci/project/client
+          command: npm install 
+      - run: 
+          working_directory: /home/circleci/project/client
+          command: npm run build
+      - run:
+          working_directory: /home/circleci/project/client
+          command: npm run deploy
+
 workflows:
+    version: 2
     build-and-test:
       jobs:
-        - build-and-test 
+        - build-and-test-server
+        - build-and-test-client
+        - deploy-client:
+            filters:
+              branches:
+                only:
+                  - master
+                  
+
+        
