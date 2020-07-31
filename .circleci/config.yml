@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run: pwd
       - run: npm install
-      - run: sudo npm install eslint -g  
+      - run: npm cache clean --force
       - run: pwd
       - run: npm run lint
       - run: pwd
