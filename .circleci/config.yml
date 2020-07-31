@@ -10,7 +10,7 @@ jobs:
           command: npm install 
       - run: 
           working_directory: /home/circleci/project/server
-          command: npm run
+          command: npm run lint
   build-and-test-client:
     docker:
       - image: circleci/node:12.16.0
@@ -18,7 +18,7 @@ jobs:
     steps:
       - checkout
       - run: npm install 
-      - run: npm run
+      - run: npm run lint
   
 workflows:
     version: 2
