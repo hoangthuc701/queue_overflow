@@ -54,4 +54,4 @@ workflows:
     version: 2
     build-and-test:
       jobs:
-        - deloy-server
+        - deploy-client
