@@ -1,1 +1,1 @@
-./../node_modules/surge/lib/cli.js  --project ./ --domain queueoverflow.surge.sh 
+surge . queueoverflow.surge.sh
