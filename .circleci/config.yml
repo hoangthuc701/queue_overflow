@@ -47,7 +47,7 @@ workflows:
       jobs:
         - build-and-test-server
         - build-and-test-client
-        - deploy-client
+        - deploy-client:
           filters:
             branches:
               only:
