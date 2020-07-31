@@ -40,24 +40,18 @@ jobs:
       - run:
           working_directory: /home/circleci/project/client
           command: npm run deploy
-  deloy-server:
-    docker:
-      - image: circleci/ruby:2.4-node
-      - image: circleci/postgres:9.4.12-alpine
-    steps:
-      - checkout
-      - run:
-          name: Setup Heroku
-          command: bash .circleci/setup-heroku.sh # run a script to set up Heroku
-      - run:
-          working_directory: /home/circleci/project
-          command: |
-            git push heroku master
-            sleep 5 # sleep for 5 seconds to wait for dynos
-            heroku restart
 
 workflows:
     version: 2
     build-and-test:
       jobs:
-        - heroku/deploy-via-git
+        - build-and-test-server
+        - build-and-test-client
+        - deploy-client
+            filters:
+              branches:
+                only:
+                  - master
+                  
+
+        
