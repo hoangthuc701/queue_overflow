@@ -10,7 +10,7 @@ jobs:
       - run: npm install
       - run: sudo npm install eslint -g  
       - run: pwd
-      - run: npm run lint
+      - run: cd /home/circleci/project/server && npm run lint
       - run: pwd
   build-and-test-client:
     docker:
