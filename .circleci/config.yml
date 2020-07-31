@@ -17,8 +17,12 @@ jobs:
     working_directory: /home/circleci/project/client
     steps:
       - checkout
-      - run: npm install 
-      - run: npm run lint
+      - run: 
+          working_directory: /home/circleci/project/client
+          command: npm install 
+      - run: 
+          working_directory: /home/circleci/project/client
+          command: npm run lint
   
 workflows:
     version: 2
