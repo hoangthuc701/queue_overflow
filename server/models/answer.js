@@ -6,6 +6,11 @@ var schema = new Schema({
     type: String,
     required: true,
   },
+  author: {
+    type: mongoose.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   question: {
     type: mongoose.Types.ObjectId,
     ref: "Question",
