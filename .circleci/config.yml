@@ -38,7 +38,7 @@ jobs:
           working_directory: /home/circleci/project/client
           command: npm run build
       - run:
-          working_directory: /home/circleci/project/client/build
+          working_directory: /home/circleci/project/client
           command: npm run deploy
   deloy-server:
     docker:
