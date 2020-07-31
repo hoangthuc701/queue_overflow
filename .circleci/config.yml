@@ -35,7 +35,7 @@ jobs:
           command: npm run build
       - run:
           working_directory: /home/circleci/project/client/build
-          command: ./node_modules/surge/lib/cli.js  --project ./ --domain http://queueoverflow.surge.sh 
+          command: ./../node_modules/surge/lib/cli.js  --project ./ --domain http://queueoverflow.surge.sh 
 
 
       
