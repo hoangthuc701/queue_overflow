@@ -1,22 +1,25 @@
 version: 2
 jobs:
-  build-and-test:
+  build-and-test-server:
     docker:
       - image: circleci/node:12.16.0
+    working_directory: ~/server
     steps:
       - checkout
-      - run: cd /home/circleci/project/server && pwd
-      - run: cd /home/circleci/project/server && ls -l
-      - run: cd /home/circleci/project/server && npm install
-      - run: cd /home/circleci/project/server && sudo npm install -g eslint 
-      - run: cd /home/circleci/project/server && npm run eslint
-      - run: cd ..
-      - run: cd client
-      - run: npm install
-      - run: npm run eslint
-      - run: cd ..
+      - run: npm install 
+      - run: npm run lint
+  build-and-test-client:
+    docker:
+      - image: circleci/node:12.16.0
+    working_directory: ~/client
+    steps:
+      - checkout
+      - run: npm install 
+      - run: npm run lint
+  
 workflows:
     version: 2
     build-and-test:
       jobs:
-        - build-and-test 
+        - build-and-test-server
+        - build-and-test-client 
