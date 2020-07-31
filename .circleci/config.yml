@@ -3,19 +3,20 @@ jobs:
   build-and-test-server:
     docker:
       - image: circleci/node:12.16.0
-    working_directory: server
+    working_directory: /home/circleci/project/server
     steps:
       - checkout
       - run: pwd
       - run: npm install
       - run: npm cache clean --force
       - run: pwd
-      - run: npm run
-      - run: pwd
+      - run: 
+        - working_directory: server
+        - command: npm run
   build-and-test-client:
     docker:
       - image: circleci/node:12.16.0
-    working_directory: client
+    working_directory: /home/circleci/project/client
     steps:
       - checkout
       - run: npm install 
