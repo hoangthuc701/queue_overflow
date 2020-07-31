@@ -22,10 +22,26 @@ jobs:
       - run: 
           working_directory: /home/circleci/project/client
           command: npm run lint
-  
+  deploy-client:
+    docker:
+      - image: circleci/node:12.16.0
+    steps:
+      - checkout
+      - run: 
+          working_directory: /home/circleci/project/client
+          command: npm install 
+      - run: 
+          working_directory: /home/circleci/project/client
+          command: npm run build
+      - run:
+          working_directory: /home/circleci/project/client/build
+          command: ./node_modules/surge/lib/cli.js  --project ./ --domain http://queueoverflow.surge.sh 
+
+
+      
+
 workflows:
     version: 2
     build-and-test:
       jobs:
-        - build-and-test-server
-        - build-and-test-client
+        - deploy-client
