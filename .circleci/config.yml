@@ -6,11 +6,11 @@ jobs:
     working_directory: /home/circleci/project/server
     steps:
       - checkout
-      - run: echo pwd
+      - run: pwd
       - run: npm install 
-      - run: echo pwd
+      - run: pwd
       - run: npm run lint
-      - run: echo pwd
+      - run: pwd
   build-and-test-client:
     docker:
       - image: circleci/node:12.16.0
