@@ -8,8 +8,8 @@ const port = process.env.PORT;
 const authRouter = require('./routes/auth.js');
 app.use(authRouter);
 
-app.use('*', (req, res)=>{
-	res.json({error:'Hello world '});
+app.use('*', (req, res) => {
+	res.json({ error: 'Hello world ' });
 });
 
 app.listen(port, () => {
