@@ -48,15 +48,13 @@ jobs:
       - checkout
       - run:
           name: Setup Heroku
-          working_directory: /home/circleci/project
-          command: |
-            chmod +x .circleci/setup-heroku.sh
-            .circleci/setup-heroku.sh
+          command: bash .circleci/setup-heroku.sh # run a script to set up Heroku
       - run:
-          name: Deploy to Heroku
           working_directory: /home/circleci/project
           command: |
             git push heroku master
+            sleep 5 # sleep for 5 seconds to wait for dynos
+            heroku restart
 
 workflows:
     version: 2
