@@ -40,6 +40,24 @@ jobs:
       - run:
           working_directory: /home/circleci/project/client
           command: npm run deploy
+  deloy-server:
+    docker:
+      - image: circleci/ruby:2.4-node
+      - image: circleci/postgres:9.4.12-alpine
+    steps:
+      - checkout
+      - run:
+          name: Setup Heroku
+          working_directory: /home/circleci/project
+          command: |
+            chmod +x .circleci/setup-heroku.sh
+            .circleci/setup-heroku.sh
+      - run:
+          name: Deploy to Heroku
+          working_directory: /home/circleci/project
+          command: |
+            git push heroku master
+
 workflows:
     version: 2
     build-and-test:
