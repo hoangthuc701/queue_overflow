@@ -10,7 +10,7 @@ jobs:
       - run: npm install
       - run: npm cache clean --force
       - run: pwd
-      - run: npm run lint
+      - run: npm run
       - run: pwd
   build-and-test-client:
     docker:
@@ -19,7 +19,7 @@ jobs:
     steps:
       - checkout
       - run: npm install 
-      - run: npm run lint
+      - run: npm run
   
 workflows:
     version: 2
