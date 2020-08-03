@@ -11,9 +11,9 @@ var schema = new Schema({
 		ref: 'Question',
 		required: true,
 	},
-	user: {
+	receiver: {
 		type: mongoose.Types.ObjectId,
-		ref: 'Question',
+		ref: 'User',
 		required: true,
 	},
 	is_read: {

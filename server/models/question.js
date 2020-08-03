@@ -10,7 +10,7 @@ var schema = new Schema({
 		type: String,
 		required: true,
 	},
-	answer: [
+	answers: [
 		{
 			type: mongoose.Types.ObjectId,
 			ref: 'Answer',
@@ -20,12 +20,12 @@ var schema = new Schema({
 		type: mongoose.Types.ObjectId,
 		ref: 'Answer',
 	},
-	user: {
+	author: {
 		type: mongoose.Types.ObjectId,
 		ref: 'User',
 		required: true,
 	},
-	followed_users: [
+	followers: [
 		{
 			type: mongoose.Types.ObjectId,
 			ref: 'User',
@@ -37,7 +37,7 @@ var schema = new Schema({
 		ref: 'Category',
 		required: true,
 	},
-	tag: [
+	tags: [
 		{
 			type: mongoose.Types.ObjectId,
 			ref: 'Tag',

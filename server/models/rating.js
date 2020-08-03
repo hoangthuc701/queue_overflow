@@ -6,15 +6,21 @@ var schema = new Schema({
 		type: mongoose.Types.ObjectId,
 		required: true,
 	},
+	message_type: {
+		type: String,
+		enum: ['question', 'answer'],
+		required: true,
+	},
 	user: {
 		type: mongoose.Types.ObjectId,
 		ref: 'User',
 		required: true,
 	},
 	vote: {
-		type: Boolean,
+		type: String,
+		enum: ['like', 'dislike'],
 		required: true,
 	},
 });
 
-module.exports = mongoose.model('Answer', schema);
+module.exports = mongoose.model('Rating', schema);
