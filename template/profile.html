@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <!--BOOTSTRAP-->
+    <!-- CSS only -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+<!-- JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<!--JQUERY-->
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+<!-- <link rel="stylesheet" href="/Signup_Signin/css/profile.css"> -->
+<style>
+  a {
+    text-decoration: none !important;
+}
+.navtop{
+    margin-top:50px;
+}
+.tab-content {
+    padding: 40px;
+    margin-top: -20px; 
+}
+.avatar{
+    width: 17em;
+    height: 17em;
+}
+
+.question{
+    color: rgb(0, 0, 0);
+}
+
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <ul class="nav nav-pills nav-fill navtop">
+            <li class="nav-item">
+                <a class="nav-link active" href="#menu1" data-toggle="tab">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#menu2" data-toggle="tab">Manage Question</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#menu3" data-toggle="tab">Manage Answer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#menu4" data-toggle="tab">Setting</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" role="tabpanel" id="menu1">
+                <!--AVATAR-->
+                <div class="row">
+                    <div class="col-4">
+                        <img class="avatar" src="https://static.vecteezy.com/system/resources/previews/000/241/070/non_2x/flat-boy-with-vintage-glasses-avatar-vector-illustration.jpg" alt="avatar">
+                    </div>
+                    <div class="col-8 mt-5">
+                        <h2>HOANG TUAN</h2>
+                        <h5>Posts and Telecommunications Institute of Technology</h5>
+                        <h2>Example@gmail.com</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" role="tabpanel" id="menu2">
+                <!--MANAGE QUESTION-->
+                <table class="table table-borderless table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col"><h2>Title</h2></th>
+                        <th scope="col"><h2>Category</h2></th>
+                        <th scope="col"><h2>Edit</h2></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                            <a href="#" class="question_info">
+                                    <h3 class="question">Running a job during specified time of the day</h3>
+                            </a>
+                            <h4>2020-07-28 12:50:30</h4>
+                        </td>
+                        <td><h4><a href="#" class="badge badge-warning">JAVA</a></h4></td>
+                        <td>
+                            <a href="#" class="mr-2"><img src="https://i.ibb.co/RNWjm8H/pencil.png"></a>
+                            <a href="#" class=""><img src="https://i.ibb.co/hgYsCP1/delete.png"></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                            <a href="#" class="question_info">
+                                    <h3 class="question">views Panda "to_date_time" not accepting series</h3>
+                            </a>
+                            <h4>2020-07-28 12:50:30</h4>
+                        </td>
+                        <td><h4><a href="#" class="badge badge-warning">C++</a></h4></td>
+                        <td>
+                            <a href="#" class="mr-2"><img src="https://i.ibb.co/RNWjm8H/pencil.png"></a>
+                            <a href="#" class=""><img src="https://i.ibb.co/hgYsCP1/delete.png"></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                            <a href="#" class="question_info">
+                                    <h3 class="question">Setup a cron on a bash scrips but its not running</h3>
+                            </a>
+                            <h4>2020-07-28 12:50:30</h4>
+                        </td>
+                        <td><h4><a href="#" class="badge badge-warning">NODEJS</a></h4></td>
+                        <td>
+                            <a href="#" class="mr-2"><img src="https://i.ibb.co/RNWjm8H/pencil.png"></a>
+                            <a href="#" class=""><img src="https://i.ibb.co/hgYsCP1/delete.png"></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                            <a href="#" class="question_info">
+                                    <h3 class="question">Connect android device to python project via socket</h3>
+                            </a>
+                            <h4>2020-07-28 12:50:30</h4>
+                        </td>
+                        <td><h4><a href="#" class="badge badge-warning">C#</a></h4></td>
+                        <td>
+                            <a href="#" class="mr-2"><img src="https://i.ibb.co/RNWjm8H/pencil.png"></a>
+                            <a href="#" class=""><img src="https://i.ibb.co/hgYsCP1/delete.png"></a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item"><a class="page-link" href="#">4</a></li>
+                      <li class="page-item"><a class="page-link" href="#">5</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+            </div>
+            <div class="tab-pane" role="tabpanel" id="menu3">
+                <!--MANAGE ANSWER-->
+                <table class="table table-borderless table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col"><h4>Question title - Answer content - Answer create time</h4></th>
+                        <th scope="col"><h2>Category</h2></th>
+                        <th scope="col"><h2>Edit</h2></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                            <a href="#" class="question_info">
+                                    <h3 class="question">Running a job during specified time of the day</h3>
+                            </a>
+                            <h7>At process env, on firebase function project , there a boolean variable called,...</h7>
+                            <h6>2020-07-28 12:50:30</h6>
+                        </td>
+                        <td><h4><a href="#" class="badge badge-warning">CSS</a></h4></td>
+                        <td>
+                            <a href="#" class="mr-2"><img src="https://i.ibb.co/RNWjm8H/pencil.png"></a>
+                            <a href="#" class=""><img src="https://i.ibb.co/hgYsCP1/delete.png"></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                            <a href="#" class="question_info">
+                                    <h3 class="question">views Panda "to_date_time" not accepting series</h3>
+                            </a>
+                            <h7>At process env, on firebase function project , there a boolean variable called,...</h7>
+                            <h6>2020-07-28 12:50:30</h6>
+                        </td>
+                        <td><h4><a href="#" class="badge badge-warning">HTML</a></h4></td>
+                        <td>
+                            <a href="#" class="mr-2"><img src="https://i.ibb.co/RNWjm8H/pencil.png"></a>
+                            <a href="#" class=""><img src="https://i.ibb.co/hgYsCP1/delete.png"></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                            <a href="#" class="question_info">
+                                    <h3 class="question">Setup a cron on a bash scrips but its not running</h3>
+                            </a>
+                            <h7>At process env, on firebase function project , there a boolean variable called,...</h7>
+                            <h6>2020-07-28 12:50:30</h6>
+                        </td>
+                        <td><h4><a href="#" class="badge badge-warning">JAVA</a></h4></td>
+                        <td>
+                            <a href="#" class="mr-2"><img src="https://i.ibb.co/RNWjm8H/pencil.png"></a>
+                            <a href="#" class=""><img src="https://i.ibb.co/hgYsCP1/delete.png"></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                            <a href="#" class="question_info">
+                                    <h3 class="question">Connect android device to python project via socket</h3>
+                            </a>
+                            <h7>At process env, on firebase function project , there a boolean variable called,...</h7>
+                            <h6>2020-07-28 12:50:30</h6>
+                        </td>
+                        <td><h4><a href="#" class="badge badge-warning">SQL</a></h4></td>
+                        <td>
+                            <a href="#" class="mr-2"><img src="https://i.ibb.co/RNWjm8H/pencil.png"></a>
+                            <a href="#" class=""><img src="https://i.ibb.co/hgYsCP1/delete.png"></a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item"><a class="page-link" href="#">4</a></li>
+                      <li class="page-item"><a class="page-link" href="#">5</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+
+            </div>
+            <div class="tab-pane" role="tabpanel" id="menu4">
+                <!--SETTING PROFILE-->
+                <div class="row">
+                    <div class="col-4">
+                        <img class="avatar" src="https://static.vecteezy.com/system/resources/previews/000/241/070/non_2x/flat-boy-with-vintage-glasses-avatar-vector-illustration.jpg" alt="avatar">
+                        <button type="button" style="margin-left: 2em;" class="btn btn-lg btn-primary">Change Avatar</button>
+                    </div>
+                    <div class="col-8 mt-5">
+                        <form>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1"><h6>Display Name</h6></label>
+                              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputPassword1"><h6>Title</h6></label>
+                              <input type="text" class="form-control" id="exampleInputPassword1">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1"><h6>Gmail</h6></label>
+                                <input type="email" class="form-control" id="exampleInputPassword1">
+                              </div>
+                              <div class="form-group">
+                                <label for="exampleInputPassword1"><h6>New Password</h6></label>
+                                <input type="password" class="form-control" id="exampleInputPassword1">
+                              </div>
+                              <div class="form-group">
+                                <label for="exampleInputPassword1"><h6>Confirm Password</h6></label>
+                                <input type="password" class="form-control" id="exampleInputPassword1">
+                              </div>
+                            <button type="submit" class="btn btn-success">Save</button>
+                          </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
