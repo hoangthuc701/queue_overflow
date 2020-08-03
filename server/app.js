@@ -9,5 +9,5 @@ const authRouter = require('./routes/auth.js');
 app.use(authRouter);
 
 app.listen(port, () => {
-	console.log('Server listening to ' + port);
+	console.log('Server listening to  hello' + port);
 });
