@@ -7,7 +7,7 @@ var schema = new Schema({
 		required: true,
 		unique: true,
 	},
-	question: [
+	questions: [
 		{
 			type: mongoose.Types.ObjectId,
 			ref: 'Question',
