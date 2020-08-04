@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 
 import HomePage from './pages/Home';
+import SignInPage from './pages/SignIn';
 import NotFoundPage from './pages/NotFound';
 
 const MainRoute = () => (
@@ -12,6 +13,7 @@ const MainRoute = () => (
     <Header />
     <Switch>
       <Route exact path="/" component={HomePage} />
+      <Route exact path="/signin" component={SignInPage} />
       <Route component={NotFoundPage} />
     </Switch>
     <Footer />
