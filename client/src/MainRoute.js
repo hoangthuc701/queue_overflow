@@ -11,11 +11,13 @@ import NotFoundPage from './pages/NotFound';
 const MainRoute = () => (
   <BrowserRouter>
     <Header />
-    <Switch>
-      <Route exact path="/" component={HomePage} />
-      <Route exact path="/signin" component={SignInPage} />
-      <Route component={NotFoundPage} />
-    </Switch>
+    <div className="container">
+      <Switch>
+        <Route exact path="/" component={HomePage} />
+        <Route exact path="/signin" component={SignInPage} />
+        <Route component={NotFoundPage} />
+      </Switch>
+    </div>
     <Footer />
   </BrowserRouter>
 );

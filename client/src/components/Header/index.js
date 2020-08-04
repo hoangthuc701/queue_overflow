@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 
 const Header = () => (
   <>
-    <div className="navbar navbar-dark bg-dark">
+    <div
+      className="navbar navbar-dark bg-dark"
+      style={{ marginBottom: '10px' }}
+    >
       <div className="container justify-content-between">
         <div className="row">
           <form className="form-inline">
