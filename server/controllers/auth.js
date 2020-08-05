@@ -6,7 +6,7 @@ exports.sign_up = async (req, res) => {
 	let email_user = await UserService.getUserByEmail(req.body.email);
 	if (email_user) {
 		res.json({
-			message: 'Email is already existed.',
+			error: 'Email is already existed.',
 		});
 	}
 	let hashed_password = await getHashedPassword(req.body.password);
@@ -23,12 +23,12 @@ exports.sign_up = async (req, res) => {
 			});
 		} else {
 			res.json({
-				message: 'Oh no, something went wrong.',
+				error: 'Oh no, something went wrong.',
 			});
 		}
 	} catch (error) {
 		res.status(500).json({
-			error: error,
+			error: 'Oh no, something went wrong.',
 		});
 	}
 };
