@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, BrowserRouter, Router } from 'react-router-dom';
+import { Route, Switch, Router } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import history from './helper/history';
@@ -30,7 +30,7 @@ const MainRoute = () => (
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route exact path="/signin" component={SignInPage} />
-        <Route exact path="/signup"  component={SignUpPage} />
+        <Route exact path="/signup" component={SignUpPage} />
         <Route component={NotFoundPage} />
       </Switch>
     </div>
