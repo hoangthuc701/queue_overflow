@@ -1,25 +1,22 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './index.css';
-import {useDispatch,useSelector} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import authActions from '../../actions/auth';
 
-const SignInForm = () => 
-  {
-    const [user,setUser]=useState({});
-    const dispatch = useDispatch();
+const SignInForm = () => {
+  const [user, setUser] = useState({});
+  const dispatch = useDispatch();
 
-    const handleOnChange=(event)=>
-    {
-      setUser({...user,[event.target.name]:event.target.value});
-    }
+  const handleOnChange = (event) => {
+    setUser({ ...user, [event.target.name]: event.target.value });
+  };
 
-    const handleSubmit = (event)=>
-    {
-      event.preventDefault();
-      dispatch(authActions.signin(user.email, user.password));
-    }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    dispatch(authActions.signin(user.email, user.password));
+  };
   return (
     <div className="row">
       <div id="first " className="col-5" style={{ margin: 'auto' }}>
@@ -114,6 +111,6 @@ const SignInForm = () =>
       </div>
     </div>
   );
-  };
+};
 
 export default SignInForm;
