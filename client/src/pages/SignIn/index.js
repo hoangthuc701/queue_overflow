@@ -1,10 +1,26 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react';
+import React,{useState} from 'react';
 import { Link } from 'react-router-dom';
 import './index.css';
+import {useDispatch,useSelector} from 'react-redux';
+import authActions from '../../actions/auth';
 
-const SignInForm = () => (
-  <>
+const SignInForm = () => 
+  {
+    const [user,setUser]=useState({});
+    const dispatch = useDispatch();
+
+    const handleOnChange=(event)=>
+    {
+      setUser({...user,[event.target.name]:event.target.value});
+    }
+
+    const handleSubmit = (event)=>
+    {
+      event.preventDefault();
+      dispatch(authActions.signin(user.email, user.password));
+    }
+  return (
     <div className="row">
       <div id="first " className="col-5" style={{ margin: 'auto' }}>
         <div className="myform form ">
@@ -23,6 +39,7 @@ const SignInForm = () => (
                 id="email"
                 aria-describedby="emailHelp"
                 placeholder="Enter email"
+                onChange={handleOnChange}
               />
             </div>
             <div className="form-group">
@@ -34,6 +51,7 @@ const SignInForm = () => (
                 className="form-control"
                 aria-describedby="emailHelp"
                 placeholder="Enter Password"
+                onChange={handleOnChange}
               />
             </div>
             <div className="form-group">
@@ -45,6 +63,7 @@ const SignInForm = () => (
               <button
                 type="submit"
                 className=" btn btn-block mybtn btn-primary tx-tfm"
+                onClick={handleSubmit}
               >
                 Submit
               </button>
@@ -94,7 +113,7 @@ const SignInForm = () => (
         </div>
       </div>
     </div>
-  </>
-);
+  );
+  };
 
 export default SignInForm;
