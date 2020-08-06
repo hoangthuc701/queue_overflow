@@ -2,11 +2,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import history from '../../helper/history';
 
 import UserService from '../../services/userService';
 
-const SignUpForm = () => {
+const SignUpForm = (props) => {
   const [user, setUser] = useState({});
 
   const handleOnChange = (event) => {
@@ -24,8 +23,9 @@ const SignUpForm = () => {
         if (data.error) {
           toast.error(data.error);
         } else {
-          toast.success('Sign up succeed.');
-          history.push('/');
+          toast.success(data.message);
+          // eslint-disable-next-line react/prop-types
+          props.history.push('/signin');
         }
       }
     );

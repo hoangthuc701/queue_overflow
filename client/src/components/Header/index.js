@@ -40,7 +40,7 @@ const Header = () => (
               <span className="badge badge-danger">9</span>
             </button>
             <div className="dropdown-menu" aria-labelledby="btnGroupDrop1">
-              <Link className="dropdown-item" href>
+              <Link className="dropdown-item" to="/">
                 <div className="media">
                   <img
                     className="align-self-start rounded-circle mr-2 "
@@ -58,7 +58,7 @@ const Header = () => (
                   </div>
                 </div>
               </Link>
-              <Link className="dropdown-item" href>
+              <Link className="dropdown-item" to="/">
                 <div className="media">
                   <img
                     className="align-self-start rounded-circle mr-2 "

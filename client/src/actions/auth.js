@@ -1,58 +1,33 @@
 import { toast } from 'react-toastify';
-import history from '../helper/history';
 import authConstants from '../constants/auth';
 import UserService from '../services/userService';
 
-// function signup(user) {
-//   return (dispatch) => {
-//     dispatch(request(user));
-//   };
-
-//   function request(user) {
-//     return { type: authConstants.SIGNUP_REQUEST, user };
-//   }
-
-//   function success(user) {
-//     return { type: authConstants.SIGNUP_SUCCESS, user };
-//   }
-
-//   function failure(error) {
-//     return { type: authConstants.SIGNUP_FAILURE, error };
-//   }
-// }
-
+function request(user) {
+  return { type: authConstants.SIGN_IN_REQUEST, user };
+}
+function success(user) {
+  return { type: authConstants.SIGN_IN_SUCCESS, user };
+}
+function failure(error) {
+  return { type: authConstants.SIGN_IN_FAILURE, error };
+}
 function signIn(email, password) {
-  function request(user) {
-    return { type: authConstants.SIGN_IN_REQUEST, user };
-  }
-  function success(user) {
-    return { type: authConstants.SIGN_IN_SUCCESS, user };
-  }
-  function failure(error) {
-    return { type: authConstants.SIGN_IN_FAILURE, error };
-  }
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(request(email));
-
-    UserService.signIn(email, password).then(
-      (data) => {
-        if (data.data.token) {
-          dispatch(success(data.data.user));
-        } else {
-          toast.error(data.error);
-        }
-
-        history.push('/');
-      },
-      (error) => {
-        dispatch(failure(error.toString()));
-      }
-    );
+    const value = await UserService.signIn(email, password);
+    if (value.data.token) {
+      toast.success(value.message);
+      dispatch(success(value.data.user));
+      localStorage.setItem('token', JSON.stringify(value.data.token));
+      return true;
+    }
+    toast.error(value.error);
+    dispatch(failure(value.error));
+    return false;
   };
 }
 
 const authActions = {
-  // signup,
   signIn,
 };
 

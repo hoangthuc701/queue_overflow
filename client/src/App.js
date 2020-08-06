@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import MainRoute from './MainRoute';
 import history from './helper/history';
@@ -7,9 +7,9 @@ import history from './helper/history';
 function App() {
   return (
     <div>
-      <Router history={history}>
+      <BrowserRouter history={history}>
         <MainRoute />
-      </Router>
+      </BrowserRouter>
     </div>
   );
 }

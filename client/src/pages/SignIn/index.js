@@ -5,7 +5,7 @@ import './index.css';
 import { useDispatch } from 'react-redux';
 import authActions from '../../actions/auth';
 
-const SignInForm = () => {
+const SignInForm = (props) => {
   const [user, setUser] = useState({});
   const dispatch = useDispatch();
 
@@ -13,9 +13,13 @@ const SignInForm = () => {
     setUser({ ...user, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    dispatch(authActions.signIn(user.email, user.password));
+    const value = await dispatch(authActions.signIn(user.email, user.password));
+    if (value) {
+      // eslint-disable-next-line react/prop-types
+      props.history.push('/');
+    }
   };
   return (
     <div className="row">
