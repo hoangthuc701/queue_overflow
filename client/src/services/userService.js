@@ -1,5 +1,5 @@
 class UserService {
-  static async signin(email, password) {
+  static async signIn(email, password) {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

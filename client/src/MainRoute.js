@@ -1,8 +1,7 @@
 import React from 'react';
-import { Route, Switch, Router } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import history from './helper/history';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -13,7 +12,7 @@ import NotFoundPage from './pages/NotFound';
 import SignUpPage from './pages/SignUp';
 
 const MainRoute = () => (
-  <Router history={history}>
+  <>
     <ToastContainer
       position="top-right"
       autoClose={5000}
@@ -35,6 +34,6 @@ const MainRoute = () => (
       </Switch>
     </div>
     <Footer />
-  </Router>
+  </>
 );
-export default MainRoute;
+export default withRouter(MainRoute);

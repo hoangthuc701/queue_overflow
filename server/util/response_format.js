@@ -14,4 +14,4 @@ const success = (mes, data) => {
 	};
 };
 
-exports = { error, success };
+module.exports = { error, success };

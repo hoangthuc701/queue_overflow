@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify';
+import history from '../helper/history';
 import authConstants from '../constants/auth';
 import UserService from '../services/userService';
 
@@ -33,7 +34,7 @@ function signIn(email, password) {
   return (dispatch) => {
     dispatch(request(email));
 
-    UserService.sign_in(email, password).then(
+    UserService.signIn(email, password).then(
       (data) => {
         if (data.data.token) {
           dispatch(success(data.data.user));
@@ -41,7 +42,7 @@ function signIn(email, password) {
           toast.error(data.error);
         }
 
-        // history.push('/');
+        history.push('/');
       },
       (error) => {
         dispatch(failure(error.toString()));

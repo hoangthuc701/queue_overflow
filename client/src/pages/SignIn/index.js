@@ -15,12 +15,12 @@ const SignInForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(authActions.signin(user.email, user.password));
+    dispatch(authActions.signIn(user.email, user.password));
   };
   return (
     <div className="row">
       <div id="first " className="col-5" style={{ margin: 'auto' }}>
-        <div className="myform form ">
+        <div className="myform form">
           <div className="logo mb-3">
             <div className="col-md-12 text-center">
               <h1>Sign In</h1>
