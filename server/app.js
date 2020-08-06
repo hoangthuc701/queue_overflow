@@ -8,11 +8,13 @@ var cors = require('cors');
 require('dotenv').config();
 
 // connect to DB
-mongoose.connect(process.env.DATABASE_URL, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-	useCreateIndex:true
-}).then(()=> console.log('DB connected.'));
+mongoose
+	.connect(process.env.DATABASE_URL, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useCreateIndex: true,
+	})
+	.then(() => console.log('DB connected.'));
 
 mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
 mongoose.connection.on('error', (err) => {
@@ -54,10 +56,17 @@ app.use((req, res, next) => {
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
 	res.status(err.status || 500);
+	if (err.name === 'UnauthorizedError') {
+		res.status(401).send({
+			message:'',
+			error: 'Invalid token.',
+			data:{}
+		});
+	}
 	res.json({
-		error: {
-			message: err.message,
-		},
+		message:'',
+		data:{},
+		error: err.message,
 	});
 });
 

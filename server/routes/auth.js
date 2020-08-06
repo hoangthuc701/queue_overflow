@@ -2,7 +2,6 @@ const router = require('express').Router();
 const { sign_up, sign_in } = require('../controllers/auth');
 const { body } = require('express-validator');
 const { validate } = require('../middlewares/validateError');
-const auth = require('../middlewares/authentication');
 router.post(
 	'/signup',
 	[
@@ -24,9 +23,4 @@ router.post(
 
 router.post('/signin', sign_in);
 
-router.get('/tuanquen', auth, function (req, res) {
-	res.json({
-		tuaquen: 'tuanquen',
-	});
-});
 module.exports = router;
