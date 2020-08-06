@@ -4,9 +4,9 @@ class QuestionService {
 	static async create({
 		title,
 		content,
-		category_id,
-		author_id,
-		tag_ids,
+		category,
+		author,
+		tags,
 		attach_file,
 	}) {
 		let new_question;
@@ -14,9 +14,9 @@ class QuestionService {
 			new_question = new QuestionModel({
 				title,
 				content,
-				category_id,
-				author_id,
-				tag_ids,
+				category,
+				author,
+				tags,
 				attach_file,
 			});
 			await new_question.save();
@@ -26,18 +26,21 @@ class QuestionService {
 		return new_question;
 	}
 
-	static async update({ title, content, category_id, tag_ids, question_id }) {
+	static async update({ title, content, category, tags, question_id }) {
 		let question;
 		try {
 			question = await QuestionModel.findOne({
 				_id: question_id,
 			}).exec();
+			
 			if (question) {
 				question.title = title;
 				question.content = content;
-				question.category_id = category_id;
-				question.tag_ids = tag_ids;
-				await question.save();
+				question.category = category;
+				question.tags = tags;
+				console.log('tuanquen2',question);
+				const check = await question.save();
+				console.log('tuanquen',check);
 			}
 		} catch (error) {
 			throw new Error('Cannot edit question.');
@@ -46,7 +49,9 @@ class QuestionService {
 	}
 	static async delete(question_id) {
 		try {
-			await QuestionModel.deleteOne({ _id: question_id });
+			const result = await QuestionModel.deleteOne({ _id: question_id });
+			if (result.deletedCount>0) return true;
+			return false;
 		} catch (error) {
 			throw new Error('Cannot delete question.');
 		}

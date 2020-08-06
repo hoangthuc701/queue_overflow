@@ -23,25 +23,25 @@ var schema = new Schema({
 	author: {
 		type: mongoose.Types.ObjectId,
 		ref: 'User',
-		required: true,
+		// required: true,
 	},
 	followers: [
 		{
 			type: mongoose.Types.ObjectId,
 			ref: 'User',
-			required: true,
+			// required: true,
 		},
 	],
 	category: {
 		type: mongoose.Types.ObjectId,
 		ref: 'Category',
-		required: true,
+		// required: true,
 	},
 	tags: [
 		{
 			type: mongoose.Types.ObjectId,
 			ref: 'Tag',
-			required: true,
+			// required: true,
 		},
 	],
 });
