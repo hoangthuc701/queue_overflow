@@ -25,4 +25,25 @@ class QuestionService {
 		}
 		return new_question;
 	}
+
+	static async update({ title, content, category_id, tag_ids, question_id }) {
+		let question;
+		try {
+			question = await QuestionModel.findOne({
+				_id: question_id,
+			}).exec();
+			if (question) {
+				question.title = title;
+				question.content = content;
+				question.category_id = category_id;
+				question.tag_ids = tag_ids;
+				await question.save();
+			}
+		} catch (error) {
+			throw new Error('Cannot edit question.');
+		}
+		return question;
+	}
 }
+
+module.exports = QuestionService;
