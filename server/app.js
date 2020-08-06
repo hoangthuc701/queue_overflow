@@ -11,6 +11,7 @@ require('dotenv').config();
 mongoose.connect(process.env.DATABASE_URL, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
+	useCreateIndex:true
 }).then(()=> console.log('DB connected.'));
 
 mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
@@ -62,5 +63,5 @@ app.use((err, req, res, next) => {
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
-	console.log('Server listening to  hello' + port);
+	console.log('Server listening to ' + port);
 });
