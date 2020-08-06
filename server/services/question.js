@@ -44,6 +44,42 @@ class QuestionService {
 		}
 		return question;
 	}
+	static async delete(question_id) {
+		try {
+			await QuestionModel.deleteOne({ _id: question_id });
+		} catch (error) {
+			throw new Error('Cannot delete question.');
+		}
+	}
+	static async getById(question_id) {
+		let question;
+		try {
+			question = await QuestionModel.findOne({
+				_id: question_id,
+			}).exec();
+		} catch (error) {
+			throw new Error('Cannot get question.');
+		}
+		return question;
+	}
+	static async getAllQuestion() {
+		let questions;
+		try {
+			questions = await QuestionModel.find({});
+		} catch (error) {
+			throw new Error('Cannot get question.');
+		}
+		return questions;
+	}
+	static async getByAuthorId(author_id) {
+		let questions;
+		try {
+			questions = await QuestionModel.find({ author_id });
+		} catch (error) {
+			throw new Error('Cannot get question.');
+		}
+		return questions;
+	}
 }
 
 module.exports = QuestionService;
