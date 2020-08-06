@@ -20,25 +20,25 @@ import UserService from '../services/userService';
 //   }
 // }
 
-function signin(email, password) {
+function signIn(email, password) {
   function request(user) {
-    return { type: authConstants.SIGNIN_REQUEST, user };
+    return { type: authConstants.SIGN_IN_REQUEST, user };
   }
   function success(user) {
-    return { type: authConstants.SIGNIN_SUCCESS, user };
+    return { type: authConstants.SIGN_IN_SUCCESS, user };
   }
   function failure(error) {
-    return { type: authConstants.SIGNIN_FAILURE, error };
+    return { type: authConstants.SIGN_IN_FAILURE, error };
   }
   return (dispatch) => {
     dispatch(request(email));
 
-    UserService.signin(email, password).then(
+    UserService.sign_in(email, password).then(
       (data) => {
-        if (data.token) {
-          dispatch(success(data.user));
+        if (data.data.token) {
+          dispatch(success(data.data.user));
         } else {
-          toast.error(data.message);
+          toast.error(data.error);
         }
 
         // history.push('/');
@@ -52,7 +52,7 @@ function signin(email, password) {
 
 const authActions = {
   // signup,
-  signin,
+  signIn,
 };
 
 export default authActions;

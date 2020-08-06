@@ -4,18 +4,18 @@ const initialState = {};
 
 export default function authentication(state = initialState, action) {
   switch (action.type) {
-    case authConstants.SIGNIN_REQUEST:
+    case authConstants.SIGN_IN_REQUEST:
       return {
         loggingIn: true,
       };
-    case authConstants.SIGNIN_SUCCESS:
+    case authConstants.SIGN_IN_SUCCESS:
       return {
         loggedIn: true,
         user: action.user,
       };
     case authConstants.SIGNUP_FAILURE:
       return {};
-    case authConstants.SIGNOUT:
+    case authConstants.SIGN_OUT:
       return {};
     default:
       return state;
