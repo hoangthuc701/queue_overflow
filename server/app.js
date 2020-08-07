@@ -25,6 +25,7 @@ const app = express();
 
 //import routes
 const authRouter = require('./routes/auth.js');
+const questionRouter = require('./routes/question.js');
 
 //middleware
 if (process.env.NODE_ENV === 'production') {
@@ -42,6 +43,7 @@ app.use(cors());
 
 //Route
 app.use(authRouter);
+app.use(questionRouter);
 
 // catch 404 and forward to error handler
 // eslint-disable-next-line no-unused-vars
