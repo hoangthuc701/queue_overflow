@@ -1,9 +1,14 @@
 const router = require('express').Router();
-const { body } = require('express-validator');
+// const { body } = require('express-validator');
 const { validate } = require('../middlewares/validateError');
-const =require('')
+const { create } = require('../controllers/question');
 
-router.post('/question',);
-
+router.post(
+    '/questions',[
+        
+    ],
+    validate,
+    create
+);
 
 module.exports = router;
