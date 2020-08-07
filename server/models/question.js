@@ -5,11 +5,9 @@ var schema = new Schema(
 	{
 		title: {
 			type: String,
-			required: true,
 		},
 		content: {
 			type: String,
-			required: true,
 		},
 		answers: [
 			{
@@ -24,25 +22,21 @@ var schema = new Schema(
 		author: {
 			type: mongoose.Types.ObjectId,
 			ref: 'User',
-			required: true,
 		},
 		followers: [
 			{
 				type: mongoose.Types.ObjectId,
 				ref: 'User',
-				required: true,
 			},
 		],
 		category: {
 			type: mongoose.Types.ObjectId,
 			ref: 'Category',
-			required: true,
 		},
 		tags: [
 			{
 				type: mongoose.Types.ObjectId,
 				ref: 'Tag',
-				required: true,
 			},
 		],
 		rating_detail: {
