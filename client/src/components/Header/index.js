@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 import Logo from '../../assets/images/logo.png';
 import NotificationBox from '../Notification';
@@ -93,6 +94,7 @@ class Header extends Component {
             className="dropdown-item"
             onClick={() =>
               signout(() => {
+                toast.success('Log out succeed.');
                 history.push('/');
               })
             }

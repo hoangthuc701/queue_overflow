@@ -32,7 +32,7 @@ const SignInForm = (props) => {
                 <h1>Sign In</h1>
               </div>
             </div>
-            <form action method="post" name="login">
+            <form method="post" name="login">
               <div className="form-group">
                 <label>Email address</label>
                 <input
