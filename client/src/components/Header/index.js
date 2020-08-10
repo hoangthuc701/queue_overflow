@@ -52,7 +52,7 @@ const Header = () => (
                     <h6 className="mb-0">
                       {' '}
                       <b> Hoàng Anh Tuấn </b> commented on{' '}
-                      <b>How to learn...</b>{' '}
+                      <b>How to learn... hello</b>{' '}
                     </h6>
                     I totally donot wanna do it. Rimmer can do it.
                   </div>
