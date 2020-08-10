@@ -1,3 +1,4 @@
+
 class UserService {
   static async signIn(email, password) {
     const requestOptions = {
@@ -6,7 +7,7 @@ class UserService {
       body: JSON.stringify({ email, password }),
     };
 
-    const res = await fetch('http://localhost:8080/signin', requestOptions);
+    const res = await fetch(process.env.REACT_APP_SERVER_DOMAIN+'signin', requestOptions);
     const data = await res.json();
     return data;
   }
@@ -18,7 +19,7 @@ class UserService {
       body: JSON.stringify({ email, password, display_name: displayName }),
     };
 
-    const res = await fetch('http://localhost:8080/signup', requestOptions);
+    const res = await fetch(process.env.REACT_APP_SERVER_DOMAIN+'signup', requestOptions);
     const data = await res.json();
     return data;
   }
