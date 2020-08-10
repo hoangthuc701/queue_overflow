@@ -15,9 +15,7 @@ router.post(
 			.withMessage('Password must contain character.'),
 		body('display_name')
 			.isLength({ min: 5, max: 30 })
-			.withMessage('Display name must be between 5 and 30 characters.')
-			.matches(/[!@#$%^&*(),.?":{}|<>//]/)
-			.withMessage('Display name must not have special characters.'),
+			.withMessage('Display name must be between 5 and 30 characters.'),
 	],
 	validate,
 	sign_up
