@@ -33,3 +33,10 @@ export const authenticate = (token, next) => {
     next();
   }
 };
+export const signout = (next) => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    next();
+  }
+};

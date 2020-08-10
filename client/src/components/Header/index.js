@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import Logo from '../../assets/images/logo.jpg';
 import NotificationBox from '../Notification';
-import { isAuthenticate, getUser } from '../../helper/auth';
+import { isAuthenticate, getUser, signout } from '../../helper/auth';
 
 class Header extends Component {
   renderNotify = () => {
@@ -66,7 +68,7 @@ class Header extends Component {
     </div>
   );
 
-  renderProfile = () => (
+  renderProfile = (history) => (
     <div>
       <b style={{ color: 'white', marginRight: '10px' }}>
         {getUser().display_name}{' '}
@@ -86,9 +88,17 @@ class Header extends Component {
             Profile
           </Link>
           <div className="dropdown-divider" />
-          <Link className="dropdown-item" to="/logout">
+          <button
+            type="button"
+            className="dropdown-item"
+            onClick={() =>
+              signout(() => {
+                history.push('/');
+              })
+            }
+          >
             Logout
-          </Link>
+          </button>
         </div>
       </div>
     </div>
@@ -122,6 +132,7 @@ class Header extends Component {
   );
 
   render() {
+    const { history } = this.props;
     return (
       <>
         <div
@@ -138,7 +149,7 @@ class Header extends Component {
               {isAuthenticate() && this.renderAddButton()}
             </div>
             {!isAuthenticate() && this.renderSignInSignUpButton()}
-            {isAuthenticate() && this.renderProfile()}
+            {isAuthenticate() && this.renderProfile(history)}
           </div>
         </div>
       </>
@@ -146,4 +157,9 @@ class Header extends Component {
   }
 }
 
-export default Header;
+Header.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+export default withRouter(Header);
