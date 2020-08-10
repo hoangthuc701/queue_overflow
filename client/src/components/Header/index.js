@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 
 const Header = () => (
   <>
-    <div className="navbar navbar-dark bg-dark">
+    <div
+      className="navbar navbar-dark bg-dark"
+      style={{ marginBottom: '10px' }}
+    >
       <div className="container justify-content-between">
         <div className="row">
           <form className="form-inline">
@@ -37,7 +40,7 @@ const Header = () => (
               <span className="badge badge-danger">9</span>
             </button>
             <div className="dropdown-menu" aria-labelledby="btnGroupDrop1">
-              <Link className="dropdown-item" href>
+              <Link className="dropdown-item" to="/">
                 <div className="media">
                   <img
                     className="align-self-start rounded-circle mr-2 "
@@ -49,13 +52,13 @@ const Header = () => (
                     <h6 className="mb-0">
                       {' '}
                       <b> Hoàng Anh Tuấn </b> commented on{' '}
-                      <b>How to learn...</b>{' '}
+                      <b>How to learn... hello</b>{' '}
                     </h6>
                     I totally donot wanna do it. Rimmer can do it.
                   </div>
                 </div>
               </Link>
-              <Link className="dropdown-item" href>
+              <Link className="dropdown-item" to="/">
                 <div className="media">
                   <img
                     className="align-self-start rounded-circle mr-2 "
