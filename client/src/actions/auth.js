@@ -19,6 +19,7 @@ function signIn(email, password) {
       toast.success(value.message);
       dispatch(success(value.data.user));
       localStorage.setItem('token', JSON.stringify(value.data.token));
+      localStorage.setItem('user', JSON.stringify(value.data.user));
       return true;
     }
     toast.error(value.error);
