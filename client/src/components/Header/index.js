@@ -124,13 +124,15 @@ class Header extends Component {
   );
 
   renderLogo = () => (
-    <img
-      width="200px"
-      height="50px"
-      src={Logo}
-      alt="logo"
-      style={{ marginRight: '10px' }}
-    />
+    <Link to="/">
+      <img
+        width="200px"
+        height="50px"
+        src={Logo}
+        alt="logo"
+        style={{ marginRight: '10px' }}
+      />
+    </Link>
   );
 
   render() {
