@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../../assets/images/logo.jpg';
+import Logo from '../../assets/images/logo.png';
 import NotificationBox from '../Notification';
 import { isAuthenticate } from '../../helper/auth';
 
