@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import Logo from '../../assets/images/logo.png';
 import NotificationBox from '../Notification';
 import { isAuthenticate, getUser, signout } from '../../helper/auth';
