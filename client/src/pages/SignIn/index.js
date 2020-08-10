@@ -59,7 +59,7 @@ const SignInForm = (props) => {
               </div>
               <div className="form-group">
                 <p className="text-right">
-                  <Link to="/forgotPassword">Forgot Password</Link>
+                  <Link to="/">Forgot Password</Link>
                 </p>
               </div>
               <div className="col-md-12 text-center ">

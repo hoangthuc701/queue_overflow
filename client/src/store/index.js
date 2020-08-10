@@ -13,7 +13,7 @@ const composeEnhancers =
     : compose;
 
 const configureStore = () => {
-  const middleware = [thunk, logger];
+  const middleware = [thunk];
   const enhancers = [applyMiddleware(...middleware)];
   const store = createStore(rootReducer, composeEnhancers(...enhancers));
   return store;
