@@ -6,11 +6,13 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
+import PrivateRoute from './components/PrivateRoute';
 
 import HomePage from './pages/Home';
 import SignInPage from './pages/SignIn';
 import NotFoundPage from './pages/NotFound';
 import SignUpPage from './pages/SignUp';
+import TestSite from './pages/Test';
 
 class App extends Component {
   renderHeader = () => <Header />;
@@ -41,6 +43,7 @@ class App extends Component {
             <Route exact path="/" component={HomePage} />
             <Route exact path="/signin" component={SignInPage} />
             <Route exact path="/signup" component={SignUpPage} />
+            <PrivateRoute exact path="/test" component={TestSite} />
             <Route component={NotFoundPage} />
           </Switch>
         </div>
