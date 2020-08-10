@@ -17,6 +17,16 @@ export const getToken = () => {
   }
   return '';
 };
+export const getUser = () => {
+  if (typeof window === 'undefined') {
+    return '';
+  }
+  if (localStorage.getItem('user')) {
+    return JSON.parse(localStorage.getItem('user'));
+  }
+  return '';
+};
+
 export const authenticate = (token, next) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem('token', JSON.stringify(token));

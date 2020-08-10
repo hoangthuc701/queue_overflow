@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/images/logo.jpg';
 import NotificationBox from '../Notification';
-import { isAuthenticate } from '../../helper/auth';
+import { isAuthenticate, getUser } from '../../helper/auth';
 
 class Header extends Component {
   renderNotify = () => {
@@ -68,7 +68,9 @@ class Header extends Component {
 
   renderProfile = () => (
     <div>
-      <b style={{ color: 'white', marginRight: '10px' }}>Nguyen Hoang Thuc </b>
+      <b style={{ color: 'white', marginRight: '10px' }}>
+        {getUser().display_name}{' '}
+      </b>
       <div className="btn-group">
         <button
           type="button"
