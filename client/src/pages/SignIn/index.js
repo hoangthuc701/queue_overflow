@@ -34,19 +34,19 @@ const SignInForm = (props) => {
             </div>
             <form method="post" name="login">
               <div className="form-group">
-                <label>Email address</label>
+                <label htmlFor="email">Email address</label>
                 <input
                   type="email"
                   name="email"
                   className="form-control"
                   id="email"
                   aria-describedby="emailHelp"
-                  placeholder="Enter email"
+                  placeholder="Enter Email"
                   onChange={handleOnChange}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="#password">Password</label>
+                <label htmlFor="password">Password</label>
                 <input
                   type="password"
                   name="password"
