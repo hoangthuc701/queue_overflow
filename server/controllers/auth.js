@@ -55,7 +55,7 @@ exports.sign_in = async (req, res) => {
 			expiresIn: '1h',
 		});
 		res.json(
-			response_format.success('Request succeed', {
+			response_format.success('Sign in succeed', {
 				token,
 				user: user_info,
 			})
