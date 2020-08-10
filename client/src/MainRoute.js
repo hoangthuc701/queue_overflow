@@ -10,6 +10,7 @@ import HomePage from './pages/Home';
 import SignInPage from './pages/SignIn';
 import NotFoundPage from './pages/NotFound';
 import SignUpPage from './pages/SignUp';
+import TestSite from './pages/Test';
 
 const MainRoute = () => (
   <>
@@ -30,6 +31,7 @@ const MainRoute = () => (
         <Route exact path="/" component={HomePage} />
         <Route exact path="/signin" component={SignInPage} />
         <Route exact path="/signup" component={SignUpPage} />
+        <Route exact path="/test" component={TestSite} />
         <Route component={NotFoundPage} />
       </Switch>
     </div>

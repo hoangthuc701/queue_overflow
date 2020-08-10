@@ -18,7 +18,7 @@ const SignInForm = (props) => {
     const value = await dispatch(authActions.signIn(user.email, user.password));
     if (value) {
       // eslint-disable-next-line react/prop-types
-      props.history.push('/');
+      props.history.push('/test');
     }
   };
   return (
