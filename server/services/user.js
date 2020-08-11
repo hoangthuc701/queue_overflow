@@ -14,26 +14,44 @@ class UserService {
 	}
 
 	static async getUserByEmail(email) {
-		let user = await UserModel.findOne({ email });
+		let user;
+		try {
+			user = await UserModel.findOne({ email });
+		} catch (error) {
+			console.error(error);
+			throw new Error('Cannot get account.');
+		}
+
 		return user;
 	}
 
 	static async getUserById(id) {
-		let user = await UserModel.findById(id);
+		let user;
+		try {
+			user = await UserModel.findById(id);
+		} catch (error) {
+			console.error(error);
+			throw new Error('Cannot get account.');
+		}
+
 		return user;
 	}
 
 	static async update(id, { email, hashed_password, display_name }) {
+		let user;
 		try {
-			let user = await UserModel.findById(id);
-			user.email = email;
-			user.hashed_password = hashed_password;
-			user.display_name = display_name;
-			await user.save();
-		} catch {
-			return false;
+			user = await UserModel.findById(id);
+			if (user) {
+				user.email = email;
+				user.hashed_password = hashed_password;
+				user.display_name = display_name;
+				await user.save();
+			}
+		} catch (error) {
+			console.error(error);
+			throw new Error('Cannot get account.');
 		}
-		return true;
+		return user;
 	}
 }
 
