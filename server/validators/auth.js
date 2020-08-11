@@ -17,3 +17,13 @@ exports.signupValidator = [
 		.withMessage('Display name must not have special characters.'),
 	validate,
 ];
+
+exports.signinValidator = [
+	body('email')
+		.notEmpty()
+		.withMessage('Email is required')
+		.isEmail()
+		.withMessage('This is not email.'),
+	body('password').notEmpty().withMessage('Password is required'),
+	validate,
+];
