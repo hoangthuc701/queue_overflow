@@ -14,8 +14,10 @@ router.post(
 			.matches(/[a-z]|[A-Z]/)
 			.withMessage('Password must contain character.'),
 		body('display_name')
-			.isAlphanumeric()
-			.withMessage('Display name must be only number and character.'),
+			.matches(/^[_A-z0-9]*((-|\s)[_A-z0-9]+)*$/)
+			.withMessage(
+				'Display name must not have special characters or too many spaces between words.'
+			),
 	],
 	validate,
 	sign_up
