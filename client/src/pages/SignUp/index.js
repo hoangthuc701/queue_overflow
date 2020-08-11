@@ -42,7 +42,7 @@ const SignUpForm = (props) => {
             </div>
             <form action="#" name="registration">
               <div className="form-group">
-                <label htmlFor="exampleInputEmail1">Email address</label>
+                <label htmlFor="email">Email address</label>
                 <input
                   type="email"
                   name="email"
