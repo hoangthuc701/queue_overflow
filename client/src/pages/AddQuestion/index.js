@@ -1,5 +1,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
+import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import MarkDownEditer from './components/MarkdownEditer';
 
@@ -48,12 +51,18 @@ class AddQuestionPage extends Component {
     const error = CreateNewValidator(title, content, category);
     this.setState({ errors: error });
     if (Object.keys(error).length > 0) return;
-    QuestionService.createNewQuestion(
-      title,
-      category,
-      content,
-      tags
-    ).then(() => {});
+    QuestionService.createNewQuestion(title, category, content, tags).then(
+      (data) => {
+        if (data.error) {
+          toast.error(data.error);
+        } else {
+          const { history } = this.props;
+          toast.success(data.message);
+          // eslint-disable-next-line no-underscore-dangle
+          history.push(`/question/${data.data._id}`);
+        }
+      }
+    );
   };
 
   render() {
@@ -107,5 +116,10 @@ class AddQuestionPage extends Component {
     );
   }
 }
+AddQuestionPage.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
-export default AddQuestionPage;
+export default withRouter(AddQuestionPage);
