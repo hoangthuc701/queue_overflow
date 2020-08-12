@@ -6,7 +6,7 @@ const CreateNewValidator = (title, content, category) => {
   if (!content) errors.content = 'Content is required.';
   else if (content.length <= 20 || content.length > 1000)
     errors.content = 'Content is between 20 and 1000 character.';
-  // if (!category) errors.category = 'Category is required.';
+  if (!category) errors.category = '';
   return errors;
 };
 
