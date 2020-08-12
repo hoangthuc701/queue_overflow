@@ -39,7 +39,7 @@ class App extends Component {
       <BrowserRouter>
         {this.renderToastMessage()}
         {this.renderHeader()}
-        <div className="container">
+        <div className="container" id="content">
           <Switch>
             <Route exact path="/" component={HomePage} />
             <Route exact path="/signin" component={SignInPage} />
