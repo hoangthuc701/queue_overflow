@@ -40,10 +40,12 @@ app.use(cors());
 //import routes
 const authRouter = require('./routes/auth.js');
 const userRouter = require('./routes/user');
+const questionRouter = require('./routes/question');
 
 //Route
 app.use(authRouter);
 app.use(userRouter);
+app.use(questionRouter);
 
 // catch 404 and forward to error handler
 // eslint-disable-next-line no-unused-vars
