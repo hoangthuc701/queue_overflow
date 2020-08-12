@@ -1,4 +1,4 @@
-import questionlistContants from '../constants/questionpage';
+import questionlistContants from '../constants/question';
 
 const initialquestionListState = {};
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import questionAction from '../../actions/question';
 import Question from '../../components/Question';
 
 const QuestionPage = () => {
@@ -16,7 +17,12 @@ const QuestionPage = () => {
       'https://internship.cybozu.com/api/user/photo.do/-/user.png?id=35&size=ORIGINAL_R&hash=0a24f42c063380c3724569e5d01744b7ed96dccf&.png',
     like: '10',
   };
+  const dispatch = useDispatch();
   const question = (title) => <Question title={title} />;
+  async function getList() {
+    await dispatch(questionAction.questionList());
+  }
+  getList();
   const questionlist = useSelector((state) => state.questionList.questionlist);
   console.log(questionlist);
   return (
