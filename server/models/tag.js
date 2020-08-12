@@ -4,8 +4,6 @@ const Schema = mongoose.Schema;
 var schema = new Schema({
 	name: {
 		type: String,
-		required: true,
-		unique: true,
 	},
 	questions: [
 		{

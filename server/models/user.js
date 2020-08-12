@@ -4,16 +4,12 @@ const Schema = mongoose.Schema;
 var schema = new Schema({
 	email: {
 		type: String,
-		required: true,
-		unique: true,
 	},
 	hashed_password: {
 		type: String,
-		required: true,
 	},
 	display_name: {
 		type: String,
-		required: true,
 	},
 	description: String,
 	avatar: String,
