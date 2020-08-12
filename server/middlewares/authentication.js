@@ -9,7 +9,7 @@ exports.auth = express_jwt({
 });
 
 exports.verifyUser = (req, res, next) => {
-	if (req.res.user._id !== req.params.user_id) {
+	if (req.res.user._id !== req.user_id) {
 		res.status(401).json(
 			response_format.error('You can not access this infomation')
 		);
