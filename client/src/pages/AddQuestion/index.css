@@ -1,0 +1,18 @@
+.dropdown-toggle {
+    background-color: white;
+    color: black;
+  }
+
+  .col-btn {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .tag {
+    font-size: 18px;
+    height: fit-content;
+  }
+
+  .close {
+    float: none;
+  }
