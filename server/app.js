@@ -23,9 +23,6 @@ mongoose.connection.on('error', (err) => {
 
 const app = express();
 
-//import routes
-const authRouter = require('./routes/auth.js');
-
 //middleware
 if (process.env.NODE_ENV === 'production') {
 	app.use(
@@ -40,8 +37,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
+//import routes
+const authRouter = require('./routes/auth.js');
+const userRouter = require('./routes/user');
+const questionRouter = require('./routes/question');
+
 //Route
 app.use(authRouter);
+app.use(userRouter);
+app.use(questionRouter);
 
 // catch 404 and forward to error handler
 // eslint-disable-next-line no-unused-vars
@@ -58,14 +62,14 @@ app.use((err, req, res, next) => {
 	res.status(err.status || 500);
 	if (err.name === 'UnauthorizedError') {
 		res.status(401).send({
-			message:'',
+			message: '',
 			error: 'Invalid token.',
-			data:{}
+			data: {},
 		});
 	}
 	res.json({
-		message:'',
-		data:{},
+		message: '',
+		data: {},
 		error: err.message,
 	});
 });

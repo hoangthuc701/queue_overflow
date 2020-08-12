@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { sign_up, sign_in } = require('../controllers/auth');
 const { body } = require('express-validator');
 const { validate } = require('../middlewares/validateError');
+const { signinValidator, signupValidator } = require('../validators/auth');
 router.post(
 	'/signup',
 	[
@@ -23,6 +24,8 @@ router.post(
 	sign_up
 );
 
-router.post('/signin', sign_in);
+router.post('/signup', signupValidator, sign_up);
+
+router.post('/signin', signinValidator, sign_in);
 
 module.exports = router;
