@@ -264,28 +264,11 @@ exports.getQuestions = async (req, res) => {
 		);
 	}
 };
-exports.getQuestionsByAuthorId = async (req, res) => {
+exports.getQuestionById = async (req, res) => {
 	let questions;
 	try {
-		questions = await QuestionService.getQuestionsByFilter(
-			parseInt(req.query.page, 10),
-			10,
-			req.query.filter
-		);
-		let questions_index;
-		for (questions_index=0;questions_index<questions.questions.length;questions_index++){
-			let tags_index;
-			let tags_data=[];
-			let tag_data;
-			for (tags_index=0;tags_index<questions.questions[questions_index].tags.length;tags_index++){
-				tag_data = await TagService.getById({tag_id: questions.questions[questions_index].tags[tags_index]});
-				tags_data.push({tag_id: tag_data._id, name: tag_data.name});
-			}
-			questions.questions[questions_index].tags = tags_data;
-			let category_data = await CategoryService.getById(questions.questions[questions_index].category);
-			let res_category = {category_id: category_data[0]._id, name: category_data[0].name, color: category_data[0].color};
-			questions.questions[questions_index].category = res_category;
-		}
+		questions = await QuestionService.getById(req.params.question_id);
+		
 		return res.json(
 			response_format.success('Get question succeed.', questions)
 		);
