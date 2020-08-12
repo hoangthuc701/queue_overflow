@@ -1,9 +1,9 @@
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const UserService = require('../services/user');
 const { getHashedPassword, comparePassword } = require('../util/password');
-const jwt = require('jsonwebtoken');
-
 const response_format = require('../util/response_format');
+
 exports.sign_up = async (req, res) => {
 	let email_user = await UserService.getUserByEmail(req.body.email);
 	if (email_user) {
