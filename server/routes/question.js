@@ -1,14 +1,10 @@
 const router = require('express').Router();
+const { addNewQuestion, editQuestion, deleteQuestion, getQuestions } = require('../controllers/question');
+const { questionValidator } = require('../validators/question');
 // const { body } = require('express-validator');
 const { validate } = require('../middlewares/validateError');
-const { create } = require('../controllers/question');
-
-router.post(
-    '/questions',[
-        
-    ],
-    validate,
-    create
-);
-
+router.post('/questions', questionValidator, validate, addNewQuestion);
+router.put('/questions/:question_id', questionValidator, validate, editQuestion);
+router.delete('/questions/:question_id', validate, deleteQuestion);
+router.get('/questions', validate, getQuestions);
 module.exports = router;

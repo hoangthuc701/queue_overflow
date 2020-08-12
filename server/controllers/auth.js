@@ -7,7 +7,7 @@ const response_format = require('../util/response_format');
 exports.sign_up = async (req, res) => {
 	let email_user = await UserService.getUserByEmail(req.body.email);
 	if (email_user) {
-		res.json(response_format.error('Email is exist.'));
+		return res.json(response_format.error('Email is exist.'));
 	}
 	let hashed_password = await getHashedPassword(req.body.password);
 	let user = {
@@ -38,7 +38,7 @@ exports.sign_up = async (req, res) => {
 exports.sign_in = async (req, res) => {
 	let user = await UserService.getUserByEmail(req.body.email);
 	if (!user) {
-		res.json(response_format.error('Email is not existed.'));
+		return res.json(response_format.error('Email is not existed.'));
 	}
 	let password_check = await comparePassword(
 		req.body.password,
@@ -55,7 +55,7 @@ exports.sign_in = async (req, res) => {
 			expiresIn: '1h',
 		});
 		res.json(
-			response_format.success('Request succeed', {
+			response_format.success('Sign in succeed', {
 				token,
 				user: user_info,
 			})
