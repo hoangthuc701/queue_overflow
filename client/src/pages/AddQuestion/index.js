@@ -8,12 +8,14 @@ import './index.css';
 import CategoryBox from './components/CategoryBox';
 import TagInput from './components/TagInput';
 import QuestionService from '../../services/questionService';
+import CreateNewValidator from '../../validators/question';
 
 class AddQuestionPage extends Component {
   constructor() {
     super();
     this.state = {
       tags: [],
+      errors: {},
     };
   }
 
@@ -43,6 +45,9 @@ class AddQuestionPage extends Component {
 
   handleSubmit = () => {
     const { title, category, tags, content } = this.state;
+    const error = CreateNewValidator(title, content, category);
+    this.setState({ errors: error });
+    if (Object.keys(error).length > 0) return;
     QuestionService.createNewQuestion(
       title,
       category,
@@ -52,7 +57,7 @@ class AddQuestionPage extends Component {
   };
 
   render() {
-    const { tags } = this.state;
+    const { tags, errors } = this.state;
     return (
       <>
         <h2>Create new question</h2>
@@ -70,13 +75,16 @@ class AddQuestionPage extends Component {
               this.handleChange(e.target.name, e.target.value);
             }}
           />
+          {errors && errors.title && (
+            <span style={{ color: 'red' }}> {errors.title} </span>
+          )}
         </div>
-        <CategoryBox handleChange={this.handleChange} />
+        <CategoryBox handleChange={this.handleChange} errors={errors} />
         <div className="form-group">
           <label htmlFor="content">
             <h5>Content</h5>
           </label>
-          <MarkDownEditer handleChange={this.handleChange} />
+          <MarkDownEditer handleChange={this.handleChange} errors={errors} />
         </div>
         <TagInput
           handleNewTag={this.handleNewTag}
@@ -84,7 +92,11 @@ class AddQuestionPage extends Component {
           handleRemoveTag={this.handleRemoveTag}
         />
         <div className="col col-btn">
-          <button type="submit" className="btn btn-primary mr-2">
+          <button
+            type="submit"
+            className="btn btn-primary mr-2"
+            onClick={this.handleSubmit}
+          >
             Post
           </button>
           <button type="button" className="btn">
