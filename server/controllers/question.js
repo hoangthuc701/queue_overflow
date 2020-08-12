@@ -2,6 +2,7 @@ require('dotenv').config();
 const QuestionService = require('../services/question');
 const TagService = require('../services/tag');
 const CategoryService = require('../services/category');
+const UserService = require('../services/user');
 const jwt = require('jsonwebtoken');
 
 const response_format = require('../util/response_format');
@@ -228,6 +229,42 @@ exports.deleteQuestion = async (req, res) => {
 	}
 };
 exports.getQuestions = async (req, res) => {
+	let questions;
+	try {
+		questions = await QuestionService.getQuestionsByFilter(
+			parseInt(req.query.page, 10),
+			10,
+			req.query.filter
+		);
+		let questions_index;
+		for (questions_index=0;questions_index<questions.questions.length;questions_index++){
+			let tags_index;
+			let tags_data=[];
+			let tag_data;
+			for (tags_index=0;tags_index<questions.questions[questions_index].tags.length;tags_index++){
+				tag_data = await TagService.getById({tag_id: questions.questions[questions_index].tags[tags_index]});
+				tags_data.push({tag_id: tag_data._id, name: tag_data.name});
+			}
+			questions.questions[questions_index].tags = tags_data;
+			let category_data = await CategoryService.getById(questions.questions[questions_index].category);
+			let res_category = {category_id: category_data[0]._id, name: category_data[0].name, color: category_data[0].color};
+			questions.questions[questions_index].category = res_category;
+			let user_data = await UserService.getUserById(questions.questions[questions_index].author);
+			let res_author = {author_id: user_data._id, display_name: user_data.display_name, avatar: user_data.avatar};
+			questions.questions[questions_index].author = res_author;
+			questions.questions[questions_index].rating_detail.totalLike = questions.questions[questions_index].rating_detail.like_users.length;
+			questions.questions[questions_index].rating_detail.totalDislike = questions.questions[questions_index].rating_detail.dislike_users.length;
+		}
+		return res.json(
+			response_format.success('Get question succeed.', questions)
+		);
+	} catch (error) {
+		res.status(500).json(
+			response_format.error('Oh no, something went wrong.')
+		);
+	}
+};
+exports.getQuestionsByAuthorId = async (req, res) => {
 	let questions;
 	try {
 		questions = await QuestionService.getQuestionsByFilter(
