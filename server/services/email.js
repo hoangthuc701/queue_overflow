@@ -10,12 +10,13 @@ const smtpConfig = {
 	},
 };
 class EmailService {
-	static async sendTo(receiver, subject, text) {
+	static async send({ receiver, subject, text, html }) {
 		let mail = {
 			from: process.env.EMAIL_USER,
 			to: receiver,
 			subject,
 			text,
+			html,
 		};
 		let result;
 		try {

@@ -28,7 +28,7 @@ exports.comparePassword = (rawPassword, hashedPassword) =>
 		});
 	});
 
-exports.ramdomPassword = () => {
+exports.generateRandomPassword = () => {
 	const getRandomInt = (range) => {
 		let min = Math.ceil(range[0]);
 		let max = Math.floor(range[1]);
