@@ -42,12 +42,14 @@ const authRouter = require('./routes/auth.js');
 const userRouter = require('./routes/user');
 const questionRouter = require('./routes/question');
 const answerRouter = require('./routes/answer');
+const ratingRouter = require('./routes/rating');
 
 //Route
 app.use(authRouter);
 app.use(userRouter);
 app.use(questionRouter);
 app.use(answerRouter);
+app.use(ratingRouter);
 
 // catch 404 and forward to error handler
 // eslint-disable-next-line no-unused-vars
