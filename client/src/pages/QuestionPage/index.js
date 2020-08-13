@@ -17,10 +17,10 @@ const QuestionPage = () => {
   let questionitem;
   if (questionlist.questions) {
     questionitem = questionlist.questions.map((e) => {
-      return <div key={e._id}>{questionComponent(e)}</div>;
+      return <div key={e}>{questionComponent(e)}</div>;
     });
   }
-  //EVENT BUTTON
+  // EVENT BUTTON
   function onClickfilter(filby) {
     if (filby.Newest === Newest) {
       dispatch(questionAction.questionList());
@@ -31,7 +31,7 @@ const QuestionPage = () => {
     }
   }
   if (getting) {
-    questionitem = <div className="loader"></div>;
+    questionitem = <div className="loader" />;
   }
 
   return (

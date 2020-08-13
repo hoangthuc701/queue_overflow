@@ -157,7 +157,7 @@ const Question = (props) => {
 };
 
 Question.propTypes = {
-  plainObj: PropTypes.shape({ subProp: PropTypes.string }),
+  title: PropTypes.string,
 };
 Question.defaultProps = {
   title: {},
