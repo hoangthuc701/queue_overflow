@@ -42,6 +42,22 @@ class QuestionService {
     const data = await res.json();
     return data;
   }
+
+  static async getQuestionsByToken(token) {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/user/questions`,
+      requestOptions
+    );
+    const data = await res.json();
+    return data;
+  }
 }
 
 export default QuestionService;

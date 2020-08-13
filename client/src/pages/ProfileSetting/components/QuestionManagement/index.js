@@ -1,8 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getToken } from '../../../../helper/auth';
+import QuestionService from '../../../../services/questionService';
+import Question from './Question';
 
 const QuestionManagement = () => {
+  const [questions, setQuestions] = useState([]);
+  const [questionsDisplay, setQuestionsDisplay] = useState([]);
+  const user_info_getted = useSelector((state) => state.user_info.getted);
+  useEffect(() => {
+    if (!user_info_getted) return;
+    const fetchQuestionsByToken = async (token) => {
+      const value = await QuestionService.getQuestionsByToken(token);
+      console.log(value);
+      if (!value.error) setQuestions(value.data);
+    };
+    const token = getToken();
+    fetchQuestionsByToken(token);
+  }, [user_info_getted]);
+
+  useEffect(() => {
+    const display = questions.map((value) => {
+      return <Question />;
+    });
+    setQuestionsDisplay(display);
+  }, [questions]);
+
   return (
     <div className="tab-pane" role="tabpanel" id="menu2">
       <table className="table table-borderless table-hover">
@@ -19,108 +43,7 @@ const QuestionManagement = () => {
             </th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>
-              <a href="#" className="question_info">
-                <h3 className="question">
-                  Running a job during specified time of the day
-                </h3>
-              </a>
-              <h4>2020-07-28 12:50:30</h4>
-            </td>
-            <td>
-              <h4>
-                <a href="#" className="badge badge-warning">
-                  JAVA
-                </a>
-              </h4>
-            </td>
-            <td>
-              <a href="#" className="mr-2">
-                <img src="https://i.ibb.co/RNWjm8H/pencil.png" />
-              </a>
-              <a href="#">
-                <img src="https://i.ibb.co/hgYsCP1/delete.png" />
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a href="#" className="question_info">
-                <h3 className="question">
-                  views Panda "to_date_time" not accepting series
-                </h3>
-              </a>
-              <h4>2020-07-28 12:50:30</h4>
-            </td>
-            <td>
-              <h4>
-                <a href="#" className="badge badge-warning">
-                  C++
-                </a>
-              </h4>
-            </td>
-            <td>
-              <a href="#" className="mr-2">
-                <img src="https://i.ibb.co/RNWjm8H/pencil.png" />
-              </a>
-              <a href="#" className>
-                <img src="https://i.ibb.co/hgYsCP1/delete.png" />
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a href="#" className="question_info">
-                <h3 className="question">
-                  Setup a cron on a bash scrips but its not running
-                </h3>
-              </a>
-              <h4>2020-07-28 12:50:30</h4>
-            </td>
-            <td>
-              <h4>
-                <a href="#" className="badge badge-warning">
-                  NODEJS
-                </a>
-              </h4>
-            </td>
-            <td>
-              <a href="#" className="mr-2">
-                <img src="https://i.ibb.co/RNWjm8H/pencil.png" />
-              </a>
-              <a href="#" className>
-                <img src="https://i.ibb.co/hgYsCP1/delete.png" />
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a href="#" className="question_info">
-                <h3 className="question">
-                  Connect android device to python project via socket
-                </h3>
-              </a>
-              <h4>2020-07-28 12:50:30</h4>
-            </td>
-            <td>
-              <h4>
-                <a href="#" className="badge badge-warning">
-                  C#
-                </a>
-              </h4>
-            </td>
-            <td>
-              <a href="#" className="mr-2">
-                <img src="https://i.ibb.co/RNWjm8H/pencil.png" />
-              </a>
-              <a href="#" className>
-                <img src="https://i.ibb.co/hgYsCP1/delete.png" />
-              </a>
-            </td>
-          </tr>
-        </tbody>
+        <tbody>{questionsDisplay}</tbody>
       </table>
       <nav aria-label="Page navigation example">
         <ul className="pagination">
