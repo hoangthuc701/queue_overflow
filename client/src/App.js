@@ -14,6 +14,7 @@ import NotFoundPage from './pages/NotFound';
 import SignUpPage from './pages/SignUp';
 import ProfileSetting from './pages/ProfileSetting';
 import TestSite from './pages/Test';
+import AddQuestionPage from './pages/AddQuestion';
 
 class App extends Component {
   renderHeader = () => <Header />;
@@ -39,13 +40,18 @@ class App extends Component {
       <BrowserRouter>
         {this.renderToastMessage()}
         {this.renderHeader()}
-        <div className="container">
+        <div className="container" id="content">
           <Switch>
             <Route exact path="/" component={HomePage} />
             <Route exact path="/signin" component={SignInPage} />
             <Route exact path="/signup" component={SignUpPage} />
             <Route exact path="/profile" component={ProfileSetting} />
             <Route exact path="/profile/:user_id" component={ProfileSetting} />
+            <PrivateRoute
+              exact
+              path="/question/add"
+              component={AddQuestionPage}
+            />
             <PrivateRoute exact path="/test" component={TestSite} />
             <Route component={NotFoundPage} />
           </Switch>
