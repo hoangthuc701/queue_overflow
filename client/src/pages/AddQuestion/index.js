@@ -50,7 +50,7 @@ class AddQuestionPage extends Component {
     const { title, category, tags, content } = this.state;
     const error = CreateNewValidator(title, content, category);
     this.setState({ errors: error });
-    if (Object.keys(error).length > 0) return;
+    //if (Object.keys(error).length > 0) return;
     QuestionService.createNewQuestion(title, category, content, tags).then(
       (data) => {
         if (data.error) {
