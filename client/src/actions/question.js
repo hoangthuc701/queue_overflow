@@ -16,10 +16,11 @@ function questionList(page = 1, filter = 'newest') {
     const values = await questionService.getListQuestion(page, filter);
     if (values.message) {
       dispatch(successList(values.data));
-      return true;
     }
-    dispatch(failureList());
-    return false;
+    else {
+
+        dispatch(failureList());
+    }
   };
 }
 const questionActions = {

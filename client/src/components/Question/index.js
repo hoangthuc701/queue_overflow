@@ -17,17 +17,17 @@ const Question = (props) => {
                   style={{ fontSize: '300%', color: '#4cf760' }}
                 />
                 <p>
-                  <b style={{ color: '#bdbdbd' }}>{title.answered} answers</b>
+                  <b style={{ color: '#bdbdbd' }}>title.answered answers</b>
                 </p>
               </div>
               <div className="col-sm-10">
-                <text>Created {title.created}</text>
+                <text>Created title.created</text>
                 <div className="card">
                   <div className="card-header">
                     <div className="row">
                       <div className="col-sm-6 col align-self-center">
                         <a href style={{ color: 'black' }}>
-                          <h3>{title.titles}</h3>
+                          <h3>title.titles</h3>
                         </a>
                       </div>
                       <div className="col-sm-6">
@@ -41,16 +41,15 @@ const Question = (props) => {
                                 borderColor: '#f44336',
                               }}
                             >
-                              {title.category}
+                              title.category
                             </a>
                           </h5>
                         </div>
                         <div
                           className="text-right"
-                          d
                           style={{ marginTop: '0.5em' }}
                         >
-                          {title.TAG.map((tag) => (
+                          {/* {title.TAG.map((tag) => (
                             <a
                               href
                               className="badge badge-secondary"
@@ -62,29 +61,29 @@ const Question = (props) => {
                             >
                               {tag}
                             </a>
-                          ))}
+                          ))} */}
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="card-body">
-                    <p className="card-text">{title.content}</p>
+                    <p className="card-text">title.content</p>
                     <a href className="float-right">
                       <img
-                        src={title.avartar}
+                        src="title.avartar"
                         className="rounded-circle"
                         alt="Cinque Terre"
                         width={50}
                         height={50}
                       />
                       <b style={{ color: 'black', fontSize: '120%' }}>
-                        {title.name}
+                        title.name
                       </b>
                     </a>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span style={{ fontSize: '200%' }}>{title.like}</span>
+                  <span style={{ fontSize: '200%' }}>title.like</span>
                   <a
                     href
                     className="fas fa-chevron-up"
@@ -119,7 +118,7 @@ const Question = (props) => {
 };
 
 Question.propTypes = {
-  title: PropTypes.oneOf([PropTypes.func, PropTypes.node]),
+  plainObj: PropTypes.shape({ subProp: PropTypes.string })
 };
 Question.defaultProps = {
   title: {},

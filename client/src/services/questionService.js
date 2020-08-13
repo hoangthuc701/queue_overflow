@@ -47,12 +47,11 @@ class QuestionService {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     };
-    const res = await fetch(
+    const data = await fetch(
       `${process.env.REACT_APP_SERVER_DOMAIN}/questions?page=${page}&filter=${filter}`,
       requestOptions
     );
-    const data = await res.json();
-    return data;
+    return data.json();
   }
 }
 

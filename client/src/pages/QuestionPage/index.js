@@ -1,30 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import questionAction from '../../actions/question';
 import Question from '../../components/Question';
 
 const QuestionPage = () => {
-  const test = {
-    titles: 'tuanquen',
-    name: 'huyquen',
-    created: '19/08/2022',
-    category: 'LẬP TRÌNH',
-    TAG: ['reactjs', 'nodejs', 'monggo'],
-    content:
-      'I have written a react component with a constructor, methods, and render. When I comment out the methods and have only the render and constructor everything is fine, but when I add the methods the first always comes up as undefined unless I close off the whole class after the constructor.',
-    answered: '10',
-    avartar:
-      'https://internship.cybozu.com/api/user/photo.do/-/user.png?id=35&size=ORIGINAL_R&hash=0a24f42c063380c3724569e5d01744b7ed96dccf&.png',
-    like: '10',
-  };
   const dispatch = useDispatch();
-  const question = (title) => <Question title={title} />;
-  async function getList() {
-    await dispatch(questionAction.questionList());
+  const questionComponent = (title) => <Question title={title} />;
+  useEffect(() => {
+    dispatch(questionAction.questionList());
+  }, []);
+  const { questionlist } = useSelector((state) => state.questionList);
+  let questionitem;
+  if (questionlist.questions) {
+    questionitem = questionlist.questions.map((e) => {
+      return <div key={e._id}>{questionComponent(e)}</div>;
+    });
+  } else {
+    questionitem = 'LOADING....';
   }
-  getList();
-  const questionlist = useSelector((state) => state.questionList.questionlist);
-  console.log(questionlist);
   return (
     <div
       className="container-fluid"
@@ -93,7 +86,7 @@ const QuestionPage = () => {
         </div>
         <div className="col-sm-2"> </div>
       </div>
-      {question(test)}
+      {questionitem}
     </div>
   );
 };
