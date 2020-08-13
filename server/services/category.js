@@ -10,6 +10,15 @@ class CategoryService {
 		}
 		return category;
 	}
+	static async getAll() {
+		let category;
+		try {
+			category = await CategoryModel.find().exec();
+		} catch (error) {
+			throw new Error('Cannot get category.');
+		}
+		return category;
+	}
 }
 
 module.exports = CategoryService;
