@@ -131,11 +131,13 @@ class QuestionService {
 	}
 	static async likeQuestion(question_id, user_id, type) {
 		let question;
-		let vote='none';
+		let vote = 'none';
 		try {
 			question = await QuestionModel.findOne({ _id: question_id }).exec();
 			if (question) {
 				let like_index;
+				let is_like = false;
+				let is_dislike = false;
 				for (
 					like_index = 0;
 					like_index < question.rating_detail.like_users.length;
@@ -145,8 +147,10 @@ class QuestionService {
 						question.rating_detail.like_users[
 							like_index
 						].toString() === user_id
-					)
-						throw new Error('You cannot like.');
+					) {
+						is_like = true;
+						break;
+					}
 				}
 				for (
 					like_index = 0;
@@ -157,20 +161,45 @@ class QuestionService {
 						question.rating_detail.dislike_users[
 							like_index
 						].toString() === user_id
-					)
-						throw new Error('You cannot dislike.');
+					) {
+						is_dislike = true;
+						break;
+					}
 				}
 				if (parseInt(type, 10) === 1) {
-					vote='like';
-					question.rating_detail.like_users.push(user_id);
-					question.save();
+					if (!is_like && !is_dislike) {
+						vote = 'like';
+						question.rating_detail.like_users.push(user_id);
+						question.save();
+					} else if (is_like) {
+						vote = 'none';
+						question.rating_detail.like_users.pull(user_id);
+						question.save();
+					} else if (is_dislike) {
+						vote = 'like';
+						question.rating_detail.dislike_users.pull(user_id);
+						question.rating_detail.like_users.push(user_id);
+						question.save();
+					}
 				} else {
-					vote='dislike';
-					question.rating_detail.dislike_users.push(user_id);
-					question.save();
+					if(!is_like&&!is_dislike){
+						vote = 'dislike';
+						question.rating_detail.dislike_users.push(user_id);
+						question.save();
+					}
+					else if(is_like){
+						vote='dislike';
+						question.rating_detail.dislike_users.push(user_id);
+						question.rating_detail.like_users.pull(user_id);
+						question.save();
+					}
+					else if(is_dislike){
+						vote='none';
+						question.rating_detail.dislike_users.pull(user_id);
+						question.save();
+					}
 				}
-			}
-			else{
+			} else {
 				throw new Error('There is no question.');
 			}
 		} catch (error) {
@@ -179,7 +208,7 @@ class QuestionService {
 		return {
 			totalLike: question.rating_detail.like_users.length,
 			totalDislike: question.rating_detail.dislike_users.length,
-			vote: vote
+			vote: vote,
 		};
 	}
 }
