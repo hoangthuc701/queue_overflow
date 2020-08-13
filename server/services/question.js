@@ -63,7 +63,7 @@ class QuestionService {
 	static async getById(question_id) {
 		let question;
 		try {
-			question = await QuestionModel.findOne({ _id: question_id }).exec();
+			question = await QuestionModel.findOne({ _id: question_id }).lean().exec();
 		} catch (error) {
 			throw new Error('Cannot get question.');
 		}
