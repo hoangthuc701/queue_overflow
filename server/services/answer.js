@@ -24,6 +24,32 @@ class AnswerService {
 		}
 		return answers;
 	}
+	static async likeAnswer(answer_id, user_id, type) {
+		let answer;
+		try {
+			answer = await AnswerModel.findOne({ _id: answer_id }).exec();
+			if (answer){
+				let like_index;
+				for (like_index=0;like_index<answer.rating_detail.like_users.length;like_index++){
+					if (answer.rating_detail.like_users[like_index].toString()===user_id) throw new Error('You cannot like.');
+				}
+				for(like_index=0;like_index<answer.rating_detail.dislike_users.length;like_index++){
+					if (answer.rating_detail.dislike_users[like_index].toString()===user_id) throw new Error('You cannot dislike.');
+				}
+				if(parseInt(type, 10)===1){
+					answer.rating_detail.like_users.push(user_id);
+					answer.save();
+				}
+				else{
+					answer.rating_detail.dislike_users.push(user_id);
+					answer.save();
+				}
+			}
+		} catch (error) {
+			throw new Error('You can not rate.');
+		}
+		return answer;
+	}
 }
 
 module.exports = AnswerService;

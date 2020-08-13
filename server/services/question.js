@@ -135,8 +135,10 @@ class QuestionService {
 			if (question){
 				let like_index;
 				for (like_index=0;like_index<question.rating_detail.like_users.length;like_index++){
-					if (question.rating_detail.like_users[like_index].toString()===user_id) throw new Error('You cannot like 2 times.');
-					if (question.rating_detail.dislike_users[like_index].toString()===user_id) throw new Error('You cannot dislike 2 times.');
+					if (question.rating_detail.like_users[like_index].toString()===user_id) throw new Error('You cannot like.');
+				}
+				for(like_index=0;like_index<question.rating_detail.dislike_users.length;like_index++){
+					if (question.rating_detail.dislike_users[like_index].toString()===user_id) throw new Error('You cannot dislike.');
 				}
 				if(parseInt(type, 10)===1){
 					question.rating_detail.like_users.push(user_id);
@@ -148,7 +150,7 @@ class QuestionService {
 				}
 			}
 		} catch (error) {
-			throw new Error('Cannot like question.');
+			throw new Error('You can not rate.');
 		}
 		return question;
 	}
