@@ -7,6 +7,7 @@ const initialState = {
   author: {},
   tags: [],
   rating_detail: {},
+  answers: [],
 };
 
 export default function authentication(state = initialState, action) {

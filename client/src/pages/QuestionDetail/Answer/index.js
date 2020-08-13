@@ -11,30 +11,9 @@ import formatDate from '../../../helper/formatDate';
 import questionAction from '../../../actions/question';
 
 class Question extends Component {
-  componentDidMount() {
-    // eslint-disable-next-line react/prop-types
-    const { match } = this.props;
-    // eslint-disable-next-line react/prop-types
-    const { questionId } = match.params;
-    const { QuestionActionCreators } = this.props;
-    QuestionActionCreators.getQuestionDetail(questionId);
-  }
-
   renderManager = () => {
     return (
       <>
-        <Link to="/">
-          <span style={{ fontSize: '150%' }}>Edit</span>
-          <span
-            className="fas fa-pen"
-            style={{
-              fontSize: '150%',
-              marginLeft: '0.5em',
-              marginTop: '0.5em',
-              color: 'black',
-            }}
-          />
-        </Link>
         <span>
           <span style={{ fontSize: '150%', marginLeft: '2em' }}>Delete</span>
           <span
@@ -59,46 +38,6 @@ class Question extends Component {
   handleDislike = (questionId) => {
     const { QuestionActionCreators } = this.props;
     QuestionActionCreators.DislikeQuestion(questionId);
-  };
-
-  renderTags = () => {
-    const { tags } = this.props;
-    return tags.map((tag) => {
-      return (
-        <Link
-          className="badge badge-secondary"
-          key={tag.tag_id}
-          style={{
-            backgroundColor: '#03a9f4',
-            borderColor: '#03a9f4',
-            marginLeft: '2px',
-          }}
-          to={`/tags/${tag.tag_id}`}
-        >
-          {tag.name}
-        </Link>
-      );
-    });
-  };
-
-  renderCategory = () => {
-    const { category } = this.props;
-    return (
-      <div className="text-right">
-        <h5>
-          <Link
-            to="/"
-            className="badge badge-danger"
-            style={{
-              backgroundColor: `${category.color}`,
-              borderColor: `${category.color}`,
-            }}
-          >
-            {category.name}
-          </Link>
-        </h5>
-      </div>
-    );
   };
 
   renderAuthor = () => {
@@ -156,7 +95,6 @@ class Question extends Component {
 
   render() {
     const {
-      title,
       content,
       author,
       // eslint-disable-next-line camelcase
@@ -171,18 +109,12 @@ class Question extends Component {
         <div className="col-sm-2"> </div>
         <div className="col-sm-8">
           <div className="row">
-            <div className="col-sm-6 align-self-end">
-              <h1>{title}</h1>
-            </div>
-            <div className="col-sm-6 align-self-end">
-              {this.renderCategory()}
-            </div>
+            <div className="col-sm-6 align-self-end"> </div>
+            <div className="col-sm-6 align-self-end"> </div>
           </div>
           <hr style={{ marginTop: '-0.25em' }} />
-          <span>Created {formatDate(created_time)}</span>
-          <span style={{ marginLeft: '1em' }}>{this.renderTags()}</span>
           <div className="row">
-            <div className="col-sm-6"> </div>
+            <div className="col-sm-6"> Created {formatDate(created_time)} </div>
             <div className="col-sm-6 text-right">
               <span style={{ marginRight: '1em' }}>Edited 28/07/2020</span>
             </div>
@@ -213,11 +145,8 @@ class Question extends Component {
 }
 
 Question.propTypes = {
-  title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
   author: PropTypes.objectOf(PropTypes.string).isRequired,
-  tags: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string)).isRequired,
-  category: PropTypes.objectOf(PropTypes.string).isRequired,
   vote: PropTypes.string.isRequired,
   totalLike: PropTypes.number.isRequired,
   questionId: PropTypes.string.isRequired,
@@ -225,24 +154,9 @@ Question.propTypes = {
   created_time: PropTypes.string.isRequired,
   QuestionActionCreators: PropTypes.objectOf().isRequired,
 };
-const mapStateToProps = (state) => ({
-  title: state.question.title,
-  content: state.question.content,
-  author: state.question.author,
-  tags: state.question.tags,
-  category: state.question.category,
-  vote: state.question.vote,
-  created_time: state.question.created_time,
-  totalLike: state.question.rating_detail.totalLike,
-  totalDislike: state.question.rating_detail.totalDislike,
-  // eslint-disable-next-line no-underscore-dangle
-  questionId: state.question._id,
-});
+
 const mapDispatchToProps = (dispatch) => ({
   QuestionActionCreators: bindActionCreators(questionAction, dispatch),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(Question));
+export default connect(null, mapDispatchToProps)(withRouter(Question));
