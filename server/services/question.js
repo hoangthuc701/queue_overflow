@@ -1,4 +1,5 @@
 const QuestionModel = require('../models/question');
+const AnswerModel = require('../models/answer');
 
 class QuestionService {
 	static async create({ title, content, author, category, tags }) {
@@ -19,13 +20,7 @@ class QuestionService {
 		return new_question;
 	}
 
-	static async update({
-		title,
-		content,
-		category,
-		tags,
-		question_id,
-	}) {
+	static async update({ title, content, category, tags, question_id }) {
 		let question;
 		try {
 			question = await QuestionModel.findOne({
@@ -54,7 +49,10 @@ class QuestionService {
 	static async delete(question_id) {
 		try {
 			const result = await QuestionModel.deleteOne({ _id: question_id });
-			if (result.deletedCount > 0) return true;
+			if (result.deletedCount > 0) {
+				await AnswerModel.deleteMany({ question: question_id });
+				return true;
+			}
 			return false;
 		} catch (error) {
 			throw new Error('Cannot delete question.');
@@ -63,7 +61,9 @@ class QuestionService {
 	static async getById(question_id) {
 		let question;
 		try {
-			question = await QuestionModel.findOne({ _id: question_id }).lean().exec();
+			question = await QuestionModel.findOne({ _id: question_id })
+				.lean()
+				.exec();
 		} catch (error) {
 			throw new Error('Cannot get question.');
 		}
@@ -76,8 +76,10 @@ class QuestionService {
 		switch (filter) {
 		case 'newest':
 			try {
-				questions = await QuestionModel.find().lean().sort('-created_time')
-					.skip((offset-1) * limit)
+				questions = await QuestionModel.find()
+					.lean()
+					.sort('-created_time')
+					.skip((offset - 1) * limit)
 					.limit(limit)
 					.exec();
 			} catch (error) {
@@ -86,9 +88,10 @@ class QuestionService {
 			break;
 		case 'oldest':
 			try {
-				questions = await QuestionModel.find().lean()
+				questions = await QuestionModel.find()
+					.lean()
 					.sort('created_time')
-					.skip((offset-1) * limit)
+					.skip((offset - 1) * limit)
 					.limit(limit)
 					.exec();
 			} catch (error) {
@@ -97,9 +100,10 @@ class QuestionService {
 			break;
 		case 'category':
 			try {
-				questions = await QuestionModel.find().lean()
+				questions = await QuestionModel.find()
+					.lean()
 					.sort({ category: -1 })
-					.skip((offset-1) * limit)
+					.skip((offset - 1) * limit)
 					.limit(limit)
 					.exec();
 			} catch (error) {
@@ -109,19 +113,74 @@ class QuestionService {
 		default:
 			throw new Error('Not a filter.');
 		}
-		return {questions: questions, totalCount: count};
+		return { questions: questions, totalCount: count };
 	}
-	static async getByAuthorId(offset, author_id) {
+	static async getByAuthorId(offset, limit, author_id) {
+		let count = await QuestionModel.countDocuments({ author: author_id });
 		let questions;
 		try {
 			questions = await QuestionModel.find({ author: author_id })
-				.skip(offset * 10)
-				.limit(10)
+				.lean()
+				.skip((offset - 1) * limit)
+				.limit(limit)
 				.exec();
 		} catch (error) {
 			throw new Error('Cannot get questions.');
 		}
-		return questions;
+		return { questions: questions, totalCount: count };
+	}
+	static async likeQuestion(question_id, user_id, type) {
+		let question;
+		let vote='none';
+		try {
+			question = await QuestionModel.findOne({ _id: question_id }).exec();
+			if (question) {
+				let like_index;
+				for (
+					like_index = 0;
+					like_index < question.rating_detail.like_users.length;
+					like_index++
+				) {
+					if (
+						question.rating_detail.like_users[
+							like_index
+						].toString() === user_id
+					)
+						throw new Error('You cannot like.');
+				}
+				for (
+					like_index = 0;
+					like_index < question.rating_detail.dislike_users.length;
+					like_index++
+				) {
+					if (
+						question.rating_detail.dislike_users[
+							like_index
+						].toString() === user_id
+					)
+						throw new Error('You cannot dislike.');
+				}
+				if (parseInt(type, 10) === 1) {
+					vote='like';
+					question.rating_detail.like_users.push(user_id);
+					question.save();
+				} else {
+					vote='dislike';
+					question.rating_detail.dislike_users.push(user_id);
+					question.save();
+				}
+			}
+			else{
+				throw new Error('There is no question.');
+			}
+		} catch (error) {
+			throw new Error('You can not rate.');
+		}
+		return {
+			totalLike: question.rating_detail.like_users.length,
+			totalDislike: question.rating_detail.dislike_users.length,
+			vote: vote
+		};
 	}
 }
 

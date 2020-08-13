@@ -295,6 +295,17 @@ exports.getQuestions = async (req, res) => {
 	}
 };
 exports.getQuestionById = async (req, res) => {
+	let token = req.header('authorization');
+	let user;
+	if (token) {
+		if (token.startsWith('Bearer ')) {
+			token = token.slice(7, token.length);
+			user = jwt.verify(token, process.env.PRIVATE_KEY);
+		} else
+			return res.json(
+				response_format.error('Token format is not right.')
+			);
+	}
 	let question;
 	let answers;
 	try {
@@ -305,7 +316,6 @@ exports.getQuestionById = async (req, res) => {
 			let author_data = await UserService.getUserById(
 				answers[answer_index].author
 			);
-			console.log(author_data);
 			answers[answer_index].author = {
 				author_id: author_data._id,
 				name: author_data.display_name,
@@ -315,6 +325,19 @@ exports.getQuestionById = async (req, res) => {
 				answers[answer_index].rating_detail.like_users.length;
 			answers[answer_index].rating_detail.totalDislike =
 				answers[answer_index].rating_detail.dislike_users.length;
+			if (token) {
+				answers[answer_index].vote = 'none';
+				for (let like_user in answers[answer_index].rating_detail
+					.like_users) {
+					if (like_user.toString() === user._id)
+						answers[answer_index].vote = 'like';
+				}
+				for (let dislike_user in answers[answer_index].rating_detail
+					.dislike_users) {
+					if (dislike_user.toString() === user._id)
+						answers[answer_index].vote = 'dislike';
+				}
+			} else answers[answer_index].vote = 'none';
 		}
 		question.answers = answers;
 		let author_data = await UserService.getUserById(question.author);
@@ -342,12 +365,80 @@ exports.getQuestionById = async (req, res) => {
 			question.rating_detail.like_users.length;
 		question.rating_detail.totalDislike =
 			question.rating_detail.dislike_users.length;
+		if (token) {
+			question.vote = 'none';
+			let user_index;
+			for (user_index=0; user_index<question.rating_detail.like_users.length;user_index++) {
+				if (question.rating_detail.like_users[user_index].toString() === user._id) question.vote = 'like';
+			}
+			for (user_index=0; user_index<question.rating_detail.dislike_users.length;user_index++) {
+				if (question.rating_detail.dislike_users[user_index].toString() === user._id) question.vote = 'dislike';
+			}
+		} else question.vote = 'none';
 		return res.json(
 			response_format.success('Get question succeed.', question)
 		);
 	} catch (error) {
 		res.status(500).json(
 			response_format.error('Oh no, something went wrong.')
+		);
+	}
+};
+exports.getQuestionByAuthorId = async (req, res) => {
+	let token = req.header('authorization');
+	if (token) {
+		if (token.startsWith('Bearer ')) {
+			token = token.slice(7, token.length);
+		} else
+			return res.json(
+				response_format.error('Token format is not right.')
+			);
+	} else {
+		return res.json(response_format.error('User must sign in.'));
+	}
+	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	try{
+		let questions = await QuestionService.getByAuthorId(req.query.page, 10, user._id);
+		let question_index;
+		// let res_questions = [];
+		for(question_index=0;question_index<questions.questions.length;question_index++){
+			let category_data = await CategoryService.getById(questions.questions[question_index].category);
+			questions.questions[question_index].category = {category_id: category_data._id, name: category_data.name, color: category_data.color};
+		}
+		return res.json(
+			response_format.success('Get questions succeed.', questions)
+		);
+	} catch (error) {
+		res.status(500).json(
+			response_format.error('Oh no, something went wrong.')
+		);
+	}
+};
+exports.likeQuestion = async (req, res) => {
+	let token = req.header('authorization');
+	if (token) {
+		if (token.startsWith('Bearer ')) {
+			token = token.slice(7, token.length);
+		} else
+			return res.json(
+				response_format.error('Token format is not right.')
+			);
+	} else {
+		return res.json(response_format.error('User must sign in.'));
+	}
+	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	try {
+		let question = await QuestionService.likeQuestion(req.body.question_id, user._id, req.body.type);
+		if (!question) return res.json(
+			response_format.error('No question exists.')
+		);
+		return res.json(
+			response_format.success('Like question succeed.', question)
+		);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json(
+			response_format.error(error.message)
 		);
 	}
 };
