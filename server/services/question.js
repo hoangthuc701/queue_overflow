@@ -50,8 +50,9 @@ class QuestionService {
 		try {
 			const result = await QuestionModel.deleteOne({ _id: question_id });
 			if (result.deletedCount > 0) {
-				await AnswerModel.deleteMany({question: question_id});
-				return true;}	
+				await AnswerModel.deleteMany({ question: question_id });
+				return true;
+			}
 			return false;
 		} catch (error) {
 			throw new Error('Cannot delete question.');
@@ -115,7 +116,7 @@ class QuestionService {
 		return { questions: questions, totalCount: count };
 	}
 	static async getByAuthorId(offset, limit, author_id) {
-		let count = await QuestionModel.countDocuments({author: author_id});
+		let count = await QuestionModel.countDocuments({ author: author_id });
 		let questions;
 		try {
 			questions = await QuestionModel.find({ author: author_id })
@@ -126,31 +127,89 @@ class QuestionService {
 		} catch (error) {
 			throw new Error('Cannot get questions.');
 		}
-		return {questions:questions, totalCount: count};
+		return { questions: questions, totalCount: count };
 	}
 	static async likeQuestion(question_id, user_id, type) {
 		let question;
+		let vote = 'none';
 		try {
 			question = await QuestionModel.findOne({ _id: question_id }).exec();
-			if (question){
+			if (question) {
 				let like_index;
-				for (like_index=0;like_index<question.rating_detail.like_users.length;like_index++){
-					if (question.rating_detail.like_users[like_index].toString()===user_id) throw new Error('You cannot like 2 times.');
-					if (question.rating_detail.dislike_users[like_index].toString()===user_id) throw new Error('You cannot dislike 2 times.');
+				let is_like = false;
+				let is_dislike = false;
+				for (
+					like_index = 0;
+					like_index < question.rating_detail.like_users.length;
+					like_index++
+				) {
+					if (
+						question.rating_detail.like_users[
+							like_index
+						].toString() === user_id
+					) {
+						is_like = true;
+						break;
+					}
 				}
-				if(parseInt(type, 10)===1){
-					question.rating_detail.like_users.push(user_id);
-					question.save();
+				for (
+					like_index = 0;
+					like_index < question.rating_detail.dislike_users.length;
+					like_index++
+				) {
+					if (
+						question.rating_detail.dislike_users[
+							like_index
+						].toString() === user_id
+					) {
+						is_dislike = true;
+						break;
+					}
 				}
-				else{
-					question.rating_detail.dislike_users.push(user_id);
-					question.save();
+				if (parseInt(type, 10) === 1) {
+					if (!is_like && !is_dislike) {
+						vote = 'like';
+						question.rating_detail.like_users.push(user_id);
+						question.save();
+					} else if (is_like) {
+						vote = 'none';
+						question.rating_detail.like_users.pull(user_id);
+						question.save();
+					} else if (is_dislike) {
+						vote = 'like';
+						question.rating_detail.dislike_users.pull(user_id);
+						question.rating_detail.like_users.push(user_id);
+						question.save();
+					}
+				} else {
+					if(!is_like&&!is_dislike){
+						vote = 'dislike';
+						question.rating_detail.dislike_users.push(user_id);
+						question.save();
+					}
+					else if(is_like){
+						vote='dislike';
+						question.rating_detail.dislike_users.push(user_id);
+						question.rating_detail.like_users.pull(user_id);
+						question.save();
+					}
+					else if(is_dislike){
+						vote='none';
+						question.rating_detail.dislike_users.pull(user_id);
+						question.save();
+					}
 				}
+			} else {
+				throw new Error('There is no question.');
 			}
 		} catch (error) {
-			throw new Error('Cannot like question.');
+			throw new Error('You can not rate.');
 		}
-		return question;
+		return {
+			totalLike: question.rating_detail.like_users.length,
+			totalDislike: question.rating_detail.dislike_users.length,
+			vote: vote,
+		};
 	}
 }
 

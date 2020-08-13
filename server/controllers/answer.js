@@ -61,3 +61,31 @@ exports.addNewAnswer = async (req, res) => {
 		);
 	}
 };
+exports.likeAnswer = async (req, res) => {
+	let token = req.header('authorization');
+	if (token) {
+		if (token.startsWith('Bearer ')) {
+			token = token.slice(7, token.length);
+		} else
+			return res.json(
+				response_format.error('Token format is not right.')
+			);
+	} else {
+		return res.json(response_format.error('User must sign in.'));
+	}
+	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	try {
+		let answer = await AnswerService.likeAnswer(req.body.answer_id, user._id, req.body.type);
+		if (!answer) return res.json(
+			response_format.error('No answer exists.')
+		);
+		return res.json(
+			response_format.success('Like answer succeed.', answer)
+		);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json(
+			response_format.error(error.message)
+		);
+	}
+};

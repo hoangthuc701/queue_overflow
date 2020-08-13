@@ -24,6 +24,69 @@ class AnswerService {
 		}
 		return answers;
 	}
+	static async likeAnswer(answer_id, user_id, type) {
+		let answer;
+		let vote='none';
+		try {
+			answer = await AnswerModel.findOne({ _id: answer_id }).exec();
+			if (answer){
+				let like_index;
+				let is_like = false;
+				let is_dislike = false;
+				for (like_index=0;like_index<answer.rating_detail.like_users.length;like_index++){
+					if (answer.rating_detail.like_users[like_index].toString()===user_id) {
+						is_like = true;
+						break;
+					}
+				}
+				for(like_index=0;like_index<answer.rating_detail.dislike_users.length;like_index++){
+					if (answer.rating_detail.dislike_users[like_index].toString()===user_id){
+						is_dislike = true;
+						break;
+					}
+				}
+				if (parseInt(type, 10) === 1) {
+					if (!is_like && !is_dislike) {
+						vote = 'like';
+						answer.rating_detail.like_users.push(user_id);
+						answer.save();
+					} else if (is_like) {
+						vote = 'none';
+						answer.rating_detail.like_users.pull(user_id);
+						answer.save();
+					} else if (is_dislike) {
+						vote = 'like';
+						answer.rating_detail.dislike_users.pull(user_id);
+						answer.rating_detail.like_users.push(user_id);
+						answer.save();
+					}
+				} else {
+					if(!is_like&&!is_dislike){
+						vote = 'dislike';
+						answer.rating_detail.dislike_users.push(user_id);
+						answer.save();
+					}
+					else if(is_like){
+						vote='dislike';
+						answer.rating_detail.dislike_users.push(user_id);
+						answer.rating_detail.like_users.pull(user_id);
+						answer.save();
+					}
+					else if(is_dislike){
+						vote='none';
+						answer.rating_detail.dislike_users.pull(user_id);
+						answer.save();
+					}
+				}
+			}
+			else{
+				throw new Error('Threr is no answer.');
+			}
+		} catch (error) {
+			throw new Error('You can not rate.');
+		}
+		return {totalLike: answer.rating_detail.like_users.length, totalDislike: answer.rating_detail.dislike_users.length,vote: vote};
+	}
 }
 
 module.exports = AnswerService;

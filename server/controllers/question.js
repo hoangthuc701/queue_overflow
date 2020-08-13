@@ -430,7 +430,7 @@ exports.likeQuestion = async (req, res) => {
 	try {
 		let question = await QuestionService.likeQuestion(req.body.question_id, user._id, req.body.type);
 		if (!question) return res.json(
-			response_format.success('No question exists.', question)
+			response_format.error('No question exists.')
 		);
 		return res.json(
 			response_format.success('Like question succeed.', question)
