@@ -12,6 +12,7 @@ import HomePage from './pages/Home';
 import SignInPage from './pages/SignIn';
 import NotFoundPage from './pages/NotFound';
 import SignUpPage from './pages/SignUp';
+import ProfileSetting from './pages/ProfileSetting';
 import TestSite from './pages/Test';
 
 class App extends Component {
@@ -43,6 +44,8 @@ class App extends Component {
             <Route exact path="/" component={HomePage} />
             <Route exact path="/signin" component={SignInPage} />
             <Route exact path="/signup" component={SignUpPage} />
+            <Route exact path="/profile" component={ProfileSetting} />
+            <Route exact path="/profile/:user_id" component={ProfileSetting} />
             <PrivateRoute exact path="/test" component={TestSite} />
             <Route component={NotFoundPage} />
           </Switch>
