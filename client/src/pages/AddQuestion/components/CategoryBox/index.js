@@ -13,7 +13,9 @@ class CategoryBox extends Component {
 
   componentDidMount() {
     CategoryService.getCategory().then((data) => {
-      this.setState({ list: data.data });
+      if (data.data) {
+        this.setState({ list: data.data });
+      }
     });
   }
 

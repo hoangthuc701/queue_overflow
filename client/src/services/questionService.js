@@ -42,6 +42,44 @@ class QuestionService {
     const data = await res.json();
     return data;
   }
+
+  // eslint-disable-next-line no-unused-vars
+  static async getDetailQuestion(questionId) {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      // x: quesitionId,
+    };
+
+    const res = await fetch(
+      `https://run.mocky.io/v3/31cd9c28-3bd4-4e08-bfe4-f14a8bd46d4a`,
+      requestOptions
+    );
+    const data = await res.json();
+    return data;
+  }
+
+  static async LikeQuestion(quesitionId) {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
+
+    const res = await fetch(`${quesitionId}`, requestOptions);
+    const data = await res.json();
+    return data;
+  }
+
+  static async DislikeQuestion(quesitionId) {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
+
+    const res = await fetch(`${quesitionId}`, requestOptions);
+    const data = await res.json();
+    return data;
+  }
 }
 
 export default QuestionService;
