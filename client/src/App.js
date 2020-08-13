@@ -14,6 +14,7 @@ import NotFoundPage from './pages/NotFound';
 import SignUpPage from './pages/SignUp';
 import TestSite from './pages/Test';
 import AddQuestionPage from './pages/AddQuestion';
+import QuestionDetail from './pages/QuestionDetail';
 
 class App extends Component {
   renderHeader = () => <Header />;
@@ -44,10 +45,11 @@ class App extends Component {
             <Route exact path="/" component={HomePage} />
             <Route exact path="/signin" component={SignInPage} />
             <Route exact path="/signup" component={SignUpPage} />
-            <PrivateRoute
+            <Route exact path="/question/add" component={AddQuestionPage} />
+            <Route
               exact
-              path="/question/add"
-              component={AddQuestionPage}
+              path="/question/:questionId"
+              component={QuestionDetail}
             />
             <PrivateRoute exact path="/test" component={TestSite} />
             <Route component={NotFoundPage} />

@@ -33,6 +33,12 @@ export const authenticate = (token, next) => {
     next();
   }
 };
+
+export const isAuthor = (userId) => {
+  const currentUser = getUser();
+  // eslint-disable-next-line no-underscore-dangle
+  return currentUser._id === userId;
+};
 export const signout = (next) => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('token');
