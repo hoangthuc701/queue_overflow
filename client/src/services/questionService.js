@@ -42,6 +42,7 @@ class QuestionService {
     const data = await res.json();
     return data;
   }
+
   static async getListQuestion(page, filter) {
     const requestOptions = {
       method: 'GET',

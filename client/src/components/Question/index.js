@@ -1,8 +1,57 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './index.css';
 
 const Question = (props) => {
   const { title } = props;
+  let bestAnswered;
+  let totalAnswer;
+  let avatar;
+  if (title.best_answer) {
+    bestAnswered = (
+      <p
+        className="fas fa-check"
+        style={{ fontSize: '300%', color: '#4cf760' }}
+      />
+    );
+  }
+  if (title.answers.length) {
+    totalAnswer = (
+      <p>
+        <b style={{ color: '#bdbdbd' }}>{title.answers.length} answers</b>
+      </p>
+    );
+  } else {
+    totalAnswer = (
+      <p>
+        <b style={{ color: '#bdbdbd' }}>No answers</b>
+      </p>
+    );
+  }
+  if (title.author.avatar) {
+    avatar = (
+      <img
+        src={title.author.avatar}
+        className="rounded-circle"
+        alt="Cinque Terre"
+        width={50}
+        height={50}
+      />
+    );
+  } else {
+    avatar = (
+      <img
+        src="https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/86811916/original/5d2499b138522f3486159269b72ca2c7d5ea86f1/illustrate-an-amazing-flat-avatar-for-you.jpg"
+        className="rounded-circle"
+        alt="Cinque Terre"
+        width={50}
+        height={50}
+      />
+    );
+  }
+  const point =
+    title.rating_detail.totalLike - title.rating_detail.totalDislike;
+
   return (
     <div>
       <div>
@@ -12,22 +61,17 @@ const Question = (props) => {
             <hr />
             <div className="row">
               <div className="col-sm-2 align-self-center text-center">
-                <p
-                  className="fas fa-check"
-                  style={{ fontSize: '300%', color: '#4cf760' }}
-                />
-                <p>
-                  <b style={{ color: '#bdbdbd' }}>title.answered answers</b>
-                </p>
+                {bestAnswered}
+                {totalAnswer}
               </div>
               <div className="col-sm-10">
-                <text>Created title.created</text>
+                <p>Created {title.created_time}</p>
                 <div className="card">
                   <div className="card-header">
                     <div className="row">
                       <div className="col-sm-6 col align-self-center">
                         <a href style={{ color: 'black' }}>
-                          <h3>title.titles</h3>
+                          <h3>{title.title}</h3>
                         </a>
                       </div>
                       <div className="col-sm-6">
@@ -41,7 +85,7 @@ const Question = (props) => {
                                 borderColor: '#f44336',
                               }}
                             >
-                              title.category
+                              {title.category.name}
                             </a>
                           </h5>
                         </div>
@@ -49,7 +93,7 @@ const Question = (props) => {
                           className="text-right"
                           style={{ marginTop: '0.5em' }}
                         >
-                          {/* {title.TAG.map((tag) => (
+                          {title.tags.map((tag) => (
                             <a
                               href
                               className="badge badge-secondary"
@@ -57,34 +101,29 @@ const Question = (props) => {
                                 backgroundColor: '#03a9f4',
                                 borderColor: '#03a9f4',
                               }}
-                              key={tag.toString()}
+                              key={tag.tag_id}
                             >
-                              {tag}
+                              {tag.name}
                             </a>
-                          ))} */}
+                          ))}
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="card-body">
-                    <p className="card-text">title.content</p>
+                    <p className="card-text">{title.content}</p>
                     <a href className="float-right">
-                      <img
-                        src="title.avartar"
-                        className="rounded-circle"
-                        alt="Cinque Terre"
-                        width={50}
-                        height={50}
-                      />
+                      {avatar}
                       <b style={{ color: 'black', fontSize: '120%' }}>
-                        title.name
+                        {title.author.display_name}
                       </b>
                     </a>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span style={{ fontSize: '200%' }}>title.like</span>
-                  <a
+                  <span style={{ fontSize: '200%' }}>{point}</span>
+                  <h5>Votes</h5>
+                  {/* <a
                     href
                     className="fas fa-chevron-up"
                     style={{
@@ -105,7 +144,7 @@ const Question = (props) => {
                     }}
                   >
                     {' '}
-                  </a>
+                  </a> */}
                 </div>
               </div>
             </div>
@@ -118,7 +157,7 @@ const Question = (props) => {
 };
 
 Question.propTypes = {
-  plainObj: PropTypes.shape({ subProp: PropTypes.string })
+  plainObj: PropTypes.shape({ subProp: PropTypes.string }),
 };
 Question.defaultProps = {
   title: {},

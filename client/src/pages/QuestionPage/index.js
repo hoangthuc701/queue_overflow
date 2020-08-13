@@ -2,22 +2,38 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import questionAction from '../../actions/question';
 import Question from '../../components/Question';
+import './index.css';
 
 const QuestionPage = () => {
+  const Newest = 'newest';
+  const Oldest = 'oldest';
+  const Category = 'category';
   const dispatch = useDispatch();
   const questionComponent = (title) => <Question title={title} />;
   useEffect(() => {
     dispatch(questionAction.questionList());
   }, []);
-  const { questionlist } = useSelector((state) => state.questionList);
+  const { questionlist, getting } = useSelector((state) => state.questionList);
   let questionitem;
   if (questionlist.questions) {
     questionitem = questionlist.questions.map((e) => {
       return <div key={e._id}>{questionComponent(e)}</div>;
     });
-  } else {
-    questionitem = 'LOADING....';
   }
+  //EVENT BUTTON
+  function onClickfilter(filby) {
+    if (filby.Newest === Newest) {
+      dispatch(questionAction.questionList());
+    } else if (filby.Oldest === Oldest) {
+      dispatch(questionAction.questionList(1, Oldest));
+    } else if (filby.Category === Category) {
+      dispatch(questionAction.questionList(1, Category));
+    }
+  }
+  if (getting) {
+    questionitem = <div className="loader"></div>;
+  }
+
   return (
     <div
       className="container-fluid"
@@ -38,6 +54,7 @@ const QuestionPage = () => {
                   color: '#424242',
                   borderColor: '#bdbdbd',
                 }}
+                onClick={() => onClickfilter({ Newest })}
               >
                 Newset
               </button>
@@ -49,6 +66,7 @@ const QuestionPage = () => {
                   color: '#424242',
                   borderColor: '#bdbdbd',
                 }}
+                onClick={() => onClickfilter({ Oldest })}
               >
                 Oldest
               </button>
@@ -60,19 +78,9 @@ const QuestionPage = () => {
                   color: '#424242',
                   borderColor: '#bdbdbd',
                 }}
+                onClick={() => onClickfilter({ Category })}
               >
                 Category
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                style={{
-                  backgroundColor: '#e0e0e0',
-                  color: '#424242',
-                  borderColor: '#bdbdbd',
-                }}
-              >
-                Tag
               </button>
             </div>
             <button

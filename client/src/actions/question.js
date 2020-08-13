@@ -16,10 +16,8 @@ function questionList(page = 1, filter = 'newest') {
     const values = await questionService.getListQuestion(page, filter);
     if (values.message) {
       dispatch(successList(values.data));
-    }
-    else {
-
-        dispatch(failureList());
+    } else {
+      dispatch(failureList());
     }
   };
 }
