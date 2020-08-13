@@ -14,7 +14,7 @@ class AnswerService {
 	static async getByQuestionId(question_id) {
 		let answers;
 		try {
-			answers = AnswerModel.find({ question: question_id }).exec();
+			answers = AnswerModel.find({ question: question_id }).lean().exec();
 		} catch (error) {
 			throw new Error('Cannot get answers for this question.');
 		}
