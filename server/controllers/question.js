@@ -2,9 +2,11 @@ require('dotenv').config();
 const QuestionService = require('../services/question');
 const TagService = require('../services/tag');
 const CategoryService = require('../services/category');
+const UserService = require('../services/user');
 const jwt = require('jsonwebtoken');
 
 const response_format = require('../util/response_format');
+const AnswerService = require('../services/answer');
 exports.addNewQuestion = async (req, res) => {
 	let token = req.header('authorization');
 	if (token) {
@@ -236,21 +238,112 @@ exports.getQuestions = async (req, res) => {
 			req.query.filter
 		);
 		let questions_index;
-		for (questions_index=0;questions_index<questions.questions.length;questions_index++){
+		for (
+			questions_index = 0;
+			questions_index < questions.questions.length;
+			questions_index++
+		) {
 			let tags_index;
-			let tags_data=[];
+			let tags_data = [];
 			let tag_data;
-			for (tags_index=0;tags_index<questions.questions[questions_index].tags.length;tags_index++){
-				tag_data = await TagService.getById({tag_id: questions.questions[questions_index].tags[tags_index]});
-				tags_data.push({tag_id: tag_data._id, name: tag_data.name});
+			for (
+				tags_index = 0;
+				tags_index < questions.questions[questions_index].tags.length;
+				tags_index++
+			) {
+				tag_data = await TagService.getById({
+					tag_id:
+						questions.questions[questions_index].tags[tags_index],
+				});
+				tags_data.push({ tag_id: tag_data._id, name: tag_data.name });
 			}
 			questions.questions[questions_index].tags = tags_data;
-			let category_data = await CategoryService.getById(questions.questions[questions_index].category);
-			let res_category = {category_id: category_data[0]._id, name: category_data[0].name, color: category_data[0].color};
+			let category_data = await CategoryService.getById(
+				questions.questions[questions_index].category
+			);
+			let res_category = {
+				category_id: category_data._id,
+				name: category_data.name,
+				color: category_data.color,
+			};
 			questions.questions[questions_index].category = res_category;
+			let user_data = await UserService.getUserById(
+				questions.questions[questions_index].author
+			);
+			let res_author = {
+				author_id: user_data._id,
+				display_name: user_data.display_name,
+				avatar: user_data.avatar,
+			};
+			questions.questions[questions_index].author = res_author;
+			questions.questions[questions_index].rating_detail.totalLike =
+				questions.questions[
+					questions_index
+				].rating_detail.like_users.length;
+			questions.questions[questions_index].rating_detail.totalDislike =
+				questions.questions[
+					questions_index
+				].rating_detail.dislike_users.length;
 		}
 		return res.json(
 			response_format.success('Get question succeed.', questions)
+		);
+	} catch (error) {
+		res.status(500).json(
+			response_format.error('Oh no, something went wrong.')
+		);
+	}
+};
+exports.getQuestionById = async (req, res) => {
+	let question;
+	let answers;
+	try {
+		question = await QuestionService.getById(req.params.question_id);
+		answers = await AnswerService.getByQuestionId(req.params.question_id);
+		let answer_index;
+		for (answer_index = 0; answer_index < answers.length; answer_index++) {
+			let author_data = await UserService.getUserById(
+				answers[answer_index].author
+			);
+			console.log(author_data);
+			answers[answer_index].author = {
+				author_id: author_data._id,
+				name: author_data.display_name,
+				avatar: author_data.avatar,
+			};
+			answers[answer_index].rating_detail.totalLike =
+				answers[answer_index].rating_detail.like_users.length;
+			answers[answer_index].rating_detail.totalDislike =
+				answers[answer_index].rating_detail.dislike_users.length;
+		}
+		question.answers = answers;
+		let author_data = await UserService.getUserById(question.author);
+		question.author = {
+			author_id: author_data._id,
+			name: author_data.display_name,
+			avatar: author_data.avatar,
+		};
+		let category_data = await CategoryService.getById(question.category);
+		question.category = {
+			category_id: category_data._id,
+			name: category_data.name,
+			color: category_data.color,
+		};
+		let tags_data = [];
+		let tag_index;
+		for (tag_index = 0; tag_index < question.tags.length; tag_index++) {
+			let tag_data = await TagService.getById({
+				tag_id: question.tags[tag_index],
+			});
+			tags_data.push({ tag_id: tag_data._id, name: tag_data.name });
+		}
+		question.tags = tags_data;
+		question.rating_detail.totalLike =
+			question.rating_detail.like_users.length;
+		question.rating_detail.totalDislike =
+			question.rating_detail.dislike_users.length;
+		return res.json(
+			response_format.success('Get question succeed.', question)
 		);
 	} catch (error) {
 		res.status(500).json(
