@@ -7,9 +7,11 @@ const Question = (props) => {
   const { title } = props;
   const linkTitle = '/question/add';
   const linkUser = '/question/add';
-
+  const { color } = title.category;
   const point =
     title.rating_detail.totalLike - title.rating_detail.totalDislike;
+  const headerCard = '#e1f2fb';
+  const bodyCard = '#f1f9f9';
   const bestAnswered = title.best_answer ? (
     <p
       className="fas fa-check"
@@ -34,8 +36,8 @@ const Question = (props) => {
       src={title.author.avatar}
       className="rounded-circle"
       alt="Cinque Terre"
-      width={50}
-      height={50}
+      width={200}
+      height={2000}
     />
   ) : (
     <img
@@ -63,11 +65,14 @@ const Question = (props) => {
               <div className="col-sm-10">
                 <p>Created {title.created_time}</p>
                 <div className="card">
-                  <div className="card-header">
+                  <div
+                    className="card-header"
+                    style={{ backgroundColor: headerCard }}
+                  >
                     <div className="row">
                       <div className="col-sm-8 col align-self-center">
                         <Link to={linkTitle} style={{ color: 'black' }}>
-                          <h3 className="effect-shine">{title.title}</h3>
+                          <h5 className="effect-shine">{title.title}</h5>
                         </Link>
                       </div>
                       <div className="col-sm-4">
@@ -77,8 +82,9 @@ const Question = (props) => {
                               href
                               className="badge badge-danger"
                               style={{
-                                backgroundColor: '#f44336',
-                                borderColor: '#f44336',
+                                backgroundColor: color,
+                                borderColor: '#ffffff',
+                                color: '#ffffff',
                               }}
                             >
                               {title.category.name}
@@ -95,6 +101,7 @@ const Question = (props) => {
                           style={{
                             backgroundColor: '#03a9f4',
                             borderColor: '#03a9f4',
+                            color: '#ffffff',
                           }}
                           key={tag.tag_id}
                         >
@@ -103,13 +110,22 @@ const Question = (props) => {
                       ))}
                     </div>
                   </div>
-                  <div className="card-body">
+                  <div
+                    className="card-body"
+                    style={{ backgroundColor: bodyCard }}
+                  >
                     <p className="card-text">{title.content}</p>
                     <Link to={linkUser} className="float-right">
-                      {avatar}
-                      <b style={{ color: 'black', fontSize: '120%' }}>
-                        {title.author.display_name}
-                      </b>
+                      <div className="row">
+                        <div className="col-4">
+                          <figure>{avatar}</figure>
+                        </div>
+                        <div className="col-8 d-flex align-items-center">
+                          <b style={{ color: 'black', fontSize: '75%' }}>
+                            {title.author.display_name}
+                          </b>
+                        </div>
+                      </div>
                     </Link>
                   </div>
                 </div>
