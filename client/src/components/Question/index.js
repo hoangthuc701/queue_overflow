@@ -4,51 +4,42 @@ import './index.css';
 
 const Question = (props) => {
   const { title } = props;
-  let bestAnswered;
-  let totalAnswer;
-  let avatar;
-  if (title.best_answer) {
-    bestAnswered = (
-      <p
-        className="fas fa-check"
-        style={{ fontSize: '300%', color: '#4cf760' }}
-      />
-    );
-  }
-  if (title.answers.length) {
-    totalAnswer = (
-      <p>
-        <b style={{ color: '#bdbdbd' }}>{title.answers.length} answers</b>
-      </p>
-    );
-  } else {
-    totalAnswer = (
-      <p>
-        <b style={{ color: '#bdbdbd' }}>No answers</b>
-      </p>
-    );
-  }
-  if (title.author.avatar) {
-    avatar = (
-      <img
-        src={title.author.avatar}
-        className="rounded-circle"
-        alt="Cinque Terre"
-        width={50}
-        height={50}
-      />
-    );
-  } else {
-    avatar = (
-      <img
-        src="https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/86811916/original/5d2499b138522f3486159269b72ca2c7d5ea86f1/illustrate-an-amazing-flat-avatar-for-you.jpg"
-        className="rounded-circle"
-        alt="Cinque Terre"
-        width={50}
-        height={50}
-      />
-    );
-  }
+  const bestAnswered = title.best_answer ? (
+    <p
+      className="fas fa-check"
+      style={{ fontSize: '300%', color: '#4cf760' }}
+    />
+  ) : (
+    <div />
+  );
+
+  const totalAnswer = title.answers.length ? (
+    <p>
+      <b style={{ color: '#bdbdbd' }}>{title.answers.length} answers</b>
+    </p>
+  ) : (
+    <p>
+      <b style={{ color: '#bdbdbd' }}>No answers</b>
+    </p>
+  );
+
+  const avatar = title.author.avatar ? (
+    <img
+      src={title.author.avatar}
+      className="rounded-circle"
+      alt="Cinque Terre"
+      width={50}
+      height={50}
+    />
+  ) : (
+    <img
+      src="https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/86811916/original/5d2499b138522f3486159269b72ca2c7d5ea86f1/illustrate-an-amazing-flat-avatar-for-you.jpg"
+      className="rounded-circle"
+      alt="Cinque Terre"
+      width={50}
+      height={50}
+    />
+  );
   const point =
     title.rating_detail.totalLike - title.rating_detail.totalDislike;
 
@@ -123,28 +114,6 @@ const Question = (props) => {
                 <div className="text-right">
                   <span style={{ fontSize: '200%' }}>{point}</span>
                   <h5>Votes</h5>
-                  {/* <a
-                    href
-                    className="fas fa-chevron-up"
-                    style={{
-                      fontSize: '200%',
-                      marginLeft: '0.5em',
-                      color: 'black',
-                    }}
-                  >
-                    {' '}
-                  </a>
-                  <a
-                    href
-                    className="fas fa-chevron-down"
-                    style={{
-                      fontSize: '200%',
-                      marginLeft: '0.2em',
-                      color: 'black',
-                    }}
-                  >
-                    {' '}
-                  </a> */}
                 </div>
               </div>
             </div>

@@ -11,6 +11,17 @@ const QuestionPage = () => {
   const Category = 'category';
   const dispatch = useDispatch();
   const questionComponent = (title) => <Question title={title} />;
+  const paginationComponent = (perPage, questionlist, paginate) => {
+    return (
+      <div className="d-flex justify-content-center">
+        <Pagination
+          postsPerPage={perPage}
+          totalPosts={questionlist.totalCount}
+          paginate={paginate}
+        />
+      </div>
+    );
+  };
   const perPage = 10;
   const [flagCate, setflagCate] = useState(Newest);
   useEffect(() => {
@@ -18,10 +29,17 @@ const QuestionPage = () => {
   }, []);
   const { questionlist, getting } = useSelector((state) => state.questionList);
   let questionitem;
+  let pageItems;
+  // PAGINATION
+  const paginate = (pageNumber) => {
+    console.log('TEST TEST', flagCate);
+    dispatch(questionAction.questionList(pageNumber, flagCate));
+  };
   if (questionlist.questions) {
     questionitem = questionlist.questions.map((e) => {
       return <div key={e}>{questionComponent(e)}</div>;
     });
+    pageItems = paginationComponent(perPage, questionlist, paginate);
   }
   // EVENT BUTTON
   function onClickfilter(filby) {
@@ -34,13 +52,9 @@ const QuestionPage = () => {
       dispatch(questionAction.questionList(1, Category));
     }
   }
-  // PAGINATION
-  const paginate = (pageNumber) => {
-    console.log('TEST TEST', flagCate);
-    dispatch(questionAction.questionList(pageNumber, flagCate));
-  };
   if (getting) {
     questionitem = <div className="loader" />;
+    pageItems = <div />;
   }
 
   return (
@@ -104,13 +118,7 @@ const QuestionPage = () => {
         <div className="col-sm-2"> </div>
       </div>
       {questionitem}
-      <div className="d-flex justify-content-center">
-        <Pagination
-          postsPerPage={perPage}
-          totalPosts={questionlist.totalCount}
-          paginate={paginate}
-        />
-      </div>
+      {pageItems}
     </div>
   );
 };
