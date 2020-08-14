@@ -50,9 +50,9 @@ class AddQuestionPage extends Component {
     const { title, category, tags, content } = this.state;
     const error = CreateNewValidator(title, content, category);
     this.setState({ errors: error });
-    //if (Object.keys(error).length > 0) return;
-    QuestionService.createNewQuestion(title, category, content, tags).then(
-      (data) => {
+    if (Object.keys(error).length > 0) return;
+    QuestionService.createNewQuestion(title, category, content, tags)
+      .then((data) => {
         if (data.error) {
           toast.error(data.error);
         } else {
@@ -61,8 +61,10 @@ class AddQuestionPage extends Component {
           // eslint-disable-next-line no-underscore-dangle
           history.push(`/question/${data.data._id}`);
         }
-      }
-    );
+      })
+      .catch((err) => {
+        toast.warn(err);
+      });
   };
 
   render() {

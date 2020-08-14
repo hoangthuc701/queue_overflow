@@ -39,6 +39,8 @@ class CategoryBox extends Component {
           id="category"
           onBlur={(e) => this.handleChange(e.target.name, e.target.value)}
         >
+          <option value=""> </option>
+
           {list.map((category) => {
             return (
               // eslint-disable-next-line no-underscore-dangle

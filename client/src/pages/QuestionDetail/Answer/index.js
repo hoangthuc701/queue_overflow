@@ -2,54 +2,34 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
+import { bindActionCreators } from 'redux';
 
 import Markdown from '../MarkDown';
 import { isAuthor } from '../../../helper/auth';
 import formatDate from '../../../helper/formatDate';
 
-import questionAction from '../../../actions/question';
+import answerAction from '../../../actions/answer';
 import modalAction from '../../../actions/modal';
 
-class Question extends Component {
-  componentDidMount() {
-    // eslint-disable-next-line react/prop-types
-    const { match } = this.props;
-    // eslint-disable-next-line react/prop-types
-    const { questionId } = match.params;
-    const { QuestionActionCreators } = this.props;
-    QuestionActionCreators.getQuestionDetail(questionId);
-  }
-
+class Answer extends Component {
   handleDelete = () => {
     const { ModelActionCreators } = this.props;
-    // eslint-disable-next-line react/prop-types
-    const { match } = this.props;
-    // eslint-disable-next-line react/prop-types
-    const { questionId } = match.params;
+    const answerId = this.props;
     ModelActionCreators.showModal(
       'Alert',
-      'Do you want to delete this question?',
-      'question',
-      questionId
+      'Do you want to delete this answer?',
+      'answer',
+      answerId
     );
   };
 
   renderManager = () => {
     return (
       <>
-        <Link to="/">
-          <span style={{ fontSize: '150%' }}>Edit</span>
-          <span
-            className="fas fa-pen"
-            style={{
-              fontSize: '150%',
-              marginLeft: '0.5em',
-              marginTop: '0.5em',
-              color: 'black',
-            }}
-          />
-        </Link>
+        <button className="btn btn-success" type="button">
+          {' '}
+          Mark as best answer
+        </button>
         <span role="presentation" onClick={this.handleDelete}>
           <span style={{ fontSize: '150%', marginLeft: '2em' }}>Delete</span>
           <span
@@ -66,54 +46,14 @@ class Question extends Component {
     );
   };
 
-  handleLike = (questionId) => {
-    const { QuestionActionCreators } = this.props;
-    QuestionActionCreators.LikeQuestion(questionId);
+  handleLike = (answerId) => {
+    const { AnswerActionCreators } = this.props;
+    AnswerActionCreators.LikeAnswer(answerId);
   };
 
-  handleDislike = (questionId) => {
-    const { QuestionActionCreators } = this.props;
-    QuestionActionCreators.DislikeQuestion(questionId);
-  };
-
-  renderTags = () => {
-    const { tags } = this.props;
-    return tags.map((tag) => {
-      return (
-        <Link
-          className="badge badge-secondary"
-          key={tag.tag_id}
-          style={{
-            backgroundColor: '#03a9f4',
-            borderColor: '#03a9f4',
-            marginLeft: '2px',
-          }}
-          to={`/tags/${tag.tag_id}`}
-        >
-          {tag.name}
-        </Link>
-      );
-    });
-  };
-
-  renderCategory = () => {
-    const { category } = this.props;
-    return (
-      <div className="text-right">
-        <h5>
-          <Link
-            to="/"
-            className="badge badge-danger"
-            style={{
-              backgroundColor: `${category.color}`,
-              borderColor: `${category.color}`,
-            }}
-          >
-            {category.name}
-          </Link>
-        </h5>
-      </div>
-    );
+  handleDislike = (answerId) => {
+    const { AnswerActionCreators } = this.props;
+    AnswerActionCreators.DislikeAnswer(answerId);
   };
 
   renderAuthor = () => {
@@ -136,11 +76,11 @@ class Question extends Component {
   };
 
   renderLikeButton = () => {
-    const { vote, questionId } = this.props;
+    const { vote, answerId } = this.props;
     return (
       <span
         role="presentation"
-        onClick={this.handleLike.bind(this, questionId)}
+        onClick={this.handleLike.bind(this, answerId)}
         className={`fas fa-chevron-up ${vote === 'like' ? 'active-like' : ' '}`}
         style={{
           fontSize: '200%',
@@ -153,11 +93,11 @@ class Question extends Component {
   };
 
   renderDisLikeButton = () => {
-    const { vote, questionId } = this.props;
+    const { vote, answerId } = this.props;
     return (
       <span
         role="presentation"
-        onClick={this.handleDislike.bind(this, questionId)}
+        onClick={this.handleDislike.bind(this, answerId)}
         className={`fas fa-chevron-down ${
           vote === 'dislike' ? 'active-dislike' : ' '
         }`}
@@ -171,7 +111,6 @@ class Question extends Component {
 
   render() {
     const {
-      title,
       content,
       author,
       // eslint-disable-next-line camelcase
@@ -182,22 +121,16 @@ class Question extends Component {
     const score = totalLike - totalDislike;
     const authorId = author.author_id;
     return (
-      <div className="row">
+      <div className="row mt-3">
         <div className="col-sm-2"> </div>
         <div className="col-sm-8">
           <div className="row">
-            <div className="col-sm-6 align-self-end">
-              <h1>{title}</h1>
-            </div>
-            <div className="col-sm-6 align-self-end">
-              {this.renderCategory()}
-            </div>
+            <div className="col-sm-6 align-self-end"> </div>
+            <div className="col-sm-6 align-self-end"> </div>
           </div>
           <hr style={{ marginTop: '-0.25em' }} />
-          <span>Created {formatDate(created_time)}</span>
-          <span style={{ marginLeft: '1em' }}>{this.renderTags()}</span>
           <div className="row">
-            <div className="col-sm-6"> </div>
+            <div className="col-sm-6"> Created {formatDate(created_time)} </div>
             <div className="col-sm-6 text-right">
               <span style={{ marginRight: '1em' }}>Edited 28/07/2020</span>
             </div>
@@ -227,38 +160,21 @@ class Question extends Component {
   }
 }
 
-Question.propTypes = {
-  title: PropTypes.string.isRequired,
+Answer.propTypes = {
   content: PropTypes.string.isRequired,
   author: PropTypes.objectOf(PropTypes.string).isRequired,
-  tags: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string)).isRequired,
-  category: PropTypes.objectOf(PropTypes.string).isRequired,
   vote: PropTypes.string.isRequired,
   totalLike: PropTypes.number.isRequired,
-  questionId: PropTypes.string.isRequired,
+  answerId: PropTypes.string.isRequired,
   totalDislike: PropTypes.number.isRequired,
   created_time: PropTypes.string.isRequired,
-  QuestionActionCreators: PropTypes.objectOf().isRequired,
+  AnswerActionCreators: PropTypes.objectOf().isRequired,
   ModelActionCreators: PropTypes.objectOf().isRequired,
 };
-const mapStateToProps = (state) => ({
-  title: state.question.title,
-  content: state.question.content,
-  author: state.question.author,
-  tags: state.question.tags,
-  category: state.question.category,
-  vote: state.question.vote,
-  created_time: state.question.created_time,
-  totalLike: state.question.rating_detail.totalLike,
-  totalDislike: state.question.rating_detail.totalDislike,
-  // eslint-disable-next-line no-underscore-dangle
-  questionId: state.question._id,
-});
+
 const mapDispatchToProps = (dispatch) => ({
-  QuestionActionCreators: bindActionCreators(questionAction, dispatch),
+  AnswerActionCreators: bindActionCreators(answerAction, dispatch),
   ModelActionCreators: bindActionCreators(modalAction, dispatch),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
-
-export default compose(withConnect, withRouter)(Question);
+export default connect(null, mapDispatchToProps)(withRouter(Answer));

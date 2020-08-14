@@ -55,7 +55,7 @@ function DislikeQuestion(questionId) {
   }
   return async (dispatch) => {
     dispatch(request());
-    const data = await QuestionService.LikeQuestion(questionId);
+    const data = await QuestionService.DislikeQuestion(questionId);
     if (!data.error) {
       dispatch(success(data.data));
     } else {
@@ -63,11 +63,33 @@ function DislikeQuestion(questionId) {
     }
   };
 }
+function DeleteQuestion(questionId) {
+  function request() {
+    return { type: questionConstants.DELETE_QUESTION_REQUEST };
+  }
+  function success(data) {
+    return { type: questionConstants.DELETE_QUESTION_SUCCESS, data };
+  }
+  function failure(error) {
+    return { type: questionConstants.DELETE_QUESTION_FAILURE, error };
+  }
+  return async (dispatch) => {
+    dispatch(request());
+    const data = await QuestionService.deleteQuestion(questionId);
+    if (!data.error) {
+      dispatch(success(data.data));
+      return true;
+    }
+    dispatch(failure(data.error));
+    return false;
+  };
+}
 
 const questionActions = {
   getQuestionDetail,
   LikeQuestion,
   DislikeQuestion,
+  DeleteQuestion,
 };
 
 export default questionActions;

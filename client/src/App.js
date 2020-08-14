@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
+import Modal from './components/Model';
 
 import HomePage from './pages/Home';
 import SignInPage from './pages/SignIn';
@@ -35,10 +36,13 @@ class App extends Component {
 
   renderFooter = () => <Footer />;
 
+  renderModal = () => <Modal />;
+
   render() {
     return (
       <BrowserRouter>
         {this.renderToastMessage()}
+        {this.renderModal()}
         {this.renderHeader()}
         <div className="container" id="content">
           <Switch>
