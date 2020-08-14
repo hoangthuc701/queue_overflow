@@ -1,4 +1,3 @@
-import './index.css';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams, Redirect } from 'react-router-dom';
@@ -7,6 +6,7 @@ import QuestionManagement from './components/QuestionManagement';
 import Setting from './components/Setting';
 import userActions from '../../actions/profileSetting';
 import { getUser } from '../../helper/auth';
+import './index.css';
 
 const ProfileSetting = () => {
   const dispatch = useDispatch();

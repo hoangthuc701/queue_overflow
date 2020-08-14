@@ -1,32 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const Question = ({ title, time, category }) => {
   return (
     <>
-      <tr>
-        <td>
+      <tr className="row">
+        <td className="col-7">
           <Link
             to="/"
             className="question_info"
             style={{ wordWrap: 'break-word' }}
           >
             <h4 className="question">{title}</h4>
+            <div style={{ color: 'black' }}>{time}</div>
           </Link>
-          {time}
         </td>
-        <td>
-          <h5>
-            <Link to className="badge badge-warning">
+        <td className="col-3 d-flex justify-content-center">
+          <h4>
+            <Link to="/" className="badge badge-warning p-2">
               {category}
             </Link>
-          </h5>
+          </h4>
         </td>
         <td>
-          <Link to="/" className="mr-2">
+          <Link to="/" className="mr-4 col-1">
             <img src="https://i.ibb.co/RNWjm8H/pencil.png" alt="" />
           </Link>
-          <Link to="/">
+          <Link to="/" className="col-1">
             <img src="https://i.ibb.co/hgYsCP1/delete.png" alt="" />
           </Link>
         </td>

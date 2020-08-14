@@ -36,18 +36,19 @@ const QuestionManagement = () => {
     <div className="tab-pane" role="tabpanel" id="menu2">
       <table className="table table-borderless table-hover">
         <thead>
-          <tr>
-            <th scope="col">
-              <h2>Title</h2>
+          <tr className="row">
+            <th scope="col" className="col-7">
+              <h3>Title</h3>
             </th>
-            <th scope="col">
-              <h2>Category</h2>
+            <th scope="col" className="col-3 d-flex justify-content-center">
+              <h3>Category</h3>
             </th>
-            <th scope="col">
-              <h2>Edit</h2>
+            <th scope="col" className="col-2 d-flex justify-content-center">
+              <h3>Edit</h3>
             </th>
           </tr>
         </thead>
+        <hr />
         <tbody>{questionsDisplay}</tbody>
       </table>
       <nav aria-label="Page navigation example">
