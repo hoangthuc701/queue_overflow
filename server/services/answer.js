@@ -15,6 +15,15 @@ class AnswerService {
 		}
 		return new_answer;
 	}
+	// static async deleteAnswer(answer_id) {
+	// 	let answer;
+	// 	try {
+	// 		answer = await AnswerModel.get
+	// 	} catch (error) {
+	// 		throw new Error('Cannot create new answer.');
+	// 	}
+	// 	return new_answer;
+	// }
 	static async getByQuestionId(question_id) {
 		let answers;
 		try {
