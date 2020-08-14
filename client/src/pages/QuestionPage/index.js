@@ -42,7 +42,7 @@ const QuestionPage = () => {
     pageItems = paginationComponent(perPage, questionlist, paginate);
   }
   // EVENT BUTTON
-  function onClickfilter(filby) {
+  function onClickFilter(filby) {
     setflagCate(filby);
     if (filby.localeCompare(Newest)) {
       dispatch(questionAction.questionList());
@@ -77,7 +77,7 @@ const QuestionPage = () => {
                   color: '#424242',
                   borderColor: '#bdbdbd',
                 }}
-                onClick={() => onClickfilter(Newest)}
+                onClick={() => onClickFilter(Newest)}
               >
                 Newset
               </button>
@@ -89,7 +89,7 @@ const QuestionPage = () => {
                   color: '#424242',
                   borderColor: '#bdbdbd',
                 }}
-                onClick={() => onClickfilter(Oldest)}
+                onClick={() => onClickFilter(Oldest)}
               >
                 Oldest
               </button>
@@ -101,7 +101,7 @@ const QuestionPage = () => {
                   color: '#424242',
                   borderColor: '#bdbdbd',
                 }}
-                onClick={() => onClickfilter(Category)}
+                onClick={() => onClickFilter(Category)}
               >
                 Category
               </button>

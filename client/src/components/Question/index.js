@@ -4,6 +4,8 @@ import './index.css';
 
 const Question = (props) => {
   const { title } = props;
+  const point =
+    title.rating_detail.totalLike - title.rating_detail.totalDislike;
   const bestAnswered = title.best_answer ? (
     <p
       className="fas fa-check"
@@ -40,8 +42,7 @@ const Question = (props) => {
       height={50}
     />
   );
-  const point =
-    title.rating_detail.totalLike - title.rating_detail.totalDislike;
+  const vote = point;
 
   return (
     <div>
@@ -112,7 +113,7 @@ const Question = (props) => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <span style={{ fontSize: '200%' }}>{point}</span>
+                  <span style={{ fontSize: '200%' }}>{vote}</span>
                   <h5>Votes</h5>
                 </div>
               </div>
