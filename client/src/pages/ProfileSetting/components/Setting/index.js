@@ -66,6 +66,9 @@ const Setting = () => {
                 aria-describedby="emailHelp"
                 onChange={handleOnChange}
               />
+              {errors && errors.display_name && (
+                <span style={{ color: 'red' }}> {errors.display_name} </span>
+              )}
             </div>
             <div className="form-group">
               {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
@@ -78,7 +81,10 @@ const Setting = () => {
                 name="description"
                 id="description"
                 onChange={handleOnChange}
-              />
+              />{' '}
+              {errors && errors.description && (
+                <span style={{ color: 'red' }}> {errors.description} </span>
+              )}
             </div>
             <div className="form-group">
               {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
@@ -91,7 +97,10 @@ const Setting = () => {
                 name="password"
                 id="password"
                 onChange={handleOnChange}
-              />
+              />{' '}
+              {errors && errors.password && (
+                <span style={{ color: 'red' }}> {errors.password} </span>
+              )}
             </div>
             <div className="form-group">
               {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
@@ -104,7 +113,13 @@ const Setting = () => {
                 name="confirm_password"
                 id="confirm_password"
                 onChange={handleOnChange}
-              />
+              />{' '}
+              {errors && errors.confirm_password && (
+                <span style={{ color: 'red' }}>
+                  {' '}
+                  {errors.confirm_password}{' '}
+                </span>
+              )}
             </div>
             <button
               onClick={handleSubmit}
