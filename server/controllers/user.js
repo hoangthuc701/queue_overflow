@@ -2,6 +2,7 @@ require('dotenv').config();
 const UserService = require('../services/user');
 const response_format = require('../util/response_format');
 const { getHashedPassword } = require('../util/password');
+const { verifyUser } = require('../util/auth');
 
 exports.getUserInfoById = async (req, res) => {
 	const user_id = req.params.user_id;
@@ -15,6 +16,7 @@ exports.getUserInfoById = async (req, res) => {
 		_id: user._id,
 		email: user.email,
 		display_name: user.display_name,
+		description: user.description,
 	};
 
 	res.json(response_format.success('Request succeed.', user_info));
@@ -22,6 +24,7 @@ exports.getUserInfoById = async (req, res) => {
 
 exports.updateUserbyId = async (req, res) => {
 	const user_id = req.params.user_id;
+	if (!verifyUser(req, res, user_id)) return;
 	let user = await UserService.getUserById(user_id);
 	if (!user) {
 		res.json(response_format.error('User is not exist.'));

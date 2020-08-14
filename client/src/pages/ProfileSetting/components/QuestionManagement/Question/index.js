@@ -6,25 +6,29 @@ const Question = ({ title, time, category }) => {
     <>
       <tr>
         <td>
-          <a href className="question_info" style={{ wordWrap: 'break-word' }}>
-            <h3 className="question">{title}</h3>
-          </a>
-          <h4>{time}</h4>
+          <Link
+            to="/"
+            className="question_info"
+            style={{ wordWrap: 'break-word' }}
+          >
+            <h4 className="question">{title}</h4>
+          </Link>
+          {time}
         </td>
         <td>
-          <h4>
-            <a href className="badge badge-warning">
+          <h5>
+            <Link to className="badge badge-warning">
               {category}
-            </a>
-          </h4>
+            </Link>
+          </h5>
         </td>
         <td>
-          <a href className="mr-2">
+          <Link to="/" className="mr-2">
             <img src="https://i.ibb.co/RNWjm8H/pencil.png" alt="" />
-          </a>
-          <a href>
+          </Link>
+          <Link to="/">
             <img src="https://i.ibb.co/hgYsCP1/delete.png" alt="" />
-          </a>
+          </Link>
         </td>
       </tr>
     </>

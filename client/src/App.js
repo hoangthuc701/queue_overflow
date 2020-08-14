@@ -46,7 +46,7 @@ class App extends Component {
             <Route exact path="/signin" component={SignInPage} />
             <Route exact path="/signup" component={SignUpPage} />
             <Route exact path="/profile" component={ProfileSetting} />
-            <Route exact path="/profile/:user_id" component={ProfileSetting} />
+            <Route exact path="/profile/:userId" component={ProfileSetting} />
             <PrivateRoute
               exact
               path="/question/add"

@@ -1,3 +1,4 @@
+import './index.css';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams, Redirect } from 'react-router-dom';
@@ -11,14 +12,12 @@ const ProfileSetting = () => {
   const dispatch = useDispatch();
   const [onlyProfile, setOnlyProfile] = useState(false);
   const [redirect, setRedirect] = useState();
-  // eslint-disable-next-line no-use-before-define
   let { userId } = useParams();
 
   useEffect(() => {
     const user = getUser();
     // eslint-disable-next-line no-underscore-dangle
     const id = user._id;
-    // eslint-disable-next-line no-use-before-define
     if (!userId) {
       if (!user) {
         setRedirect('/signin');
@@ -99,13 +98,6 @@ const ProfileSetting = () => {
         href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
         crossOrigin="anonymous"
-      />
-      <style
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{
-          __html:
-            '\n      a {\n        text-decoration: none !important;\n      }\n      .navtop {\n        margin-top: 50px;\n      }\n      .tab-content {\n        padding: 40px;\n        margin-top: -20px;\n      }\n      .avatar {\n        width: 17em;\n        height: 17em;\n      }\n\n      .question {\n        color: rgb(0, 0, 0);\n      }\n    ',
-        }}
       />
       <div className="container">{renderMenu()}</div>
     </div>
