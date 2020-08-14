@@ -6,7 +6,7 @@ import QuestionService from '../../../../services/questionService';
 import Question from './Question';
 
 const QuestionManagement = () => {
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState({ list: [], lenght: 0 });
   const [questionsDisplay, setQuestionsDisplay] = useState([]);
   const user_info_getted = useSelector((state) => state.user_info.getted);
   useEffect(() => {
@@ -14,15 +14,25 @@ const QuestionManagement = () => {
     const fetchQuestionsByToken = async (token) => {
       const value = await QuestionService.getQuestionsByToken(token);
       console.log(value);
-      if (!value.error) setQuestions(value.data);
+      if (!value.error)
+        setQuestions({ list: value.data.questions, lenght: value.data.lenght });
     };
     const token = getToken();
     fetchQuestionsByToken(token);
+
+    return () => {};
   }, [user_info_getted]);
 
   useEffect(() => {
-    const display = questions.map((value) => {
-      return <Question />;
+    const display = questions.list.map((question, index) => {
+      return (
+        <Question
+          key={index}
+          title={question.title}
+          time={question.created_time}
+          category={question.category.name}
+        />
+      );
     });
     setQuestionsDisplay(display);
   }, [questions]);

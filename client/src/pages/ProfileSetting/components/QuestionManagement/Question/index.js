@@ -1,20 +1,22 @@
 import React from 'react';
-const Question = ({}) => {
+const Question = ({ title, time, category }) => {
   return (
     <>
       <tr>
         <td>
-          <a href="#" className="question_info">
-            <h3 className="question">
-              Running a job during specified time of the day
-            </h3>
+          <a
+            href="#"
+            className="question_info"
+            style={{ wordWrap: 'break-word' }}
+          >
+            <h3 className="question">{title}</h3>
           </a>
-          <h4>2020-07-28 12:50:30</h4>
+          <h4>{time}</h4>
         </td>
         <td>
           <h4>
             <a href="#" className="badge badge-warning">
-              JAVA
+              {category}
             </a>
           </h4>
         </td>
