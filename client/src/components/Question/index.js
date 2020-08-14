@@ -1,9 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './index.css';
 
 const Question = (props) => {
   const { title } = props;
+  const linkTitle = '/question/add';
+  const linkUser = '/question/add';
+
   const point =
     title.rating_detail.totalLike - title.rating_detail.totalDislike;
   const bestAnswered = title.best_answer ? (
@@ -62,9 +66,9 @@ const Question = (props) => {
                   <div className="card-header">
                     <div className="row">
                       <div className="col-sm-8 col align-self-center">
-                        <a href style={{ color: 'black' }}>
-                          <h3>{title.title}</h3>
-                        </a>
+                        <Link to={linkTitle} style={{ color: 'black' }}>
+                          <h3 className="effect-shine">{title.title}</h3>
+                        </Link>
                       </div>
                       <div className="col-sm-4">
                         <div className="text-right">
@@ -101,12 +105,12 @@ const Question = (props) => {
                   </div>
                   <div className="card-body">
                     <p className="card-text">{title.content}</p>
-                    <a href className="float-right">
+                    <Link to={linkUser} className="float-right">
                       {avatar}
                       <b style={{ color: 'black', fontSize: '120%' }}>
                         {title.author.display_name}
                       </b>
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 <div className="text-right">

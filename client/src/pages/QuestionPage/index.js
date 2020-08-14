@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import questionAction from '../../actions/question';
 import Question from '../../components/Question';
 import Pagination from '../../components/pagination';
@@ -106,13 +107,14 @@ const QuestionPage = () => {
                 Category
               </button>
             </div>
-            <button
+            <Link
+              to="/question/add"
               type="button"
               className="btn btn-primary float-right"
               style={{ backgroundColor: '#5bc0de', borderColor: 'black' }}
             >
               <b>Add new question</b>
-            </button>
+            </Link>
           </div>
         </div>
         <div className="col-sm-2"> </div>
