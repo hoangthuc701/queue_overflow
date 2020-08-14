@@ -142,7 +142,7 @@ class Question extends Component {
     return (
       <span
         role="presentation"
-        onClick={this.handleLike.bind(this, questionId)}
+        onClick={this.handleDislike.bind(this, questionId)}
         className={`fas fa-chevron-down ${
           vote === 'dislike' ? 'active-dislike' : ' '
         }`}
