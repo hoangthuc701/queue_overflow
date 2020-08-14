@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
@@ -12,13 +12,21 @@ import questionAction from '../../../actions/question';
 import modalAction from '../../../actions/modal';
 
 class Question extends Component {
-  componentDidMount() {
+  constructor() {
+    super();
+    this.state = {
+      value: true,
+    };
+  }
+
+  async componentDidMount() {
     // eslint-disable-next-line react/prop-types
     const { match } = this.props;
     // eslint-disable-next-line react/prop-types
     const { questionId } = match.params;
     const { QuestionActionCreators } = this.props;
-    QuestionActionCreators.getQuestionDetail(questionId);
+    const value = await QuestionActionCreators.getQuestionDetail(questionId);
+    this.setState({ value });
   }
 
   handleDelete = () => {
@@ -179,6 +187,8 @@ class Question extends Component {
       totalDislike,
       totalLike,
     } = this.props;
+    const { value } = this.state;
+    if (!value) return <Redirect to="/" />;
     const score = totalLike - totalDislike;
     const authorId = author.author_id;
     return (

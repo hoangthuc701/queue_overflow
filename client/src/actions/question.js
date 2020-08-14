@@ -16,9 +16,10 @@ function getQuestionDetail(questionId) {
     const data = await QuestionService.getDetailQuestion(questionId);
     if (!data.error) {
       dispatch(success(data.data));
-    } else {
-      dispatch(failure(data.error));
+      return true;
     }
+    dispatch(failure(data.error));
+    return false;
   };
 }
 
