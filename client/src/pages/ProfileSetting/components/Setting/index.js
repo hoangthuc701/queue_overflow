@@ -1,8 +1,38 @@
 import React, { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import UserService from '../../../../services/userService';
+import { getUser } from '../../../../helper/auth';
+import profileSettingAction from '../../../../actions/profileSetting';
 
 const Setting = () => {
+  const [user, setUser] = useState({});
+  const dispatch = useDispatch();
+  const handleOnChange = (event) => {
+    setUser({ ...user, [event.target.name]: event.target.value });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (user.password !== user.confirm_password) {
+      toast.error('Password and confirm password is not match');
+      return;
+    }
+    const user_id = getUser()._id;
+    UserService.updateInfo(
+      user.display_name,
+      user.description,
+      user.password
+    ).then((data) => {
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success(data.message);
+        dispatch(profileSettingAction.getUserInfo(user_id));
+      }
+    });
+  };
+
   return (
     <div className="tab-pane" role="tabpanel" id="menu4">
       <div className="row">
@@ -23,57 +53,59 @@ const Setting = () => {
         <div className="col-8 mt-5">
           <form>
             <div className="form-group">
-              <label htmlFor="exampleInputEmail1">
+              <label htmlFor="display_name">
                 <h6>Display Name</h6>
               </label>
               <input
                 type="text"
                 className="form-control"
-                id="exampleInputEmail1"
+                name="display_name"
+                id="display_name"
                 aria-describedby="emailHelp"
+                onChange={handleOnChange}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="exampleInputPassword1">
-                <h6>Title</h6>
+              <label htmlFor="description">
+                <h6>Description</h6>
               </label>
               <input
                 type="text"
                 className="form-control"
-                id="exampleInputPassword1"
+                name="description"
+                id="description"
+                onChange={handleOnChange}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="exampleInputPassword1">
-                <h6>Gmail</h6>
-              </label>
-              <input
-                type="email"
-                className="form-control"
-                id="exampleInputPassword1"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="exampleInputPassword1">
+              <label htmlFor="password">
                 <h6>New Password</h6>
               </label>
               <input
                 type="password"
                 className="form-control"
-                id="exampleInputPassword1"
+                name="password"
+                id="password"
+                onChange={handleOnChange}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="exampleInputPassword1">
+              <label htmlFor="confirm_password">
                 <h6>Confirm Password</h6>
               </label>
               <input
                 type="password"
                 className="form-control"
-                id="exampleInputPassword1"
+                name="confirm_password"
+                id="confirm_password"
+                onChange={handleOnChange}
               />
             </div>
-            <button type="submit" className="btn btn-success">
+            <button
+              onClick={handleSubmit}
+              type="submit"
+              className="btn btn-success"
+            >
               Save
             </button>
           </form>

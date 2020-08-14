@@ -1,30 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getToken } from '../../../../helper/auth';
-import QuestionService from '../../../../services/questionService';
 import Question from './Question';
+import questionActions from '../../../../actions/question';
 
 const QuestionManagement = () => {
-  const [questions, setQuestions] = useState({ list: [], lenght: 0 });
   const [questionsDisplay, setQuestionsDisplay] = useState([]);
+  const user_info_getting = useSelector((state) => state.user_info.getting);
   const user_info_getted = useSelector((state) => state.user_info.getted);
+  const dispatch = useDispatch();
+  const questions = useSelector(
+    (state) => state.questionList.questionlist.questions
+  );
+  console.log(questions);
   useEffect(() => {
-    if (!user_info_getted) return;
-    const fetchQuestionsByToken = async (token) => {
-      const value = await QuestionService.getQuestionsByToken(token);
-      console.log(value);
-      if (!value.error)
-        setQuestions({ list: value.data.questions, lenght: value.data.lenght });
-    };
-    const token = getToken();
-    fetchQuestionsByToken(token);
-
-    return () => {};
-  }, [user_info_getted]);
+    if (!user_info_getting && user_info_getted) {
+      dispatch(questionActions.getUserQuestions());
+    }
+  }, [user_info_getting, user_info_getted]);
 
   useEffect(() => {
-    const display = questions.list.map((question, index) => {
+    const display = questions.map((question, index) => {
       return (
         <Question
           key={index}

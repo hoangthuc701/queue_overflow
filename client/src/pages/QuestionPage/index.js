@@ -12,7 +12,7 @@ const QuestionPage = () => {
   const questionComponent = (title) => <Question title={title} />;
   useEffect(() => {
     dispatch(questionAction.questionList());
-  }, []);
+  }, [dispatch]);
   const { questionlist, getting } = useSelector((state) => state.questionList);
   let questionitem;
   if (questionlist.questions) {
