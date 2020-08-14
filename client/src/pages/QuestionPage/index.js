@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import questionAction from '../../actions/question';
 import Question from '../../components/Question';
+import Pagination from '../../components/pagination';
 import './index.css';
 
 const QuestionPage = () => {
@@ -10,6 +11,8 @@ const QuestionPage = () => {
   const Category = 'category';
   const dispatch = useDispatch();
   const questionComponent = (title) => <Question title={title} />;
+  const perPage = 10;
+  const [flagCate, setflagCate] = useState(Newest);
   useEffect(() => {
     dispatch(questionAction.questionList());
   }, []);
@@ -22,14 +25,20 @@ const QuestionPage = () => {
   }
   // EVENT BUTTON
   function onClickfilter(filby) {
-    if (filby.Newest === Newest) {
+    setflagCate(filby);
+    if (filby.localeCompare(Newest)) {
       dispatch(questionAction.questionList());
-    } else if (filby.Oldest === Oldest) {
+    } else if (filby.localeCompare(Oldest)) {
       dispatch(questionAction.questionList(1, Oldest));
-    } else if (filby.Category === Category) {
+    } else if (filby.localeCompare(Category)) {
       dispatch(questionAction.questionList(1, Category));
     }
   }
+  // PAGINATION
+  const paginate = (pageNumber) => {
+    console.log('TEST TEST', flagCate);
+    dispatch(questionAction.questionList(pageNumber, flagCate));
+  };
   if (getting) {
     questionitem = <div className="loader" />;
   }
@@ -54,7 +63,7 @@ const QuestionPage = () => {
                   color: '#424242',
                   borderColor: '#bdbdbd',
                 }}
-                onClick={() => onClickfilter({ Newest })}
+                onClick={() => onClickfilter(Newest)}
               >
                 Newset
               </button>
@@ -66,7 +75,7 @@ const QuestionPage = () => {
                   color: '#424242',
                   borderColor: '#bdbdbd',
                 }}
-                onClick={() => onClickfilter({ Oldest })}
+                onClick={() => onClickfilter(Oldest)}
               >
                 Oldest
               </button>
@@ -78,7 +87,7 @@ const QuestionPage = () => {
                   color: '#424242',
                   borderColor: '#bdbdbd',
                 }}
-                onClick={() => onClickfilter({ Category })}
+                onClick={() => onClickfilter(Category)}
               >
                 Category
               </button>
@@ -95,6 +104,13 @@ const QuestionPage = () => {
         <div className="col-sm-2"> </div>
       </div>
       {questionitem}
+      <div className="d-flex justify-content-center">
+        <Pagination
+          postsPerPage={perPage}
+          totalPosts={questionlist.totalCount}
+          paginate={paginate}
+        />
+      </div>
     </div>
   );
 };
