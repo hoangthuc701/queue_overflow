@@ -98,11 +98,7 @@ const SignUpForm = (props) => {
                   )}
               </div>
               <div className="form-group">
-<<<<<<< HEAD
                 <label htmlFor="display_name">Display name</label>
-=======
-                <label htmlFor="exampleInputEmail1">Full name</label>
->>>>>>> server/signup
                 <input
                   type="text"
                   name="display_name"
