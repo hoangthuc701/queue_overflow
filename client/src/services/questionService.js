@@ -57,13 +57,14 @@ class QuestionService {
     return data;
   }
 
-  // eslint-disable-next-line no-unused-vars
   static async getDetailQuestion(questionId) {
     const token = getToken();
     const requestOptions = {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      Authorization: `Bearer ${token}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     };
 
     const res = await fetch(
