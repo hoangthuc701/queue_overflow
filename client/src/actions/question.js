@@ -86,11 +86,34 @@ function DeleteQuestion(questionId) {
   };
 }
 
+function requestList(questionlist) {
+  return { type: questionConstants.QUESTIONLIST_REQUEST, questionlist };
+}
+function successList(questionlist) {
+  return { type: questionConstants.QUESTION_SUCCESS, questionlist };
+}
+function failureList(error) {
+  return { type: questionConstants.QUESTION_FAILURE, error };
+}
+
+function questionList(page = 1, filter = 'newest') {
+  return async (dispatch) => {
+    dispatch(requestList(filter));
+    const values = await QuestionService.getListQuestion(page, filter);
+    if (values.message) {
+      dispatch(successList(values.data));
+    } else {
+      dispatch(failureList());
+    }
+  };
+}
+
 const questionActions = {
   getQuestionDetail,
   LikeQuestion,
   DislikeQuestion,
   DeleteQuestion,
+  questionList,
 };
 
 export default questionActions;
