@@ -61,12 +61,12 @@ const Question = (props) => {
                 <div className="card">
                   <div className="card-header">
                     <div className="row">
-                      <div className="col-sm-6 col align-self-center">
+                      <div className="col-sm-8 col align-self-center">
                         <a href style={{ color: 'black' }}>
                           <h3>{title.title}</h3>
                         </a>
                       </div>
-                      <div className="col-sm-6">
+                      <div className="col-sm-4">
                         <div className="text-right">
                           <h5>
                             <a
@@ -81,25 +81,22 @@ const Question = (props) => {
                             </a>
                           </h5>
                         </div>
-                        <div
-                          className="text-right"
-                          style={{ marginTop: '0.5em' }}
-                        >
-                          {title.tags.map((tag) => (
-                            <a
-                              href
-                              className="badge badge-secondary"
-                              style={{
-                                backgroundColor: '#03a9f4',
-                                borderColor: '#03a9f4',
-                              }}
-                              key={tag.tag_id}
-                            >
-                              {tag.name}
-                            </a>
-                          ))}
-                        </div>
                       </div>
+                    </div>
+                    <div className="text-right" style={{ marginTop: '0.5em' }}>
+                      {title.tags.map((tag) => (
+                        <a
+                          href
+                          className="badge badge-secondary"
+                          style={{
+                            backgroundColor: '#03a9f4',
+                            borderColor: '#03a9f4',
+                          }}
+                          key={tag.tag_id}
+                        >
+                          {tag.name}
+                        </a>
+                      ))}
                     </div>
                   </div>
                   <div className="card-body">

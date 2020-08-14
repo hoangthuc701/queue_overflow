@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import questionAction from '../../actions/question';
 import Question from '../../components/Question';
 import Pagination from '../../components/pagination';
-import './index.css';
+import Loading from '../../components/Loading';
 
 const QuestionPage = () => {
   const Newest = 'newest';
@@ -53,7 +53,7 @@ const QuestionPage = () => {
     }
   }
   if (getting) {
-    questionitem = <div className="loader" />;
+    questionitem = <Loading />;
     pageItems = <div />;
   }
 
