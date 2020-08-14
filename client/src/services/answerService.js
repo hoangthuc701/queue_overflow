@@ -1,7 +1,7 @@
 import { getToken } from '../helper/auth';
 
 class AnswerService {
-  static async createNewAnswer(title, category, content, tags) {
+  static async createNew(questionId, content) {
     const token = getToken();
     const requestOptions = {
       method: 'POST',
@@ -9,11 +9,11 @@ class AnswerService {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ title, category, content, tags }),
+      body: JSON.stringify({ content }),
     };
 
     const res = await fetch(
-      `${process.env.REACT_APP_SERVER_DOMAIN}/questions`,
+      `${process.env.REACT_APP_SERVER_DOMAIN}/answers/${questionId}`,
       requestOptions
     );
     const data = await res.json();
@@ -27,7 +27,7 @@ class AnswerService {
     };
 
     const res = await fetch(
-      `${process.env.REACT_APP_SERVER_DOMAIN}/questions/${answerId}`,
+      `${process.env.REACT_APP_SERVER_DOMAIN}/deleteAnswer/${answerId}`,
       requestOptions
     );
     const data = await res.json();

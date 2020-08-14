@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Question from './Question';
 import Answer from './Answer';
+import AnswerEditor from './AnswerEditor';
 
 class QuestionDetailPage extends Component {
   renderQuestion = () => <Question />;
@@ -28,6 +29,8 @@ class QuestionDetailPage extends Component {
     });
   };
 
+  renderAnswerEditor = () => <AnswerEditor />;
+
   render() {
     return (
       <>
@@ -47,9 +50,7 @@ class QuestionDetailPage extends Component {
             <div className="col-sm-2"> </div>
             <div className="col-sm-8">
               <h2>Your answer:</h2>
-              <button type="button" className="btn btn-primary float-right">
-                Submit
-              </button>
+              {this.renderAnswerEditor()}
             </div>
             <div className="col-sm-2"> </div>
           </div>

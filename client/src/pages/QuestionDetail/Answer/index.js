@@ -9,12 +9,28 @@ import { isAuthor } from '../../../helper/auth';
 import formatDate from '../../../helper/formatDate';
 
 import answerAction from '../../../actions/answer';
+import modalAction from '../../../actions/modal';
 
 class Answer extends Component {
+  handleDelete = () => {
+    const { ModelActionCreators } = this.props;
+    const answerId = this.props;
+    ModelActionCreators.showModal(
+      'Alert',
+      'Do you want to delete this answer?',
+      'answer',
+      answerId
+    );
+  };
+
   renderManager = () => {
     return (
       <>
-        <span>
+        <button className="btn btn-success" type="button">
+          {' '}
+          Mark as best answer
+        </button>
+        <span role="presentation" onClick={this.handleDelete}>
           <span style={{ fontSize: '150%', marginLeft: '2em' }}>Delete</span>
           <span
             className="fas fa-eraser"
@@ -105,7 +121,7 @@ class Answer extends Component {
     const score = totalLike - totalDislike;
     const authorId = author.author_id;
     return (
-      <div className="row">
+      <div className="row mt-3">
         <div className="col-sm-2"> </div>
         <div className="col-sm-8">
           <div className="row">
@@ -153,10 +169,12 @@ Answer.propTypes = {
   totalDislike: PropTypes.number.isRequired,
   created_time: PropTypes.string.isRequired,
   AnswerActionCreators: PropTypes.objectOf().isRequired,
+  ModelActionCreators: PropTypes.objectOf().isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   AnswerActionCreators: bindActionCreators(answerAction, dispatch),
+  ModelActionCreators: bindActionCreators(modalAction, dispatch),
 });
 
 export default connect(null, mapDispatchToProps)(withRouter(Answer));

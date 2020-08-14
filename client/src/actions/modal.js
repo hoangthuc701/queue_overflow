@@ -23,7 +23,7 @@ function hideModal(result, type, id) {
       if (type === 'question') {
         dispatch(questionAction.DeleteQuestion(id));
       } else if (type === 'answer') {
-        dispatch(questionAction.DeleteQuestion(id));
+        dispatch(answerAction.DeleteAnswer(id));
       }
     }
   };

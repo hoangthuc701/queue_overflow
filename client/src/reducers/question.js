@@ -77,7 +77,19 @@ export default function authentication(state = initialState, action) {
           return answer;
         }),
       };
-
+    case answerConstants.ADD_ANSWER_SUCCESS:
+      return {
+        ...state,
+        answers: [...state.answers, action.data],
+      };
+    case answerConstants.DELETE_ANSWER_SUCCESS:
+      return {
+        ...state,
+        answers: state.answers.filter(
+          // eslint-disable-next-line no-underscore-dangle
+          (answer) => answer._id !== action.data.answerId
+        ),
+      };
     default:
       return state;
   }
