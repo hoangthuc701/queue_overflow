@@ -45,7 +45,7 @@ class UserService {
   }
 
   // eslint-disable-next-line no-use-before-define
-  static async updateInfo(display_name, description, password) {
+  static async updateInfo(displayName, description, password) {
     const token = getToken();
     const user = getUser();
 
@@ -55,10 +55,14 @@ class UserService {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ display_name, description, password }),
+      body: JSON.stringify({
+        display_name: displayName,
+        description,
+        password,
+      }),
     };
     const res = await fetch(
-      // eslint-disable-next-line no-use-before-define
+      // eslint-disable-next-line no-underscore-dangle
       `${process.env.REACT_APP_SERVER_DOMAIN}/users/${user._id}`,
       requestOptions
     );

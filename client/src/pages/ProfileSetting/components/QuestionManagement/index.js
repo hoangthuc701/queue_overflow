@@ -5,24 +5,24 @@ import questionActions from '../../../../actions/question';
 
 const QuestionManagement = () => {
   const [questionsDisplay, setQuestionsDisplay] = useState([]);
-  const user_info_getting = useSelector((state) => state.user_info.getting);
-  const user_info_getted = useSelector((state) => state.user_info.getted);
+  const userInfoGetting = useSelector((state) => state.user_info.getting);
+  const userInfoGetted = useSelector((state) => state.user_info.getted);
   const dispatch = useDispatch();
   const questions = useSelector(
     (state) => state.questionList.questionlist.questions
   );
-  console.log(questions);
   useEffect(() => {
-    if (!user_info_getting && user_info_getted) {
+    if (!userInfoGetting && userInfoGetted) {
       dispatch(questionActions.getUserQuestions());
     }
-  }, [user_info_getting, user_info_getted]);
+  }, [userInfoGetting, userInfoGetted, dispatch]);
 
   useEffect(() => {
-    const display = questions.map((question, index) => {
+    const display = questions.map((question) => {
       return (
         <Question
-          key={index}
+          // eslint-disable-next-line no-underscore-dangle
+          key={question._id}
           title={question.title}
           time={question.created_time}
           category={question.category.name}
@@ -53,38 +53,38 @@ const QuestionManagement = () => {
       <nav aria-label="Page navigation example">
         <ul className="pagination">
           <li className="page-item">
-            <a className="page-link" href="#" aria-label="Previous">
+            <a className="page-link" href aria-label="Previous">
               <span aria-hidden="true">«</span>
               <span className="sr-only">Previous</span>
             </a>
           </li>
           <li className="page-item">
-            <a className="page-link" href="#">
+            <a className="page-link" href>
               1
             </a>
           </li>
           <li className="page-item">
-            <a className="page-link" href="#">
+            <a className="page-link" href>
               2
             </a>
           </li>
           <li className="page-item">
-            <a className="page-link" href="#">
+            <a className="page-link" href>
               3
             </a>
           </li>
           <li className="page-item">
-            <a className="page-link" href="#">
+            <a className="page-link" href>
               4
             </a>
           </li>
           <li className="page-item">
-            <a className="page-link" href="#">
+            <a className="page-link" href>
               5
             </a>
           </li>
           <li className="page-item">
-            <a className="page-link" href="#" aria-label="Next">
+            <a className="page-link" href aria-label="Next">
               <span aria-hidden="true">»</span>
               <span className="sr-only">Next</span>
             </a>

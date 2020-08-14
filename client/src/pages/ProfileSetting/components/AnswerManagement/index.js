@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 
 const AnswerManagement = () => {
   return (
     <div className="tab-pane" role="tabpanel" id="menu3">
-      {/*MANAGE ANSWER*/}
       <table className="table table-borderless table-hover">
         <thead>
           <tr>
@@ -23,7 +20,7 @@ const AnswerManagement = () => {
         <tbody>
           <tr>
             <td>
-              <a href="#" className="question_info">
+              <a href className="question_info">
                 <h3 className="question">
                   Running a job during specified time of the day
                 </h3>
@@ -36,25 +33,25 @@ const AnswerManagement = () => {
             </td>
             <td>
               <h4>
-                <a href="#" className="badge badge-warning">
+                <a href className="badge badge-warning">
                   CSS
                 </a>
               </h4>
             </td>
             <td>
-              <a href="#" className="mr-2">
-                <img src="https://i.ibb.co/RNWjm8H/pencil.png" />
+              <a href className="mr-2">
+                <img src="https://i.ibb.co/RNWjm8H/pencil.png" alt="" />
               </a>
-              <a href="#" className>
-                <img src="https://i.ibb.co/hgYsCP1/delete.png" />
+              <a href className>
+                <img src="https://i.ibb.co/hgYsCP1/delete.png" alt="" />
               </a>
             </td>
           </tr>
           <tr>
             <td>
-              <a href="#" className="question_info">
+              <a href className="question_info">
                 <h3 className="question">
-                  views Panda "to_date_time" not accepting series
+                  views Panda to_date_time not accepting series
                 </h3>
               </a>
               <h7>
@@ -65,23 +62,23 @@ const AnswerManagement = () => {
             </td>
             <td>
               <h4>
-                <a href="#" className="badge badge-warning">
+                <a href className="badge badge-warning">
                   HTML
                 </a>
               </h4>
             </td>
             <td>
-              <a href="#" className="mr-2">
-                <img src="https://i.ibb.co/RNWjm8H/pencil.png" />
+              <a href className="mr-2">
+                <img src="https://i.ibb.co/RNWjm8H/pencil.png" alt="" />
               </a>
-              <a href="#" className>
-                <img src="https://i.ibb.co/hgYsCP1/delete.png" />
+              <a href className>
+                <img src="https://i.ibb.co/hgYsCP1/delete.png" alt="" />
               </a>
             </td>
           </tr>
           <tr>
             <td>
-              <a href="#" className="question_info">
+              <a href className="question_info">
                 <h3 className="question">
                   Setup a cron on a bash scrips but its not running
                 </h3>
@@ -94,23 +91,23 @@ const AnswerManagement = () => {
             </td>
             <td>
               <h4>
-                <a href="#" className="badge badge-warning">
+                <a href className="badge badge-warning">
                   JAVA
                 </a>
               </h4>
             </td>
             <td>
-              <a href="#" className="mr-2">
-                <img src="https://i.ibb.co/RNWjm8H/pencil.png" />
+              <a href className="mr-2">
+                <img src="https://i.ibb.co/RNWjm8H/pencil.png" alt="" />
               </a>
-              <a href="#" className>
-                <img src="https://i.ibb.co/hgYsCP1/delete.png" />
+              <a href className>
+                <img src="https://i.ibb.co/hgYsCP1/delete.png" alt="" />
               </a>
             </td>
           </tr>
           <tr>
             <td>
-              <a href="#" className="question_info">
+              <a href className="question_info">
                 <h3 className="question">
                   Connect android device to python project via socket
                 </h3>
@@ -123,17 +120,17 @@ const AnswerManagement = () => {
             </td>
             <td>
               <h4>
-                <a href="#" className="badge badge-warning">
+                <a href className="badge badge-warning">
                   SQL
                 </a>
               </h4>
             </td>
             <td>
-              <a href="#" className="mr-2">
-                <img src="https://i.ibb.co/RNWjm8H/pencil.png" />
+              <a href className="mr-2">
+                <img src="https://i.ibb.co/RNWjm8H/pencil.png" alt="" />
               </a>
-              <a href="#" className>
-                <img src="https://i.ibb.co/hgYsCP1/delete.png" />
+              <a href className>
+                <img src="https://i.ibb.co/hgYsCP1/delete.png" alt="" />
               </a>
             </td>
           </tr>
@@ -142,38 +139,38 @@ const AnswerManagement = () => {
       <nav aria-label="Page navigation example">
         <ul className="pagination">
           <li className="page-item">
-            <a className="page-link" href="#" aria-label="Previous">
+            <a className="page-link" href aria-label="Previous">
               <span aria-hidden="true">«</span>
               <span className="sr-only">Previous</span>
             </a>
           </li>
           <li className="page-item">
-            <a className="page-link" href="#">
-              1
+            <a className="page-link" href>
+              1F
             </a>
           </li>
           <li className="page-item">
-            <a className="page-link" href="#">
+            <a className="page-link" href>
               2
             </a>
           </li>
           <li className="page-item">
-            <a className="page-link" href="#">
+            <a className="page-link" href>
               3
             </a>
           </li>
           <li className="page-item">
-            <a className="page-link" href="#">
+            <a className="page-link" href>
               4
             </a>
           </li>
           <li className="page-item">
-            <a className="page-link" href="#">
+            <a className="page-link" href>
               5
             </a>
           </li>
           <li className="page-item">
-            <a className="page-link" href="#" aria-label="Next">
+            <a className="page-link" href aria-label="Next">
               <span aria-hidden="true">»</span>
               <span className="sr-only">Next</span>
             </a>

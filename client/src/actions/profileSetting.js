@@ -5,17 +5,17 @@ import UserService from '../services/userService';
 function request() {
   return { type: userConstants.GET_USER_INFO_REQUEST };
 }
-function success(user_info) {
-  return { type: userConstants.GET_USER_INFO_SUCCESS, user_info };
+function success(userInfo) {
+  return { type: userConstants.GET_USER_INFO_SUCCESS, user_info: userInfo };
 }
 function failure(error) {
   return { type: userConstants.GET_USER_INFO_FAILURE, error };
 }
 
-function getUserInfo(user_id) {
+function getUserInfo(userId) {
   return async (dispatch) => {
     dispatch(request());
-    const value = await UserService.getInfo(user_id);
+    const value = await UserService.getInfo(userId);
     if (!value.error) {
       dispatch(success(value.data));
       return true;

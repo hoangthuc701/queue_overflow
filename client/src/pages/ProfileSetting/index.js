@@ -12,20 +12,22 @@ const ProfileSetting = () => {
   const [onlyProfile, setOnlyProfile] = useState(false);
   const [redirect, setRedirect] = useState();
   // eslint-disable-next-line no-use-before-define
-  let { user_id } = useParams();
+  let { userId } = useParams();
 
   useEffect(() => {
     const user = getUser();
+    // eslint-disable-next-line no-underscore-dangle
+    const id = user._id;
     // eslint-disable-next-line no-use-before-define
-    if (!user_id) {
+    if (!userId) {
       if (!user) {
         setRedirect('/signin');
         return;
       }
-      // eslint-disable-next-line no-use-before-define
-      user_id = user._id;
-      // eslint-disable-next-line no-use-before-define
-    } else if (user_id !== user._id) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      userId = id;
+      // eslint-disable-next-line no-underscore-dangle
+    } else if (userId !== user._id) {
       setOnlyProfile(true);
     } else {
       setOnlyProfile(false);
@@ -33,7 +35,7 @@ const ProfileSetting = () => {
     setRedirect(false);
     const userInfo = async () => {
       // eslint-disable-next-line no-use-before-define
-      const isSuccess = await dispatch(userActions.getUserInfo(user_id));
+      const isSuccess = await dispatch(userActions.getUserInfo(userId));
       if (isSuccess) {
         setRedirect();
       } else {
@@ -43,7 +45,7 @@ const ProfileSetting = () => {
     userInfo();
   }, []);
 
-  const Menu = ({ onlyProfile }) => {
+  const renderMenu = () => {
     if (onlyProfile)
       return (
         <>
@@ -52,7 +54,6 @@ const ProfileSetting = () => {
           </div>
         </>
       );
-
     return (
       <>
         <ul className="nav nav-pills nav-fill navtop">
@@ -100,14 +101,13 @@ const ProfileSetting = () => {
         crossOrigin="anonymous"
       />
       <style
+        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
           __html:
             '\n      a {\n        text-decoration: none !important;\n      }\n      .navtop {\n        margin-top: 50px;\n      }\n      .tab-content {\n        padding: 40px;\n        margin-top: -20px;\n      }\n      .avatar {\n        width: 17em;\n        height: 17em;\n      }\n\n      .question {\n        color: rgb(0, 0, 0);\n      }\n    ',
         }}
       />
-      <div className="container">
-        <Menu onlyProfile={onlyProfile} />
-      </div>
+      <div className="container">{renderMenu()}</div>
     </div>
   );
 };

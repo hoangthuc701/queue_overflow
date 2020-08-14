@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 const Profile = () => {
-  const user_info = useSelector((state) => state.user_info.user_info);
+  const userInfo = useSelector((state) => state.user_info.user_info);
   return (
     <div className="tab-pane active" role="tabpanel" id="menu1">
       <div className="row">
@@ -14,9 +14,9 @@ const Profile = () => {
           />
         </div>
         <div className="col-8 mt-5">
-          <h2>{user_info.display_name}</h2>
-          <h5>{user_info.description}</h5>
-          <h2>{user_info.email}</h2>
+          <h2>{userInfo.display_name}</h2>
+          <h5>{userInfo.description}</h5>
+          <h2>{userInfo.email}</h2>
         </div>
       </div>
     </div>

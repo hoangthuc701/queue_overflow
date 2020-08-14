@@ -18,7 +18,8 @@ const Setting = () => {
       toast.error('Password and confirm password is not match');
       return;
     }
-    const user_id = getUser()._id;
+    // eslint-disable-next-line no-underscore-dangle
+    const userId = getUser()._id;
     UserService.updateInfo(
       user.display_name,
       user.description,
@@ -28,7 +29,7 @@ const Setting = () => {
         toast.error(data.error);
       } else {
         toast.success(data.message);
-        dispatch(profileSettingAction.getUserInfo(user_id));
+        dispatch(profileSettingAction.getUserInfo(userId));
       }
     });
   };
@@ -53,6 +54,7 @@ const Setting = () => {
         <div className="col-8 mt-5">
           <form>
             <div className="form-group">
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
               <label htmlFor="display_name">
                 <h6>Display Name</h6>
               </label>
@@ -66,6 +68,7 @@ const Setting = () => {
               />
             </div>
             <div className="form-group">
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
               <label htmlFor="description">
                 <h6>Description</h6>
               </label>
@@ -78,6 +81,7 @@ const Setting = () => {
               />
             </div>
             <div className="form-group">
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
               <label htmlFor="password">
                 <h6>New Password</h6>
               </label>
@@ -90,6 +94,7 @@ const Setting = () => {
               />
             </div>
             <div className="form-group">
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
               <label htmlFor="confirm_password">
                 <h6>Confirm Password</h6>
               </label>
