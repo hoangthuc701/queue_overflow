@@ -6,7 +6,7 @@ class CategoryService {
     };
 
     const res = await fetch(
-      `${process.env.REACT_APP_SERVER_DOMAIN}/categorys`,
+      `${process.env.REACT_APP_SERVER_DOMAIN}/categories`,
       requestOptions
     );
     const data = await res.json();

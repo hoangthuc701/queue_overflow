@@ -55,7 +55,7 @@ function DislikeQuestion(questionId) {
   }
   return async (dispatch) => {
     dispatch(request());
-    const data = await QuestionService.LikeQuestion(questionId);
+    const data = await QuestionService.DislikeQuestion(questionId);
     if (!data.error) {
       dispatch(success(data.data));
     } else {

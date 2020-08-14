@@ -1,8 +1,14 @@
+import { getToken } from '../helper/auth';
+
 class QuestionService {
   static async createNewQuestion(title, category, content, tags) {
+    const token = getToken();
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({ title, category, content, tags }),
     };
 
