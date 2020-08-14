@@ -58,6 +58,17 @@ class QuestionService {
     const data = await res.json();
     return data;
   }
+  static async getListQuestion(page, filter) {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
+    const data = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/questions?page=${page}&filter=${filter}`,
+      requestOptions
+    );
+    return data.json();
+  }
 }
 
 export default QuestionService;
