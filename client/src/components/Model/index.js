@@ -5,13 +5,13 @@ import modalAction from '../../actions/modal';
 const Model = () => {
   const model = useSelector((state) => state.modal);
   const dispatch = useDispatch();
-  const { show, content, title } = model;
+  const { show, content, title, type, id } = model;
 
   const handleHide = () => {
-    dispatch(modalAction.hideModal(false));
+    dispatch(modalAction.hideModal(false, type, id));
   };
   const handleConfirm = () => {
-    dispatch(modalAction.hideModal(true));
+    dispatch(modalAction.hideModal(true, type, id));
   };
   if (show) {
     return (

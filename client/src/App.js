@@ -36,13 +36,13 @@ class App extends Component {
 
   renderFooter = () => <Footer />;
 
-  renderModel = () => <Modal />;
+  renderModal = () => <Modal />;
 
   render() {
     return (
       <BrowserRouter>
         {this.renderToastMessage()}
-        {this.renderModel()}
+        {this.renderModal()}
         {this.renderHeader()}
         <div className="container" id="content">
           <Switch>

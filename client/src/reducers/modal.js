@@ -1,10 +1,12 @@
 import modalConstants from '../constants/modal';
 
 const initialState = {
-  show: true,
+  show: false,
   content: '',
   title: '',
   result: false,
+  type: '',
+  id: '',
 };
 
 export default function authentication(state = initialState, action) {
@@ -15,6 +17,8 @@ export default function authentication(state = initialState, action) {
         content: action.data.content,
         show: true,
         result: false,
+        type: action.data.type,
+        id: action.data.id,
       };
     case modalConstants.HIDE_MODEL:
       return {

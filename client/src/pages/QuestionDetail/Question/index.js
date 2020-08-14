@@ -9,6 +9,7 @@ import { isAuthor } from '../../../helper/auth';
 import formatDate from '../../../helper/formatDate';
 
 import questionAction from '../../../actions/question';
+import modalAction from '../../../actions/modal';
 
 class Question extends Component {
   componentDidMount() {
@@ -19,6 +20,20 @@ class Question extends Component {
     const { QuestionActionCreators } = this.props;
     QuestionActionCreators.getQuestionDetail(questionId);
   }
+
+  handleDelete = () => {
+    const { ModelActionCreators } = this.props;
+    // eslint-disable-next-line react/prop-types
+    const { match } = this.props;
+    // eslint-disable-next-line react/prop-types
+    const { questionId } = match.params;
+    ModelActionCreators.showModal(
+      'Alert',
+      'Do you want to delete this question?',
+      'question',
+      questionId
+    );
+  };
 
   renderManager = () => {
     return (
@@ -35,7 +50,7 @@ class Question extends Component {
             }}
           />
         </Link>
-        <span>
+        <span role="presentation" onClick={this.handleDelete}>
           <span style={{ fontSize: '150%', marginLeft: '2em' }}>Delete</span>
           <span
             className="fas fa-eraser"
@@ -224,6 +239,7 @@ Question.propTypes = {
   totalDislike: PropTypes.number.isRequired,
   created_time: PropTypes.string.isRequired,
   QuestionActionCreators: PropTypes.objectOf().isRequired,
+  ModelActionCreators: PropTypes.objectOf().isRequired,
 };
 const mapStateToProps = (state) => ({
   title: state.question.title,
@@ -240,6 +256,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => ({
   QuestionActionCreators: bindActionCreators(questionAction, dispatch),
+  ModelActionCreators: bindActionCreators(modalAction, dispatch),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
