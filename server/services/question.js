@@ -211,6 +211,46 @@ class QuestionService {
 			vote: vote,
 		};
 	}
+	static async getQuestionsByCategory(offset, limit, category_id){
+		let count = await QuestionModel.countDocuments({ category: category_id });
+		let questions;
+		try {
+			questions = await QuestionModel.find({ category: category_id })
+				.lean()
+				.skip((offset - 1) * limit)
+				.limit(limit)
+				.exec();
+		} catch (error) {
+			throw new Error('Cannot get questions.');
+		}
+		return { questions: questions, totalCount: count };
+	}
+	static async getQuestionsByTag(offset, limit, tag_id){
+		let count = await QuestionModel.countDocuments({ tags: tag_id });
+		let questions;
+		try {
+			questions = await QuestionModel.find({ tags: tag_id })
+				.lean()
+				.skip((offset - 1) * limit)
+				.limit(limit)
+				.exec();
+		} catch (error) {
+			throw new Error('Cannot get questions.');
+		}
+		return { questions: questions, totalCount: count };
+	}
+	static async removeAnswer(question_id, answer_id){
+		let question;
+		try {
+			question = QuestionModel.update(
+				{ _id: question_id },
+				{ $pull: { answers: answer_id } }
+			).exec();
+		} catch (error) {
+			throw new Error('Cannot remove question from tag.');
+		}
+		return question;
+	}
 }
 
 module.exports = QuestionService;
