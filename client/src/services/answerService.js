@@ -35,23 +35,45 @@ class AnswerService {
   }
 
   static async LikeAnswer(answerId) {
+    const token = getToken();
     const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        answer_id: answerId,
+        type: '1',
+      }),
     };
 
-    const res = await fetch(`${answerId}`, requestOptions);
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/ratings/answers`,
+      requestOptions
+    );
     const data = await res.json();
     return data;
   }
 
   static async DislikeAnswer(answerId) {
+    const token = getToken();
     const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        answer_id: answerId,
+        type: '0',
+      }),
     };
 
-    const res = await fetch(`${answerId}`, requestOptions);
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/ratings/answers`,
+      requestOptions
+    );
     const data = await res.json();
     return data;
   }

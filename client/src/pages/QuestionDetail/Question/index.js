@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 
 import Markdown from '../MarkDown';
 import { isAuthor } from '../../../helper/auth';
@@ -242,7 +242,6 @@ const mapDispatchToProps = (dispatch) => ({
   QuestionActionCreators: bindActionCreators(questionAction, dispatch),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(Question));
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+
+export default compose(withConnect, withRouter)(Question);

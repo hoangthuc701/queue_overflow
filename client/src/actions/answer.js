@@ -15,7 +15,7 @@ function LikeAnswer(answerId) {
     dispatch(request());
     const data = await AnswerService.LikeAnswer(answerId);
     if (!data.error) {
-      dispatch(success(data.data));
+      dispatch(success({ ...data.data, answerId }));
     } else {
       dispatch(failure(data.error));
     }
@@ -34,9 +34,9 @@ function DislikeAnswer(answerId) {
   }
   return async (dispatch) => {
     dispatch(request());
-    const data = await AnswerService.LikeQuestion(answerId);
+    const data = await AnswerService.DislikeAnswer(answerId);
     if (!data.error) {
-      dispatch(success(data.data));
+      dispatch(success({ ...data.data, answerId }));
     } else {
       dispatch(failure(data.error));
     }

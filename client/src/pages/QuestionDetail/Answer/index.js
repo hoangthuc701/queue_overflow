@@ -8,9 +8,9 @@ import Markdown from '../MarkDown';
 import { isAuthor } from '../../../helper/auth';
 import formatDate from '../../../helper/formatDate';
 
-import questionAction from '../../../actions/question';
+import answerAction from '../../../actions/answer';
 
-class Question extends Component {
+class Answer extends Component {
   renderManager = () => {
     return (
       <>
@@ -30,14 +30,14 @@ class Question extends Component {
     );
   };
 
-  handleLike = (questionId) => {
-    const { QuestionActionCreators } = this.props;
-    QuestionActionCreators.LikeQuestion(questionId);
+  handleLike = (answerId) => {
+    const { AnswerActionCreators } = this.props;
+    AnswerActionCreators.LikeAnswer(answerId);
   };
 
-  handleDislike = (questionId) => {
-    const { QuestionActionCreators } = this.props;
-    QuestionActionCreators.DislikeQuestion(questionId);
+  handleDislike = (answerId) => {
+    const { AnswerActionCreators } = this.props;
+    AnswerActionCreators.DislikeAnswer(answerId);
   };
 
   renderAuthor = () => {
@@ -60,11 +60,11 @@ class Question extends Component {
   };
 
   renderLikeButton = () => {
-    const { vote, questionId } = this.props;
+    const { vote, answerId } = this.props;
     return (
       <span
         role="presentation"
-        onClick={this.handleLike.bind(this, questionId)}
+        onClick={this.handleLike.bind(this, answerId)}
         className={`fas fa-chevron-up ${vote === 'like' ? 'active-like' : ' '}`}
         style={{
           fontSize: '200%',
@@ -77,11 +77,11 @@ class Question extends Component {
   };
 
   renderDisLikeButton = () => {
-    const { vote, questionId } = this.props;
+    const { vote, answerId } = this.props;
     return (
       <span
         role="presentation"
-        onClick={this.handleLike.bind(this, questionId)}
+        onClick={this.handleDislike.bind(this, answerId)}
         className={`fas fa-chevron-down ${
           vote === 'dislike' ? 'active-dislike' : ' '
         }`}
@@ -144,19 +144,19 @@ class Question extends Component {
   }
 }
 
-Question.propTypes = {
+Answer.propTypes = {
   content: PropTypes.string.isRequired,
   author: PropTypes.objectOf(PropTypes.string).isRequired,
   vote: PropTypes.string.isRequired,
   totalLike: PropTypes.number.isRequired,
-  questionId: PropTypes.string.isRequired,
+  answerId: PropTypes.string.isRequired,
   totalDislike: PropTypes.number.isRequired,
   created_time: PropTypes.string.isRequired,
-  QuestionActionCreators: PropTypes.objectOf().isRequired,
+  AnswerActionCreators: PropTypes.objectOf().isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  QuestionActionCreators: bindActionCreators(questionAction, dispatch),
+  AnswerActionCreators: bindActionCreators(answerAction, dispatch),
 });
 
-export default connect(null, mapDispatchToProps)(withRouter(Question));
+export default connect(null, mapDispatchToProps)(withRouter(Answer));

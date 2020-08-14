@@ -15,6 +15,8 @@ class QuestionDetailPage extends Component {
         <Answer
           // eslint-disable-next-line no-underscore-dangle
           key={answer._id}
+          // eslint-disable-next-line no-underscore-dangle
+          answerId={answer._id}
           content={answer.content}
           author={answer.author}
           vote={answer.vote}
@@ -30,13 +32,21 @@ class QuestionDetailPage extends Component {
     return (
       <>
         {this.renderQuestion()}
+        <div>
+          <div className="row">
+            <div className="col-sm-2"> </div>
+            <div className="col-sm-8">
+              <h2>Answer:</h2>
+            </div>
+            <div className="col-sm-2"> </div>
+          </div>
+        </div>
         {this.renderAnswer()}
         <div>
           <div className="row">
             <div className="col-sm-2"> </div>
             <div className="col-sm-8">
               <h2>Your answer:</h2>
-
               <button type="button" className="btn btn-primary float-right">
                 Submit
               </button>
