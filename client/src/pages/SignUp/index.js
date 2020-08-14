@@ -4,9 +4,12 @@ import { Link, Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { isAuthenticate } from '../../helper/auth';
 import UserService from '../../services/userService';
+import SignUpValidator from '../../validators/signup';
 
 const SignUpForm = (props) => {
   const [user, setUser] = useState({});
+  const [errors, setErrors] = useState({});
+  const [isSignup, setSignup] = useState(false);
 
   const handleOnChange = (event) => {
     setUser({ ...user, [event.target.name]: event.target.value });
@@ -14,12 +17,18 @@ const SignUpForm = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (user.password !== user.confirm_password) {
-      toast.error('Password and confirm password is not match');
-      return;
-    }
+    const error = SignUpValidator(
+      user.email,
+      user.password,
+      user.confirm_password,
+      user.display_name
+    );
+    setErrors(error);
+    if (Object.keys(error).length > 0) return;
+    setSignup(true);
     UserService.signup(user.email, user.password, user.display_name).then(
       (data) => {
+        setSignup(false);
         if (data.error) {
           toast.error(data.error);
         } else {
@@ -52,6 +61,9 @@ const SignUpForm = (props) => {
                   placeholder="Enter Email"
                   onChange={handleOnChange}
                 />
+                {errors && errors.email && errors.email.length > 0 && (
+                  <span className="error">{errors.email}</span>
+                )}
               </div>
               <div className="form-group">
                 <label htmlFor="password">Password</label>
@@ -64,6 +76,9 @@ const SignUpForm = (props) => {
                   placeholder="Enter Password"
                   onChange={handleOnChange}
                 />
+                {errors && errors.password && errors.password.length > 0 && (
+                  <span className="error">{errors.password}</span>
+                )}
               </div>
               <div className="form-group">
                 <label htmlFor="confirm_password">Confirm password</label>
@@ -76,9 +91,18 @@ const SignUpForm = (props) => {
                   placeholder="Enter Confirm Password"
                   onChange={handleOnChange}
                 />
+                {errors &&
+                  errors.confirmPassword &&
+                  errors.confirmPassword.length > 0 && (
+                    <span className="error">{errors.confirmPassword}</span>
+                  )}
               </div>
               <div className="form-group">
+<<<<<<< HEAD
                 <label htmlFor="display_name">Display name</label>
+=======
+                <label htmlFor="exampleInputEmail1">Full name</label>
+>>>>>>> server/signup
                 <input
                   type="text"
                   name="display_name"
@@ -88,12 +112,18 @@ const SignUpForm = (props) => {
                   placeholder="Enter Fullname"
                   onChange={handleOnChange}
                 />
+                {errors &&
+                  errors.displayName &&
+                  errors.displayName.length > 0 && (
+                    <span className="error">{errors.displayName}</span>
+                  )}
               </div>
               <div className="col-md-12 text-center mb-3">
                 <button
                   type="submit"
                   className=" btn btn-block mybtn btn-primary tx-tfm"
                   onClick={handleSubmit}
+                  disabled={isSignup}
                 >
                   Submit
                 </button>
