@@ -20,8 +20,16 @@ const initialState = {
 
 export default function authentication(state = initialState, action) {
   switch (action.type) {
+    case questionConstants.GET_QUESTION_REQUEST:
+      return {
+        ...state,
+        deleted: false,
+      };
     case questionConstants.GET_QUESTION_REQUEST_SUCCESS:
-      return action.question;
+      return {
+        ...action.question,
+        deleted: false,
+      };
     case questionConstants.LIKE_QUESTION_SUCCESS:
       return {
         ...state,
@@ -53,13 +61,14 @@ export default function authentication(state = initialState, action) {
         answers: state.answers.map((answer) => {
           // eslint-disable-next-line no-underscore-dangle
           if (action.data.answerId === answer._id) {
+            const { totalLike, totalDislike, vote } = action.data;
             return {
               ...answer,
               rating_detail: {
-                totalLike: action.data.totalLike,
-                totalDislike: action.data.totalDislike,
+                totalLike,
+                totalDislike,
               },
-              vote: action.data.vote,
+              vote,
             };
           }
           return answer;
@@ -71,13 +80,14 @@ export default function authentication(state = initialState, action) {
         answers: state.answers.map((answer) => {
           // eslint-disable-next-line no-underscore-dangle
           if (action.data.answerId === answer._id) {
+            const { totalLike, totalDislike, vote } = action.data;
             return {
               ...answer,
               rating_detail: {
-                totalLike: action.data.totalLike,
-                totalDislike: action.data.totalDislike,
+                totalLike,
+                totalDislike,
               },
-              vote: action.data.vote,
+              vote,
             };
           }
           return answer;

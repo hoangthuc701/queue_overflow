@@ -3,6 +3,7 @@ import { Link, withRouter, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
+import Loading from '../../../components/Loading';
 
 import Markdown from '../MarkDown';
 import { isAuthor } from '../../../helper/auth';
@@ -16,6 +17,7 @@ class Question extends Component {
     super();
     this.state = {
       value: true,
+      loading: true,
     };
   }
 
@@ -27,6 +29,7 @@ class Question extends Component {
     const { QuestionActionCreators } = this.props;
     const value = await QuestionActionCreators.getQuestionDetail(questionId);
     this.setState({ value });
+    this.setState({ loading: false });
   }
 
   handleDelete = () => {
@@ -118,7 +121,7 @@ class Question extends Component {
       // eslint-disable-next-line no-underscore-dangle
       <Link to={`/profile/${author.author_id}`} className="float-right">
         <img
-          src={author.avatar}
+          src={` /upload/${author.author_id}`}
           className="rounded-circle"
           alt={author.name}
           width={50}
@@ -176,7 +179,8 @@ class Question extends Component {
       totalLike,
       deleted,
     } = this.props;
-    const { value } = this.state;
+    const { value, loading } = this.state;
+    if (loading) return <Loading />;
     if (!value || deleted) return <Redirect to="/" />;
     const score = totalLike - totalDislike;
     const authorId = author.author_id;
@@ -185,10 +189,10 @@ class Question extends Component {
         <div className="col-sm-2"> </div>
         <div className="col-sm-8">
           <div className="row">
-            <div className="col-sm-6 align-self-end">
+            <div className="col-sm-10 align-self-end">
               <h1>{title}</h1>
             </div>
-            <div className="col-sm-6 align-self-end">
+            <div className="col-sm-2 align-self-end">
               {this.renderCategory()}
             </div>
           </div>
