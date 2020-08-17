@@ -24,6 +24,7 @@ class QuestionDetailPage extends Component {
           totalLike={answer.rating_detail.totalLike}
           totalDislike={answer.rating_detail.totalDislike}
           created_time={answer.created_time}
+          isBestAnswer={answer.isBestAnswer}
         />
       );
     });

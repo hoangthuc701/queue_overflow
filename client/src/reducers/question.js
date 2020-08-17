@@ -90,6 +90,11 @@ export default function authentication(state = initialState, action) {
           (answer) => answer._id !== action.data.answerId
         ),
       };
+    case answerConstants.MARK_AS_BEST_ANSWER_SUCCESS:
+      return {
+        ...state,
+        answers: action.data,
+      };
     default:
       return state;
   }

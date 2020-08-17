@@ -5,7 +5,7 @@ import './index.css';
 
 const Question = (props) => {
   const { title } = props;
-  const linkTitle = '/question/add';
+  const linkTitle = '/question/';
   const linkUser = '/question/add';
   const { color } = title.category;
   const point =
@@ -71,7 +71,11 @@ const Question = (props) => {
                   >
                     <div className="row">
                       <div className="col-sm-8 col align-self-center">
-                        <Link to={linkTitle} style={{ color: 'black' }}>
+                        <Link
+                          // eslint-disable-next-line no-underscore-dangle
+                          to={`${linkTitle}${title._id}`}
+                          style={{ color: 'black' }}
+                        >
                           <h5 className="effect-shine">{title.title}</h5>
                         </Link>
                       </div>
@@ -114,7 +118,7 @@ const Question = (props) => {
                     className="card-body"
                     style={{ backgroundColor: bodyCard }}
                   >
-                    <p className="card-text">{title.content}</p>
+                    <p className="card-text-question">{title.content}</p>
                     <Link to={linkUser} className="float-right">
                       <div className="row">
                         <div className="col-4">

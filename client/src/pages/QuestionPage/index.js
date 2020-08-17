@@ -33,7 +33,7 @@ const QuestionPage = () => {
   let pageItems;
   // PAGINATION
   const paginate = (pageNumber) => {
-    console.log('TEST TEST', flagCate);
+    // console.log('TEST TEST', flagCate);
     dispatch(questionAction.questionList(pageNumber, flagCate));
   };
   if (questionlist.questions) {

@@ -21,13 +21,17 @@ class AnswerService {
   }
 
   static async delete(answerId) {
+    const token = getToken();
     const requestOptions = {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     };
 
     const res = await fetch(
-      `${process.env.REACT_APP_SERVER_DOMAIN}/deleteAnswer/${answerId}`,
+      `${process.env.REACT_APP_SERVER_DOMAIN}/answers/${answerId}`,
       requestOptions
     );
     const data = await res.json();
@@ -72,6 +76,24 @@ class AnswerService {
 
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_DOMAIN}/ratings/answers`,
+      requestOptions
+    );
+    const data = await res.json();
+    return data;
+  }
+
+  static async MarkAsBestAnswer(questionId, answerId) {
+    const token = getToken();
+    const requestOptions = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/questions/${questionId}/best_answer/${answerId}`,
       requestOptions
     );
     const data = await res.json();

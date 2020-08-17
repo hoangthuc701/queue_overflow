@@ -86,11 +86,34 @@ function createNewAnswer(questionId, content) {
   };
 }
 
+function markAsBestAnswer(questionId, commentId) {
+  function request() {
+    return { type: answerConstants.MARK_AS_BEST_ANSWER_REQUEST };
+  }
+  function success(data) {
+    return { type: answerConstants.MARK_AS_BEST_ANSWER_SUCCESS, data };
+  }
+  function failure(error) {
+    return { type: answerConstants.MARK_AS_BEST_ANSWER_FAILURE, error };
+  }
+  return async (dispatch) => {
+    dispatch(request());
+    const data = await AnswerService.MarkAsBestAnswer(questionId, commentId);
+    if (!data.error) {
+      dispatch(success(data.data));
+      return true;
+    }
+    dispatch(failure(data.error));
+    return false;
+  };
+}
+
 const questionActions = {
   LikeAnswer,
   DislikeAnswer,
   DeleteAnswer,
   createNewAnswer,
+  markAsBestAnswer,
 };
 
 export default questionActions;

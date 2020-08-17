@@ -14,34 +14,49 @@ import modalAction from '../../../actions/modal';
 class Answer extends Component {
   handleDelete = () => {
     const { ModelActionCreators } = this.props;
-    const answerId = this.props;
+    const { answerId } = this.props;
     ModelActionCreators.showModal(
-      'Alert',
+      'Confirm delete',
       'Do you want to delete this answer?',
       'answer',
       answerId
     );
   };
 
+  isPostAuthor = (commentAuthor, postAuthor) => {
+    // eslint-disable-next-line no-underscore-dangle
+    return commentAuthor._id === postAuthor._id;
+  };
+
+  handleMarkAsBestAnswer = () => {
+    const { answerId, questionId } = this.props;
+    const { AnswerActionCreators } = this.props;
+    AnswerActionCreators.markAsBestAnswer(questionId, answerId);
+  };
+
   renderManager = () => {
+    const { postAuthor, author, isBestAnswer } = this.props;
     return (
       <>
-        <button className="btn btn-success" type="button">
+        {this.isPostAuthor(author, postAuthor) && !isBestAnswer && (
+          <button
+            className="btn btn-success"
+            type="button"
+            onClick={this.handleMarkAsBestAnswer}
+          >
+            {' '}
+            Mark as best answer
+          </button>
+        )}
+        <button
+          className="btn btn-danger ml-2"
+          style={{ float: 'right' }}
+          type="button"
+          onClick={this.handleDelete}
+        >
           {' '}
-          Mark as best answer
+          Delete
         </button>
-        <span role="presentation" onClick={this.handleDelete}>
-          <span style={{ fontSize: '150%', marginLeft: '2em' }}>Delete</span>
-          <span
-            className="fas fa-eraser"
-            style={{
-              fontSize: '150%',
-              marginLeft: '0.5em',
-              marginTop: '0.5em',
-              color: 'black',
-            }}
-          />
-        </span>
       </>
     );
   };
@@ -117,12 +132,23 @@ class Answer extends Component {
       created_time,
       totalDislike,
       totalLike,
+      isBestAnswer,
     } = this.props;
     const score = totalLike - totalDislike;
     const authorId = author.author_id;
     return (
-      <div className="row mt-3">
-        <div className="col-sm-2"> </div>
+      <div className="row">
+        <div className="col-sm-2 align-self-center text-right">
+          {isBestAnswer && (
+            <p
+              className="fas fa-check"
+              style={{ fontSize: '300%', color: '#4cf760' }}
+              aria-hidden="true"
+            >
+              {' '}
+            </p>
+          )}
+        </div>
         <div className="col-sm-8">
           <div className="row">
             <div className="col-sm-6 align-self-end"> </div>
@@ -131,9 +157,7 @@ class Answer extends Component {
           <hr style={{ marginTop: '-0.25em' }} />
           <div className="row">
             <div className="col-sm-6"> Created {formatDate(created_time)} </div>
-            <div className="col-sm-6 text-right">
-              <span style={{ marginRight: '1em' }}>Edited 28/07/2020</span>
-            </div>
+            <div className="col-sm-6 text-right"> </div>
           </div>
           <div className="card">
             <div className="card-body">
@@ -149,7 +173,7 @@ class Answer extends Component {
               {this.renderLikeButton()}
               {this.renderDisLikeButton()}
             </div>
-            <div className="col-sm-6 text-right">
+            <div className="col-sm-6 text-right mt-2 mb-2">
               {isAuthor(authorId) && this.renderManager()}
             </div>
           </div>
@@ -170,11 +194,19 @@ Answer.propTypes = {
   created_time: PropTypes.string.isRequired,
   AnswerActionCreators: PropTypes.objectOf().isRequired,
   ModelActionCreators: PropTypes.objectOf().isRequired,
+  postAuthor: PropTypes.objectOf(PropTypes.string).isRequired,
+  isBestAnswer: PropTypes.bool.isRequired,
+  questionId: PropTypes.string.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   AnswerActionCreators: bindActionCreators(answerAction, dispatch),
   ModelActionCreators: bindActionCreators(modalAction, dispatch),
 });
+const mapStateToProps = (state) => ({
+  postAuthor: state.question.author,
+  // eslint-disable-next-line no-underscore-dangle
+  questionId: state.question._id,
+});
 
-export default connect(null, mapDispatchToProps)(withRouter(Answer));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Answer));

@@ -47,29 +47,17 @@ class Question extends Component {
     return (
       <>
         <Link to="/">
-          <span style={{ fontSize: '150%' }}>Edit</span>
-          <span
-            className="fas fa-pen"
-            style={{
-              fontSize: '150%',
-              marginLeft: '0.5em',
-              marginTop: '0.5em',
-              color: 'black',
-            }}
-          />
+          <button type="button" className="btn btn-outline-success">
+            Edit{' '}
+          </button>
         </Link>
-        <span role="presentation" onClick={this.handleDelete}>
-          <span style={{ fontSize: '150%', marginLeft: '2em' }}>Delete</span>
-          <span
-            className="fas fa-eraser"
-            style={{
-              fontSize: '150%',
-              marginLeft: '0.5em',
-              marginTop: '0.5em',
-              color: 'black',
-            }}
-          />
-        </span>
+        <button
+          type="button"
+          className="btn btn-outline-danger ml-2"
+          onClick={this.handleDelete}
+        >
+          Delete
+        </button>
       </>
     );
   };
@@ -208,9 +196,7 @@ class Question extends Component {
           <span style={{ marginLeft: '1em' }}>{this.renderTags()}</span>
           <div className="row">
             <div className="col-sm-6"> </div>
-            <div className="col-sm-6 text-right">
-              <span style={{ marginRight: '1em' }}>Edited 28/07/2020</span>
-            </div>
+            <div className="col-sm-6 text-right"> </div>
           </div>
           <div className="card">
             <div className="card-body">
@@ -226,7 +212,7 @@ class Question extends Component {
               {this.renderLikeButton()}
               {this.renderDisLikeButton()}
             </div>
-            <div className="col-sm-6 text-right">
+            <div className="col-sm-6 text-right mt-3">
               {isAuthor(authorId) && this.renderManager()}
             </div>
           </div>
