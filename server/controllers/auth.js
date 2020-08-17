@@ -2,13 +2,10 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const UserService = require('../services/user');
 const EmailService = require('../services/email');
-const {
-	getHashedPassword,
-	comparePassword,
-	generateRandomPassword,
-} = require('../util/password');
+const { getHashedPassword, comparePassword } = require('../util/password');
 const { createPasswordMail, createVerificationMail } = require('../util/email');
 const response_format = require('../util/response_format');
+const { generateCode } = require('../util/account');
 
 exports.sign_up = async (req, res) => {
 	let email_user = await UserService.getUserByEmail(req.body.email);
@@ -84,20 +81,26 @@ exports.sign_in = async (req, res) => {
 	}
 };
 
-exports.forgotPassword = async (req, res) => {
+exports.sendResetPasswordMail = async (req, res) => {
 	const email = req.body.email;
 	const user = await UserService.getUserByEmail(email);
 	if (!user) {
 		res.json(response_format.error('Email is not exist.'));
 		return;
 	}
-	const password = generateRandomPassword();
-	const hashed_password = await getHashedPassword(password);
-
-	await UserService.update(user._id, { hashed_password });
-	const mail = createPasswordMail(email, user.display_name, password);
+	const code = generateCode(user._id);
+	const mail = createPasswordMail(email, user.display_name, code);
 	EmailService.send(mail);
 	res.json(
 		response_format.success('Your new password has send to your email.', {})
 	);
+};
+
+exports.resetPassword = async (req, res) => {
+	const user_id = req.res.id;
+	const user = await UserService.getUserById(user_id);
+	if (!user) {
+		res.json(response_format.error('User is not exist.'));
+		return;
+	}
 };
