@@ -7,7 +7,7 @@ const {
 	comparePassword,
 	generateRandomPassword,
 } = require('../util/password');
-const { createPasswordMail } = require('../util/email');
+const { createPasswordMail, createVerificationMail } = require('../util/email');
 const response_format = require('../util/response_format');
 
 exports.sign_up = async (req, res) => {
@@ -23,17 +23,26 @@ exports.sign_up = async (req, res) => {
 	};
 	try {
 		let new_user = await UserService.create(user);
-		if (new_user) {
-			res.json(
-				response_format.success('Sign up success.', {
+		if (!new_user) {
+			res.json(response_format.error('Sign up failed'));
+			return;
+		}
+
+		//send verification mail to user
+		const hashed_code = await getHashedPassword(new_user._id);
+		const link = process.env.VERIFICATION_PAGE_URL + '/' + hashed_code;
+		EmailService.send(createVerificationMail(new_user.email, link));
+
+		res.json(
+			response_format.success(
+				'Sign up success. The account activation mail has been sent to your email',
+				{
 					_id: new_user._id,
 					email: new_user.email,
 					display_name: new_user.display_name,
-				})
-			);
-		} else {
-			res.json(response_format.error('Sign up failed'));
-		}
+				}
+			)
+		);
 	} catch (error) {
 		res.status(500).json(
 			response_format.error('Oh no, something went wrong.')
@@ -46,6 +55,10 @@ exports.sign_in = async (req, res) => {
 	if (!user) {
 		return res.json(response_format.error('Email is not existed.'));
 	}
+	if (!user.verified) {
+		return res.json(response_format.error('The account is not activated.'));
+	}
+
 	let password_check = await comparePassword(
 		req.body.password,
 		user.hashed_password

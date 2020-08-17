@@ -13,3 +13,15 @@ exports.createPasswordMail = (receiver, name, password) => ({
 		'</h3> </span>' +
 		'<div>Please sign in with the new password and change your password</div></div>',
 });
+
+exports.createVerificationMail = (receiver, link) => ({
+	receiver,
+	subject: '[QueueOverflow] Activate your account',
+	text: '',
+	html: `
+		<div>
+			<div>You're almost done! There's just one more step required to verify your QueueOverflow account.</div>
+			<a href="${link}">Please click this link to activate your QueueOverflow account<a/>
+		</div>
+		`,
+});
