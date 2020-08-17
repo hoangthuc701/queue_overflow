@@ -8,7 +8,7 @@ class CategoryBox extends Component {
     super();
     this.state = {
       list: [],
-      category:{category_id:0}
+      category: "",
     };
   }
 
@@ -22,14 +22,18 @@ class CategoryBox extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps) {
       this.setState({
-        category:nextProps.category
-      })
+        category: nextProps.category.category_id,
+      });
     }
+    console.log(nextProps.category);
   }
 
   handleChange = (key, value) => {
     // eslint-disable-next-line react/destructuring-assignment
-    console.log(value);
+    this.setState({
+      category:value,
+    });
+    console.log(this.state.category);
     this.props.handleChange([key], value);
   };
 
@@ -46,10 +50,9 @@ class CategoryBox extends Component {
           className="form-control"
           name="category"
           id="category"
-          value={this.state.category.category_id}
+          value={this.state.category}
           onBlur={(e) => this.handleChange(e.target.name, e.target.value)}
         >
-          <option key="0" value=""></option>
           {list.map((e) => {
             return (
               // eslint-disable-next-line no-underscore-dangle
