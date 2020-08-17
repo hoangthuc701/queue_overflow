@@ -50,7 +50,7 @@ class QuestionService {
     };
 
     const res = await fetch(
-      `${process.env.REACT_APP_SERVER_DOMAIN}/${quesitionId}`,
+      `${process.env.REACT_APP_SERVER_DOMAIN}/questions/${quesitionId}`,
       requestOptions
     );
     const data = await res.json();
@@ -59,13 +59,23 @@ class QuestionService {
 
   static async getDetailQuestion(questionId) {
     const token = getToken();
-    const requestOptions = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    };
+    let requestOptions;
+    if (token) {
+      requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      };
+    } else {
+      requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+    }
 
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_DOMAIN}/questions/${questionId}`,

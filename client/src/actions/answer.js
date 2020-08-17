@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import answerConstants from '../constants/answer';
 import AnswerService from '../services/answerService';
 
@@ -18,6 +19,7 @@ function LikeAnswer(answerId) {
       dispatch(success({ ...data.data, answerId }));
     } else {
       dispatch(failure(data.error));
+      toast.error('Please login to continue.');
     }
   };
 }
@@ -39,6 +41,7 @@ function DislikeAnswer(answerId) {
       dispatch(success({ ...data.data, answerId }));
     } else {
       dispatch(failure(data.error));
+      toast.error('Please login to continue.');
     }
   };
 }
@@ -82,6 +85,7 @@ function createNewAnswer(questionId, content) {
       return true;
     }
     dispatch(failure(data.error));
+    toast.error('Please login to continue.');
     return false;
   };
 }
