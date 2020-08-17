@@ -1,24 +1,13 @@
 require('dotenv').config();
-const jwt = require('jsonwebtoken');
 
 const response_format = require('../util/response_format');
 const AnswerService = require('../services/answer');
 const UserService = require('../services/user');
 const QuestionService = require('../services/question');
+const {verifyUser} = require ('../util/auth');
 exports.addNewAnswer = async (req, res) => {
-	let token = req.header('Authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
 	let author;
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	let user = req.res.user;
 	author = user._id;
 	let answer = {
 		content: req.body.content,
@@ -47,7 +36,7 @@ exports.addNewAnswer = async (req, res) => {
 					new_answer.isBestAnswer = true;
 				else new_answer.isBestAnswer = false;
 			}
-			if (token) {
+			if (user) {
 				new_answer.vote = 'none';
 				let like_index;
 				for (
@@ -92,18 +81,7 @@ exports.addNewAnswer = async (req, res) => {
 	}
 };
 exports.likeAnswer = async (req, res) => {
-	let token = req.header('Authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	let user = req.res.user;
 	try {
 		let answer = await AnswerService.likeAnswer(
 			req.body.answer_id,
@@ -121,18 +99,6 @@ exports.likeAnswer = async (req, res) => {
 	}
 };
 exports.deleteAnswer = async (req, res) => {
-	let token = req.header('Authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
 	let answer;
 	try {
 		answer = await AnswerService.getById(req.params.answer_id);
@@ -141,13 +107,8 @@ exports.deleteAnswer = async (req, res) => {
 	}
 	if (!answer)
 		return res.json(response_format.error('Answer does not exist.'));
-	if (user._id != answer.author.toString()) {
-		return res.json(
-			response_format.error(
-				'User does not have rights to delete this answer.'
-			)
-		);
-	}
+	const is_verify = verifyUser(req, res, answer.author.toString());
+	if (!is_verify) return;
 	try {
 		const is_delete = await AnswerService.delete(req.params.answer_id);
 		if (is_delete)

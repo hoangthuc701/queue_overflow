@@ -207,7 +207,10 @@ class QuestionService {
 	}
 	static async chooseBestAnswer(question_id, answer_id) {
 		let question;
+		let answer;
 		try {
+			answer = await AnswerModel.findOne({_id: answer_id}).exec();
+			if (!answer) throw new Error('There is no answer.');
 			question = await QuestionModel.findOne({ _id: question_id }).exec();
 			if (!question.best_answer) question.best_answer = answer_id;
 			else{
@@ -216,7 +219,7 @@ class QuestionService {
 			}
 			await question.save();
 		} catch (error) {
-			throw new Error('You can not choose best answer.');
+			throw new Error(error.message);
 		}
 		return question;
 	}

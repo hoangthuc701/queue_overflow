@@ -3,25 +3,16 @@ const QuestionService = require('../services/question');
 const TagService = require('../services/tag');
 const CategoryService = require('../services/category');
 const UserService = require('../services/user');
+const mongoose = require('mongoose');
+const {verifyUser} = require ('../util/auth');
 const jwt = require('jsonwebtoken');
 
 const response_format = require('../util/response_format');
 const AnswerService = require('../services/answer');
 const LIMIT = 10;
 exports.addNewQuestion = async (req, res) => {
-	let token = req.header('Authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
 	let author;
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	let user = req.res.user;
 	author = user._id;
 	let question = {
 		title: req.body.title,
@@ -79,18 +70,7 @@ exports.addNewQuestion = async (req, res) => {
 	}
 };
 exports.editQuestion = async (req, res) => {
-	let token = req.header('Authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	checkObjectId(res, req.params.question_id);
 	let data = {
 		title: req.body.title,
 		content: req.body.content,
@@ -98,6 +78,12 @@ exports.editQuestion = async (req, res) => {
 		tags: req.body.tags,
 		question_id: req.params.question_id,
 	};
+	let question = await QuestionService.getById(data.question_id);
+	if (!question) return res.status(500).json(
+		response_format.error('There is no question to edit.')
+	);
+	const is_verify = verifyUser(req, res, question.author.toString());
+	if(!is_verify) return;
 	for (
 		let index_of_tag_name = 0;
 		index_of_tag_name < data.tags.length;
@@ -117,14 +103,6 @@ exports.editQuestion = async (req, res) => {
 			});
 			data.tags[index_of_tag_name] = new_tag._id;
 		}
-	}
-	let question = await QuestionService.getById(data.question_id);
-	if (user._id != question.author.toString()) {
-		return res.json(
-			response_format.error(
-				'User does not have rights to edit this question.'
-			)
-		);
 	}
 	if (question) {
 		let index_of_tag_name;
@@ -164,18 +142,7 @@ exports.editQuestion = async (req, res) => {
 	}
 };
 exports.deleteQuestion = async (req, res) => {
-	let token = req.header('Authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	checkObjectId(res, req.params.question_id);
 	let question;
 	try {
 		question = await QuestionService.getById(req.params.question_id);
@@ -184,13 +151,8 @@ exports.deleteQuestion = async (req, res) => {
 	}
 	if (!question)
 		return res.json(response_format.error('Question does not exist.'));
-	if (user._id != question.author.toString()) {
-		return res.json(
-			response_format.error(
-				'User does not have rights to delete this question.'
-			)
-		);
-	}
+	const is_verify = verifyUser(req, res, question.author.toString());
+	if(!is_verify) return;
 	try {
 		const is_delete = await QuestionService.delete(req.params.question_id);
 		if (is_delete) {
@@ -227,6 +189,9 @@ exports.getQuestions = async (req, res) => {
 			parseInt(req.query.page, 10),
 			LIMIT,
 			req.query.filter
+		);
+		if (!questions.questions) return res.status(500).json(
+			response_format.error('There is no question.')
 		);
 		let questions_index;
 		for (
@@ -286,6 +251,7 @@ exports.getQuestions = async (req, res) => {
 	}
 };
 exports.getQuestionById = async (req, res) => {
+	checkObjectId(res, req.params.question_id);
 	let token = req.header('Authorization');
 	let user;
 	if (token) {
@@ -301,6 +267,9 @@ exports.getQuestionById = async (req, res) => {
 	let answers;
 	try {
 		question = await QuestionService.getById(req.params.question_id);
+		if (!question) return res.status(500).json(
+			response_format.error('There is no question.')
+		);
 		answers = await AnswerService.getByQuestionId(req.params.question_id);
 		let answer_index;
 		for (answer_index = 0; answer_index < answers.length; answer_index++) {
@@ -424,24 +393,18 @@ exports.getQuestionById = async (req, res) => {
 	}
 };
 exports.getQuestionByAuthorId = async (req, res) => {
-	let token = req.header('Authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	checkObjectId(res, req.params.user_id);
+	const is_verify = verifyUser(req, res, req.params.user_id);
+	if(!is_verify) return;
 	try {
 		let questions = await QuestionService.getQuestionsByOtherId(
 			req.query.page,
 			LIMIT,
-			user._id,
+			req.params.user_id,
 			'author'
+		);
+		if (!questions.questions) return res.status(500).json(
+			response_format.error('There is no question.')
 		);
 		let question_index;
 		for (
@@ -468,18 +431,7 @@ exports.getQuestionByAuthorId = async (req, res) => {
 	}
 };
 exports.likeQuestion = async (req, res) => {
-	let token = req.header('Authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	let user = req.res.user;
 	try {
 		let question = await QuestionService.likeQuestion(
 			req.body.question_id,
@@ -497,6 +449,7 @@ exports.likeQuestion = async (req, res) => {
 	}
 };
 exports.getQuestionsByCategoryId = async (req, res) => {
+	checkObjectId(res, req.params.category_id);
 	let questions;
 	let category;
 	try {
@@ -506,6 +459,9 @@ exports.getQuestionsByCategoryId = async (req, res) => {
 			LIMIT,
 			req.params.category_id,
 			'category'
+		);
+		if (!questions.questions) return res.status(500).json(
+			response_format.error('There is no question.')
 		);
 		questions = await displayQuestions(questions);
 		questions.category_info = category;
@@ -518,6 +474,7 @@ exports.getQuestionsByCategoryId = async (req, res) => {
 	}
 };
 exports.getQuestionsByTagId = async (req, res) => {
+	checkObjectId(res, req.params.tag_id);
 	let questions;
 	let tag;
 	try {
@@ -527,6 +484,9 @@ exports.getQuestionsByTagId = async (req, res) => {
 			LIMIT,
 			req.params.tag_id,
 			'tags'
+		);
+		if (!questions.questions) return res.status(500).json(
+			response_format.error('There is no question.')
 		);
 		questions = await displayQuestions(questions);
 		questions.tag_info = { tag_id: tag._id, name: tag.name };
@@ -539,28 +499,27 @@ exports.getQuestionsByTagId = async (req, res) => {
 	}
 };
 exports.chooseBestAnswer = async (req, res) => {
-	let token = req.header('Authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	checkObjectId(res, req.params.question_id);
+	checkObjectId(res, req.params.answer_id);
 	let question;
 	try {
 		question = await QuestionService.getById(req.params.question_id);
-		if (user._id != question.author.toString()) {
-			return res.json(
-				response_format.error(
-					'User does not have rights to edit this question.'
-				)
-			);
+		if (!question) return res.json(
+			response_format.error('There is no question.')
+		);
+		let answer_index;
+		let is_in_question = false;
+		for(answer_index=0;answer_index<question.answers.length;answer_index++){
+			if (question.answers[answer_index].toString()==req.params.answer_id){
+				is_in_question=true;
+				break;
+			}
 		}
+		if (!is_in_question) return res.json(
+			response_format.error('This answer does not belong to this question.')
+		);
+		const is_verify = verifyUser(req, res, question.author.toString());
+		if(!is_verify) return;
 		question = await QuestionService.chooseBestAnswer(
 			req.params.question_id,
 			req.params.answer_id
@@ -568,7 +527,6 @@ exports.chooseBestAnswer = async (req, res) => {
 		let answers = await AnswerService.getByQuestionId(
 			req.params.question_id
 		);
-		let answer_index;
 		for (answer_index = 0; answer_index < answers.length; answer_index++) {
 			if (!question.best_answer)
 				answers[answer_index].isBestAnswer = false;
@@ -593,7 +551,7 @@ exports.chooseBestAnswer = async (req, res) => {
 				answers[answer_index].rating_detail.like_users.length;
 			answers[answer_index].rating_detail.totalDislike =
 				answers[answer_index].rating_detail.dislike_users.length;
-			if (token) {
+			if (is_verify) {
 				answers[answer_index].vote = 'none';
 				let like_index;
 				for (
@@ -605,7 +563,7 @@ exports.chooseBestAnswer = async (req, res) => {
 					if (
 						answers[answer_index].rating_detail.like_users[
 							like_index
-						].toString() === user._id
+						].toString() === req.res.user._id
 					) {
 						answers[answer_index].vote = 'like';
 						break;
@@ -620,7 +578,7 @@ exports.chooseBestAnswer = async (req, res) => {
 					if (
 						answers[answer_index].rating_detail.dislike_users[
 							like_index
-						].toString() === user._id
+						].toString() === req.res.user._id
 					) {
 						answers[answer_index].vote = 'dislike';
 						break;
@@ -679,4 +637,10 @@ async function displayQuestions(data) {
 		};
 	}
 	return data;
+}
+function checkObjectId(res, objectId) {
+	const isObjectId = mongoose.Types.ObjectId.isValid(objectId);
+	if (!isObjectId) return res.json(
+		response_format.error('Invalid objectId.')
+	);
 }
