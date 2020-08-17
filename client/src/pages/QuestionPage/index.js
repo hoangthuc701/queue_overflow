@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import questionAction from '../../actions/question';
 import Question from '../../components/Question';
-import './index.css';
+import Pagination from '../../components/pagination';
+import Loading from '../../components/Loading';
 
 const QuestionPage = () => {
   const Newest = 'newest';
@@ -10,28 +12,50 @@ const QuestionPage = () => {
   const Category = 'category';
   const dispatch = useDispatch();
   const questionComponent = (title) => <Question title={title} />;
+  const paginationComponent = (perPage, questionlist, paginate) => {
+    return (
+      <div className="d-flex justify-content-center">
+        <Pagination
+          postsPerPage={perPage}
+          totalPosts={questionlist.totalCount}
+          paginate={paginate}
+        />
+      </div>
+    );
+  };
+  const perPage = 10;
+  const [flagCate, setflagCate] = useState(Newest);
   useEffect(() => {
     dispatch(questionAction.questionList());
   }, [dispatch]);
   const { questionlist, getting } = useSelector((state) => state.questionList);
   let questionitem;
+  let pageItems;
+  // PAGINATION
+  const paginate = (pageNumber) => {
+    // console.log('TEST TEST', flagCate);
+    dispatch(questionAction.questionList(pageNumber, flagCate));
+  };
   if (questionlist.questions) {
     questionitem = questionlist.questions.map((e) => {
       return <div key={e}>{questionComponent(e)}</div>;
     });
+    pageItems = paginationComponent(perPage, questionlist, paginate);
   }
   // EVENT BUTTON
-  function onClickfilter(filby) {
-    if (filby.Newest === Newest) {
+  function onClickFilter(filby) {
+    setflagCate(filby);
+    if (filby.localeCompare(Newest)) {
       dispatch(questionAction.questionList());
-    } else if (filby.Oldest === Oldest) {
+    } else if (filby.localeCompare(Oldest)) {
       dispatch(questionAction.questionList(1, Oldest));
-    } else if (filby.Category === Category) {
+    } else if (filby.localeCompare(Category)) {
       dispatch(questionAction.questionList(1, Category));
     }
   }
   if (getting) {
-    questionitem = <div className="loader" />;
+    questionitem = <Loading />;
+    pageItems = <div />;
   }
 
   return (
@@ -54,7 +78,7 @@ const QuestionPage = () => {
                   color: '#424242',
                   borderColor: '#bdbdbd',
                 }}
-                onClick={() => onClickfilter({ Newest })}
+                onClick={() => onClickFilter(Newest)}
               >
                 Newset
               </button>
@@ -66,7 +90,7 @@ const QuestionPage = () => {
                   color: '#424242',
                   borderColor: '#bdbdbd',
                 }}
-                onClick={() => onClickfilter({ Oldest })}
+                onClick={() => onClickFilter(Oldest)}
               >
                 Oldest
               </button>
@@ -78,23 +102,25 @@ const QuestionPage = () => {
                   color: '#424242',
                   borderColor: '#bdbdbd',
                 }}
-                onClick={() => onClickfilter({ Category })}
+                onClick={() => onClickFilter(Category)}
               >
                 Category
               </button>
             </div>
-            <button
+            <Link
+              to="/question/add"
               type="button"
               className="btn btn-primary float-right"
               style={{ backgroundColor: '#5bc0de', borderColor: 'black' }}
             >
               <b>Add new question</b>
-            </button>
+            </Link>
           </div>
         </div>
         <div className="col-sm-2"> </div>
       </div>
       {questionitem}
+      {pageItems}
     </div>
   );
 };

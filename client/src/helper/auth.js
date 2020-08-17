@@ -29,6 +29,12 @@ export const authenticate = (token, user, next) => {
   Cookies.set('user', user);
   if (next) next();
 };
+
+export const isAuthor = (userId) => {
+  const currentUser = getUser();
+  // eslint-disable-next-line no-underscore-dangle
+  return currentUser._id === userId;
+};
 export const signout = (next) => {
   Cookies.remove('token');
   Cookies.remove('user');
