@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import questionConstants from '../constants/question';
 import QuestionService from '../services/questionService';
 
@@ -40,6 +41,7 @@ function LikeQuestion(questionId) {
       dispatch(success(data.data));
     } else {
       dispatch(failure(data.error));
+      toast.error('Please login to continue.');
     }
   };
 }
@@ -61,6 +63,7 @@ function DislikeQuestion(questionId) {
       dispatch(success(data.data));
     } else {
       dispatch(failure(data.error));
+      toast.error('Please login to continue.');
     }
   };
 }
