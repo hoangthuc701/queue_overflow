@@ -1,7 +1,13 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const UserService = require('../services/user');
-const { getHashedPassword, comparePassword } = require('../util/password');
+const EmailService = require('../services/email');
+const {
+	getHashedPassword,
+	comparePassword,
+	generateRandomPassword,
+} = require('../util/password');
+const { createPasswordMail } = require('../util/email');
 const response_format = require('../util/response_format');
 
 exports.sign_up = async (req, res) => {
@@ -63,4 +69,22 @@ exports.sign_in = async (req, res) => {
 	} else {
 		res.json(response_format.error('Email and password are not matched.'));
 	}
+};
+
+exports.forgotPassword = async (req, res) => {
+	const email = req.body.email;
+	const user = await UserService.getUserByEmail(email);
+	if (!user) {
+		res.json(response_format.error('Email is not exist.'));
+		return;
+	}
+	const password = generateRandomPassword();
+	const hashed_password = await getHashedPassword(password);
+
+	await UserService.update(user._id, { hashed_password });
+	const mail = createPasswordMail(email, user.display_name, password);
+	EmailService.send(mail);
+	res.json(
+		response_format.success('Your new password has send to your email.', {})
+	);
 };

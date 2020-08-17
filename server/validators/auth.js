@@ -27,3 +27,12 @@ exports.signinValidator = [
 	body('password').notEmpty().withMessage('Password is required'),
 	validate,
 ];
+
+exports.forgotPasswordValidator = [
+	body('email')
+		.notEmpty()
+		.withMessage('Email is required')
+		.isEmail()
+		.withMessage('This is not email.'),
+	validate,
+];
