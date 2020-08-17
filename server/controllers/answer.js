@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const response_format = require('../util/response_format');
 const AnswerService = require('../services/answer');
 const UserService = require('../services/user');
+const QuestionService = require('../services/question');
 exports.addNewAnswer = async (req, res) => {
 	let token = req.header('Authorization');
 	if (token) {
@@ -27,9 +28,7 @@ exports.addNewAnswer = async (req, res) => {
 	try {
 		let new_answer = await AnswerService.create(answer);
 		if (new_answer) {
-			let author_data = await UserService.getUserById(
-				new_answer.author
-			);
+			let author_data = await UserService.getUserById(new_answer.author);
 			new_answer.author = {
 				author_id: author_data._id,
 				name: author_data.display_name,
@@ -39,13 +38,21 @@ exports.addNewAnswer = async (req, res) => {
 				new_answer.rating_detail.like_users.length;
 			new_answer.rating_detail.totalDislike =
 				new_answer.rating_detail.dislike_users.length;
+			let question = await QuestionService.getById(new_answer.question);
+			if (!question.best_answer) new_answer.isBestAnswer = false;
+			else {
+				if (
+					new_answer._id.toString() == question.best_answer.toString()
+				)
+					new_answer.isBestAnswer = true;
+				else new_answer.isBestAnswer = false;
+			}
 			if (token) {
 				new_answer.vote = 'none';
 				let like_index;
 				for (
 					like_index = 0;
-					like_index <
-					new_answer.rating_detail.like_users.length;
+					like_index < new_answer.rating_detail.like_users.length;
 					like_index++
 				) {
 					if (
@@ -59,8 +66,7 @@ exports.addNewAnswer = async (req, res) => {
 				}
 				for (
 					like_index = 0;
-					like_index <
-					new_answer.rating_detail.dislike_users.length;
+					like_index < new_answer.rating_detail.dislike_users.length;
 					like_index++
 				) {
 					if (
@@ -99,18 +105,19 @@ exports.likeAnswer = async (req, res) => {
 	}
 	let user = jwt.verify(token, process.env.PRIVATE_KEY);
 	try {
-		let answer = await AnswerService.likeAnswer(req.body.answer_id, user._id, req.body.type);
-		if (!answer) return res.json(
-			response_format.error('No answer exists.')
+		let answer = await AnswerService.likeAnswer(
+			req.body.answer_id,
+			user._id,
+			req.body.type
 		);
+		if (!answer)
+			return res.json(response_format.error('No answer exists.'));
 		return res.json(
 			response_format.success('Like answer succeed.', answer)
 		);
 	} catch (error) {
 		console.log(error);
-		res.status(500).json(
-			response_format.error(error.message)
-		);
+		res.status(500).json(response_format.error(error.message));
 	}
 };
 exports.deleteAnswer = async (req, res) => {
@@ -147,13 +154,9 @@ exports.deleteAnswer = async (req, res) => {
 			return res.json(
 				response_format.success('Delete answer succeed.', answer)
 			);
-		else return res.json(
-			response_format.error('Delete answer failed.')
-		);
+		else return res.json(response_format.error('Delete answer failed.'));
 	} catch (error) {
 		console.log(error);
-		res.status(500).json(
-			response_format.error(error.message)
-		);
+		res.status(500).json(response_format.error(error.message));
 	}
 };

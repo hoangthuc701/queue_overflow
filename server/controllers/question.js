@@ -304,6 +304,16 @@ exports.getQuestionById = async (req, res) => {
 		answers = await AnswerService.getByQuestionId(req.params.question_id);
 		let answer_index;
 		for (answer_index = 0; answer_index < answers.length; answer_index++) {
+			if (!question.best_answer)
+				answers[answer_index].isBestAnswer = false;
+			else {
+				if (
+					answers[answer_index]._id.toString() ==
+					question.best_answer.toString()
+				)
+					answers[answer_index].isBestAnswer = true;
+				else answers[answer_index].isBestAnswer = false;
+			}
 			let author_data = await UserService.getUserById(
 				answers[answer_index].author
 			);
@@ -497,48 +507,8 @@ exports.getQuestionsByCategoryId = async (req, res) => {
 			req.params.category_id,
 			'category'
 		);
+		questions = await displayQuestions(questions);
 		questions.category_info = category;
-		let question_index;
-		for (
-			question_index = 0;
-			question_index < questions.questions.length;
-			question_index++
-		) {
-			questions.questions[question_index].rating_detail.totalLike =
-				questions.questions[
-					question_index
-				].rating_detail.like_users.length;
-			questions.questions[question_index].rating_detail.totalDislike =
-				questions.questions[
-					question_index
-				].rating_detail.dislike_users.length;
-			let tag_index;
-			let tags_data = [];
-			for (
-				tag_index = 0;
-				tag_index < questions.questions[question_index].tags.length;
-				tag_index++
-			) {
-				let tag_data = await TagService.getById({
-					tag_id: questions.questions[question_index].tags[tag_index],
-				});
-				tags_data.push({ tag_id: tag_data._id, name: tag_data.name });
-			}
-			questions.questions[question_index].tags = tags_data;
-			let author_data = await UserService.getUserById(
-				questions.questions[question_index].author
-			);
-			questions.questions[question_index].author = {
-				author_id: author_data._id,
-				display_name: author_data.display_name,
-				avatar: author_data.avatar,
-			};
-			questions.questions[question_index].category = {
-				category_id: category._id,
-				name: category.name,
-				color: category.color,
-			};
-		}
 		return res.json(
 			response_format.success('Get questions succeed.', questions)
 		);
@@ -558,8 +528,8 @@ exports.getQuestionsByTagId = async (req, res) => {
 			req.params.tag_id,
 			'tags'
 		);
+		questions = await displayQuestions(questions);
 		questions.tag_info = { tag_id: tag._id, name: tag.name };
-		displayQuestions(questions);
 		return res.json(
 			response_format.success('Get questions succeed.', questions)
 		);
