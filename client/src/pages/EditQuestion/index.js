@@ -1,0 +1,184 @@
+import React, { Component } from 'react';
+import { bindActionCreators, compose } from 'redux';
+import { connect } from 'react-redux';
+import { toast } from 'react-toastify';
+import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import MarkDownEditer from './components/MarkdownEditer';
+import CategoryBox from './components/CategoryBox';
+import TagInput from './components/TagInput';
+import CreateNewValidator from '../../validators/question';
+import QuestionService from '../../services/questionService';
+import questionAction from '../../actions/question';
+import modalAction from '../../actions/modal';
+
+class EditQuestion extends Component {
+  constructor() {
+    super();
+    this.state = {
+      tags: [],
+      errors: {},
+    };
+  }
+  componentDidMount() {
+    // eslint-disable-next-line react/prop-types
+    const { match } = this.props;
+    // eslint-disable-next-line react/prop-types
+    const { questionId } = match.params;
+    const { QuestionActionCreators } = this.props;
+    QuestionActionCreators.getQuestionDetail(questionId);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps) {
+      const listItems=nextProps.tags.map((e)=>e.name);
+      this.setState({
+        title:nextProps.title,
+        category:nextProps.category,
+        content:nextProps.content,
+        questionId:nextProps.questionId,
+        tags:[...listItems]
+      })
+    }
+  }
+  handleChange = (key, value) => {
+    this.setState({
+      [key]: value,
+    });
+  };
+  handleNewTag = (newtag) => {
+    const { tags } = this.state;
+    const Tags = [...tags, newtag];
+    // remove duplicate
+    const newTags = [...new Set(Tags)];
+    this.setState({
+      tags: newTags,
+    });
+  };
+
+  handleRemoveTag = (removeTag) => {
+    const { tags } = this.state;
+    const newTags = tags.filter((tag) => tag !== removeTag);
+    this.setState({
+      tags: newTags,
+    });
+  };
+  handleSubmit = () => {
+    const { title, category, tags, content,questionId } = this.state;
+    const error = CreateNewValidator(title, content, category);
+    this.setState({ errors: error });
+    if (Object.keys(error).length > 0) return;
+    QuestionService.updateQuestion(title, category.category_id, content, tags,questionId)
+      .then((data) => {
+        if (data.error) {
+          toast.error(data.error);
+        } else {
+          const { history } = this.props;
+          toast.success(data.message);
+          // eslint-disable-next-line no-underscore-dangle
+          history.push(`/question/${data.data._id}`);
+        }
+      })
+      .catch((err) => {
+        toast.warn(err);
+      });
+  };
+  render() {
+    const { errors, tags } = this.state;
+    const {
+        title,
+        content,
+        author,
+        category,
+        // eslint-disable-next-line camelcase
+        created_time,
+        totalDislike,
+        totalLike,
+      } = this.props;
+    return (
+      <div>
+        <h2>Edit question</h2>
+        <div className="form-group">
+          <label htmlFor="title">
+            <h5>Title</h5>
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            name="title"
+            id="title"
+            value={this.state.title}
+            placeholder="Enter your question's title"
+            onChange={(e) => {
+              this.handleChange(e.target.name, e.target.value);
+            }}
+          />
+          {errors && errors.title && (
+            <span style={{ color: 'red' }}> {errors.title} </span>
+          )}
+        </div>
+        <CategoryBox handleChange={this.handleChange} errors={errors} category={category}/>
+        <div className="form-group">
+          <label htmlFor="content">
+            <h5>Content</h5>
+          </label>
+          <MarkDownEditer handleChange={this.handleChange} errors={errors} data={content} />
+        </div>
+        <TagInput
+          handleNewTag={this.handleNewTag}
+          tags={tags}
+          handleRemoveTag={this.handleRemoveTag}
+        />
+        <div className="col col-btn">
+          <button
+            type="submit"
+            className="btn btn-primary mr-2"
+            onClick={this.handleSubmit}
+          >
+            Post
+          </button>
+          <button type="button" className="btn">
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
+EditQuestion.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+EditQuestion.propTypes = {
+  title: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
+  author: PropTypes.objectOf(PropTypes.string).isRequired,
+  tags: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string)).isRequired,
+  category: PropTypes.objectOf(PropTypes.string).isRequired,
+  vote: PropTypes.string.isRequired,
+  totalLike: PropTypes.number.isRequired,
+  questionId: PropTypes.string.isRequired,
+  totalDislike: PropTypes.number.isRequired,
+  created_time: PropTypes.string.isRequired,
+  QuestionActionCreators: PropTypes.objectOf().isRequired,
+  ModelActionCreators: PropTypes.objectOf().isRequired,
+};
+const mapStateToProps = (state) => ({
+  title: state.question.title,
+  content: state.question.content,
+  author: state.question.author,
+  tags: state.question.tags,
+  category: state.question.category,
+  vote: state.question.vote,
+  created_time: state.question.created_time,
+  totalLike: state.question.rating_detail.totalLike,
+  totalDislike: state.question.rating_detail.totalDislike,
+  // eslint-disable-next-line no-underscore-dangle
+  questionId: state.question._id,
+});
+const mapDispatchToProps = (dispatch) => ({
+  QuestionActionCreators: bindActionCreators(questionAction, dispatch),
+  ModelActionCreators: bindActionCreators(modalAction, dispatch),
+});
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default compose(withConnect, withRouter)(EditQuestion);

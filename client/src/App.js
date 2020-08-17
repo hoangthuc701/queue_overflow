@@ -16,6 +16,7 @@ import TestSite from './pages/Test';
 import QuestionPage from './pages/QuestionPage';
 import AddQuestionPage from './pages/AddQuestion';
 import QuestionDetail from './pages/QuestionDetail';
+import EditQuestion from './pages/EditQuestion';
 
 class App extends Component {
   renderHeader = () => <Header />;
@@ -54,6 +55,11 @@ class App extends Component {
               exact
               path="/question/:questionId"
               component={QuestionDetail}
+            />
+            <Route
+              exact
+              path="/question/edit/:questionId"
+              component={EditQuestion}
             />
             <PrivateRoute exact path="/test" component={TestSite} />
             <Route component={NotFoundPage} />
