@@ -15,6 +15,7 @@ const initialState = {
   },
   answers: [],
   vote: 'none',
+  deleted: false,
 };
 
 export default function authentication(state = initialState, action) {
@@ -40,6 +41,11 @@ export default function authentication(state = initialState, action) {
           totalLike: action.data.totalLike,
           totalDislike: action.data.totalDislike,
         },
+      };
+    case questionConstants.DELETE_QUESTION_SUCCESS:
+      return {
+        ...state,
+        deleted: true,
       };
     case answerConstants.LIKE_ANSWER_SUCCESS:
       return {

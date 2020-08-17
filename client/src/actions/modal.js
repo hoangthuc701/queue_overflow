@@ -25,7 +25,9 @@ function hideModal(result, type, id) {
       } else if (type === 'answer') {
         dispatch(answerAction.DeleteAnswer(id));
       }
+      return true;
     }
+    return false;
   };
 }
 
