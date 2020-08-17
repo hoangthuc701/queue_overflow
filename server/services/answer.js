@@ -23,10 +23,12 @@ class AnswerService {
 		try {
 			let answer = await AnswerModel.findOne({ _id: answer_id });
 			if (answer) {
-				await QuestionModel.update(
-					{ _id: answer.question },
-					{ $pull: { answers: answer_id } }
-				).exec();
+				let question = await QuestionModel.findOne({_id: answer.question});
+				question.answers.pull(answer_id);
+				if (question.best_answer){
+					if (answer_id == question.best_answer.toString()) question.best_answer = undefined;
+				}
+				await question.save();
 			}
 			const result = await AnswerModel.deleteOne({ _id: answer_id });
 			if (result.deletedCount > 0) {
