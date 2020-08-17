@@ -1,5 +1,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
+import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import MarkDownEditer from './components/MarkdownEditer';
 
@@ -8,12 +11,14 @@ import './index.css';
 import CategoryBox from './components/CategoryBox';
 import TagInput from './components/TagInput';
 import QuestionService from '../../services/questionService';
+import CreateNewValidator from '../../validators/question';
 
 class AddQuestionPage extends Component {
   constructor() {
     super();
     this.state = {
       tags: [],
+      errors: {},
     };
   }
 
@@ -43,16 +48,27 @@ class AddQuestionPage extends Component {
 
   handleSubmit = () => {
     const { title, category, tags, content } = this.state;
-    QuestionService.createNewQuestion(
-      title,
-      category,
-      content,
-      tags
-    ).then(() => {});
+    const error = CreateNewValidator(title, content, category);
+    this.setState({ errors: error });
+    if (Object.keys(error).length > 0) return;
+    QuestionService.createNewQuestion(title, category, content, tags)
+      .then((data) => {
+        if (data.error) {
+          toast.error(data.error);
+        } else {
+          const { history } = this.props;
+          toast.success(data.message);
+          // eslint-disable-next-line no-underscore-dangle
+          history.push(`/question/${data.data._id}`);
+        }
+      })
+      .catch((err) => {
+        toast.warn(err);
+      });
   };
 
   render() {
-    const { tags } = this.state;
+    const { tags, errors } = this.state;
     return (
       <>
         <h2>Create new question</h2>
@@ -70,13 +86,16 @@ class AddQuestionPage extends Component {
               this.handleChange(e.target.name, e.target.value);
             }}
           />
+          {errors && errors.title && (
+            <span style={{ color: 'red' }}> {errors.title} </span>
+          )}
         </div>
-        <CategoryBox handleChange={this.handleChange} />
+        <CategoryBox handleChange={this.handleChange} errors={errors} />
         <div className="form-group">
           <label htmlFor="content">
             <h5>Content</h5>
           </label>
-          <MarkDownEditer handleChange={this.handleChange} />
+          <MarkDownEditer handleChange={this.handleChange} errors={errors} />
         </div>
         <TagInput
           handleNewTag={this.handleNewTag}
@@ -84,7 +103,11 @@ class AddQuestionPage extends Component {
           handleRemoveTag={this.handleRemoveTag}
         />
         <div className="col col-btn">
-          <button type="submit" className="btn btn-primary mr-2">
+          <button
+            type="submit"
+            className="btn btn-primary mr-2"
+            onClick={this.handleSubmit}
+          >
             Post
           </button>
           <button type="button" className="btn">
@@ -95,5 +118,10 @@ class AddQuestionPage extends Component {
     );
   }
 }
+AddQuestionPage.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
-export default AddQuestionPage;
+export default withRouter(AddQuestionPage);

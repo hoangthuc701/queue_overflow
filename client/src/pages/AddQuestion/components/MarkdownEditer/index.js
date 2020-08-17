@@ -24,19 +24,26 @@ class MarkdownEditer extends Component {
 
   render() {
     const { content } = this.state;
+    const { errors } = this.props;
     return (
-      <MdEditor
-        value={content}
-        style={{ height: '500px' }}
-        renderHTML={(text) => mdParser.render(text)}
-        onChange={this.handleEditorChange}
-      />
+      <>
+        <MdEditor
+          value={content}
+          style={{ height: '500px' }}
+          renderHTML={(text) => mdParser.render(text)}
+          onChange={this.handleEditorChange}
+        />
+        {errors && errors.content && (
+          <span style={{ color: 'red' }}> {errors.content} </span>
+        )}
+      </>
     );
   }
 }
 
 MarkdownEditer.propTypes = {
   handleChange: PropTypes.func.isRequired,
+  errors: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default MarkdownEditer;
