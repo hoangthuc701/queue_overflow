@@ -23,9 +23,9 @@ class Answer extends Component {
     );
   };
 
-  isPostAuthor = (commentAuthor, postAuthor) => {
-    // eslint-disable-next-line no-underscore-dangle
-    return commentAuthor._id === postAuthor._id;
+  isPostAuthor = () => {
+    const { author, postAuthor } = this.props;
+    return author.author_id === postAuthor.author_id;
   };
 
   handleMarkAsBestAnswer = () => {
@@ -35,10 +35,10 @@ class Answer extends Component {
   };
 
   renderManager = () => {
-    const { postAuthor, author, isBestAnswer } = this.props;
+    const { isBestAnswer } = this.props;
     return (
       <>
-        {this.isPostAuthor(author, postAuthor) && !isBestAnswer && (
+        {this.isPostAuthor() && !isBestAnswer && (
           <button
             className="btn btn-success"
             type="button"
@@ -192,11 +192,11 @@ Answer.propTypes = {
   answerId: PropTypes.string.isRequired,
   totalDislike: PropTypes.number.isRequired,
   created_time: PropTypes.string.isRequired,
-  AnswerActionCreators: PropTypes.objectOf().isRequired,
-  ModelActionCreators: PropTypes.objectOf().isRequired,
   postAuthor: PropTypes.objectOf(PropTypes.string).isRequired,
   isBestAnswer: PropTypes.bool.isRequired,
   questionId: PropTypes.string.isRequired,
+  AnswerActionCreators: PropTypes.objectOf(PropTypes.func).isRequired,
+  ModelActionCreators: PropTypes.objectOf(PropTypes.func).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

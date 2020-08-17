@@ -64,7 +64,7 @@ class AnswerEditer extends Component {
   }
 }
 AnswerEditer.propTypes = {
-  AnswerActionCreators: PropTypes.objectOf().isRequired,
+  AnswerActionCreators: PropTypes.objectOf(PropTypes.func).isRequired,
   questionId: PropTypes.string.isRequired,
 };
 const mapStateToProps = (state) => ({

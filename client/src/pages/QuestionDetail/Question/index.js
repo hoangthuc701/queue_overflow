@@ -234,8 +234,8 @@ Question.propTypes = {
   questionId: PropTypes.string.isRequired,
   totalDislike: PropTypes.number.isRequired,
   created_time: PropTypes.string.isRequired,
-  QuestionActionCreators: PropTypes.objectOf().isRequired,
-  ModelActionCreators: PropTypes.objectOf().isRequired,
+  QuestionActionCreators: PropTypes.objectOf(PropTypes.func).isRequired,
+  ModelActionCreators: PropTypes.objectOf(PropTypes.func).isRequired,
 };
 const mapStateToProps = (state) => ({
   title: state.question.title,
