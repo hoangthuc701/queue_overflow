@@ -1,38 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import UserService from '../../../../services/userService';
 import { getUser } from '../../../../helper/auth';
 import profileSettingAction from '../../../../actions/profileSetting';
+import createNewValidator from '../../../../validators/setting';
 
 const Setting = () => {
   const [user, setUser] = useState({});
+  const [errors, setErrors] = useState({});
+  const [canSubmit, setCanSubmit] = useState(false);
   const dispatch = useDispatch();
   const handleOnChange = (event) => {
     setUser({ ...user, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (user.password !== user.confirm_password) {
-      toast.error('Password and confirm password is not match');
-      return;
-    }
+  const handleSubmit = () => {
     // eslint-disable-next-line no-underscore-dangle
     const userId = getUser()._id;
-    UserService.updateInfo(
-      user.display_name,
-      user.description,
-      user.password
-    ).then((data) => {
-      if (data.error) {
-        toast.error(data.error);
-      } else {
-        toast.success(data.message);
-        dispatch(profileSettingAction.getUserInfo(userId));
+    const displayName = user.displayName || user.displayName;
+    const description = user.description || user.description;
+    const newPassword = user.newPassword || user.newPassword;
+    UserService.updateInfo(displayName, description, newPassword).then(
+      (data) => {
+        if (data.error) {
+          toast.error(data.error);
+        } else {
+          toast.success(data.message);
+          dispatch(profileSettingAction.getUserInfo(userId));
+        }
       }
-    });
+    );
   };
+
+  useEffect(() => {
+    const checkSubmitValidation = ({
+      displayName,
+      description,
+      newPassword,
+      confirmPassword,
+    }) => {
+      const error = createNewValidator(
+        displayName,
+        description,
+        newPassword,
+        confirmPassword
+      );
+      setErrors(error);
+      if (Object.keys(error).length > 0) return false;
+      return true;
+    };
+
+    const valuesOfUser = Object.values(user);
+    setCanSubmit(checkSubmitValidation(user));
+    if (valuesOfUser.every((value) => value === undefined || value === '')) {
+      setCanSubmit(false);
+    }
+  }, [user]);
 
   return (
     <div className="tab-pane" role="tabpanel" id="menu4">
@@ -55,19 +79,19 @@ const Setting = () => {
           <form>
             <div className="form-group">
               {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-              <label htmlFor="display_name">
+              <label htmlFor="displayName">
                 <h6>Display Name</h6>
               </label>
               <input
                 type="text"
                 className="form-control"
-                name="display_name"
-                id="display_name"
+                name="displayName"
+                id="displayName"
                 aria-describedby="emailHelp"
                 onChange={handleOnChange}
               />
-              {errors && errors.display_name && (
-                <span style={{ color: 'red' }}> {errors.display_name} </span>
+              {errors && errors.displayName && (
+                <span style={{ color: 'red' }}> {errors.displayName} </span>
               )}
             </div>
             <div className="form-group">
@@ -88,43 +112,41 @@ const Setting = () => {
             </div>
             <div className="form-group">
               {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-              <label htmlFor="password">
+              <label htmlFor="newPassword">
                 <h6>New Password</h6>
               </label>
               <input
                 type="password"
                 className="form-control"
-                name="password"
-                id="password"
+                name="newPassword"
+                id="newPassword"
                 onChange={handleOnChange}
               />{' '}
-              {errors && errors.password && (
-                <span style={{ color: 'red' }}> {errors.password} </span>
+              {errors && errors.newPassword && (
+                <span style={{ color: 'red' }}> {errors.newPassword} </span>
               )}
             </div>
             <div className="form-group">
               {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-              <label htmlFor="confirm_password">
+              <label htmlFor="confirmPassword">
                 <h6>Confirm Password</h6>
               </label>
               <input
                 type="password"
                 className="form-control"
-                name="confirm_password"
-                id="confirm_password"
+                name="confirmPassword"
+                id="confirmPassword"
                 onChange={handleOnChange}
               />{' '}
-              {errors && errors.confirm_password && (
-                <span style={{ color: 'red' }}>
-                  {' '}
-                  {errors.confirm_password}{' '}
-                </span>
+              {errors && errors.confirmPassword && (
+                <span style={{ color: 'red' }}> {errors.confirmPassword} </span>
               )}
             </div>
             <button
               onClick={handleSubmit}
-              type="submit"
+              type="button"
               className="btn btn-success"
+              disabled={!canSubmit}
             >
               Save
             </button>

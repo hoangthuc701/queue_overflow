@@ -33,7 +33,6 @@ const ProfileSetting = () => {
     }
     setRedirect(false);
     const userInfo = async () => {
-      // eslint-disable-next-line no-use-before-define
       const isSuccess = await dispatch(userActions.getUserInfo(userId));
       if (isSuccess) {
         setRedirect();
