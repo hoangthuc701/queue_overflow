@@ -50,7 +50,7 @@ class QuestionService {
     };
 
     const res = await fetch(
-      `${process.env.REACT_APP_SERVER_DOMAIN}/${quesitionId}`,
+      `${process.env.REACT_APP_SERVER_DOMAIN}/questions/${quesitionId}`,
       requestOptions
     );
     const data = await res.json();

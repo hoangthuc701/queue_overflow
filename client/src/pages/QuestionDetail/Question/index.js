@@ -174,9 +174,10 @@ class Question extends Component {
       created_time,
       totalDislike,
       totalLike,
+      deleted,
     } = this.props;
     const { value } = this.state;
-    if (!value) return <Redirect to="/" />;
+    if (!value || deleted) return <Redirect to="/" />;
     const score = totalLike - totalDislike;
     const authorId = author.author_id;
     return (
@@ -236,6 +237,7 @@ Question.propTypes = {
   created_time: PropTypes.string.isRequired,
   QuestionActionCreators: PropTypes.objectOf(PropTypes.func).isRequired,
   ModelActionCreators: PropTypes.objectOf(PropTypes.func).isRequired,
+  deleted: PropTypes.bool.isRequired,
 };
 const mapStateToProps = (state) => ({
   title: state.question.title,
@@ -249,6 +251,7 @@ const mapStateToProps = (state) => ({
   totalDislike: state.question.rating_detail.totalDislike,
   // eslint-disable-next-line no-underscore-dangle
   questionId: state.question._id,
+  deleted: state.question.deleted,
 });
 const mapDispatchToProps = (dispatch) => ({
   QuestionActionCreators: bindActionCreators(questionAction, dispatch),

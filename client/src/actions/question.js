@@ -82,6 +82,7 @@ function DeleteQuestion(questionId) {
     const data = await QuestionService.deleteQuestion(questionId);
     if (!data.error) {
       dispatch(success(data.data));
+      toast.success(data.message);
       return true;
     }
     dispatch(failure(data.error));
