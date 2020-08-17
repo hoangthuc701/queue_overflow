@@ -14,6 +14,9 @@ import SignUpPage from './pages/SignUp';
 import TestSite from './pages/Test';
 import QuestionPage from './pages/QuestionPage';
 import AddQuestionPage from './pages/AddQuestion';
+import ForgotPasswordPage from './pages/ForgotPassword';
+import ResetPasswordPage from './pages/ResetPassword';
+import VerifyAccoutPage from './pages/VerifyAccount';
 
 class App extends Component {
   renderHeader = () => <Header />;
@@ -46,6 +49,17 @@ class App extends Component {
             <Route exact path="/signup" component={SignUpPage} />
             <Route exact path="/question/add" component={AddQuestionPage} />
             <PrivateRoute exact path="/test" component={TestSite} />
+            <Route exact path="/verify/:token" component={VerifyAccoutPage} />
+            <Route
+              exact
+              path="/forgotPassword"
+              component={ForgotPasswordPage}
+            />
+            <Route
+              exact
+              path="/resetPassword/:token"
+              component={ResetPasswordPage}
+            />
             <Route component={NotFoundPage} />
           </Switch>
         </div>

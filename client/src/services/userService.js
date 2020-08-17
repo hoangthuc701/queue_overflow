@@ -28,6 +28,51 @@ class UserService {
     const data = await res.json();
     return data;
   }
+
+  static async resetPassword(password, token) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password, token }),
+    };
+
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/reset_password`,
+      requestOptions
+    );
+    const data = await res.json();
+    return data;
+  }
+
+  static async forgotPassword(email) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    };
+
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/forgot_password`,
+      requestOptions
+    );
+    const data = await res.json();
+    return data;
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  static async verifyAccount(token) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    };
+
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/forgot_password`,
+      requestOptions
+    );
+    const data = await res.json();
+    return data;
+  }
 }
 
 export default UserService;
