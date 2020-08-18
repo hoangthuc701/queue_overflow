@@ -51,7 +51,7 @@ const QuestionManagement = () => {
               <h3>Category</h3>
             </th>
             <th scope="col" className="col-2 d-flex justify-content-center">
-              <h3>Edit</h3>
+              <h3>Action</h3>
             </th>
           </tr>
         </thead>

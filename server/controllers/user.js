@@ -30,7 +30,14 @@ exports.updateUserbyId = async (req, res) => {
 		res.json(response_format.error('User is not exist.'));
 		return;
 	}
-	if (!(req.body.password || req.body.description || req.body.display_name || req.file)) {
+	if (
+		!(
+			req.body.password ||
+			req.body.description ||
+			req.body.display_name ||
+			req.file
+		)
+	) {
 		res.json(response_format.error('Need at least 1 field to update.'));
 		return;
 	}

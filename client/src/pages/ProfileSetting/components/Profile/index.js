@@ -9,7 +9,9 @@ const Profile = () => {
         <div className="col-4">
           <img
             className="avatar"
-            src="https://static.vecteezy.com/system/resources/previews/000/241/070/non_2x/flat-boy-with-vintage-glasses-avatar-vector-illustration.jpg"
+            src={`${process.env.REACT_APP_SERVER_DOMAIN}/upload/${
+              userInfo._id
+            }?${Date.now()}`}
             alt="avatar"
           />
         </div>

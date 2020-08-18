@@ -37,7 +37,7 @@ const Question = ({ id, title, time, categoryId, category }) => {
           </h4>
         </td>
         <td className="col-1">
-          <Link to={`/question/edit/${id}`}>
+          <Link to={`/question/edit/${id}`} className="ml-3">
             <img src="https://i.ibb.co/RNWjm8H/pencil.png" alt="edit" />
           </Link>
         </td>

@@ -8,7 +8,9 @@ class AnswerService {
 		try {
 			new_answer = new AnswerModel({ content, author, question });
 			await new_answer.save();
-			new_answer = await AnswerModel.findOne({_id: new_answer._id}).lean().exec();
+			new_answer = await AnswerModel.findOne({ _id: new_answer._id })
+				.lean()
+				.exec();
 			let update_question = await QuestionModel.findOne({
 				_id: question,
 			}).exec();
@@ -23,10 +25,11 @@ class AnswerService {
 		try {
 			let answer = await AnswerModel.findOne({ _id: answer_id });
 			if (answer) {
-				let question = await QuestionModel.findOne({_id: answer.question});
+				let question = await QuestionModel.findOne({ _id: answer.question });
 				question.answers.pull(answer_id);
-				if (question.best_answer){
-					if (answer_id == question.best_answer.toString()) question.best_answer = undefined;
+				if (question.best_answer) {
+					if (answer_id == question.best_answer.toString())
+						question.best_answer = undefined;
 				}
 				await question.save();
 			}
@@ -51,9 +54,7 @@ class AnswerService {
 	static async getByQuestionId(question_id) {
 		let answers;
 		try {
-			answers = await AnswerModel.find({ question: question_id })
-				.lean()
-				.exec();
+			answers = await AnswerModel.find({ question: question_id }).lean().exec();
 		} catch (error) {
 			throw new Error('Cannot get answers for this question.');
 		}
