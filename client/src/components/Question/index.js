@@ -64,7 +64,7 @@ const Question = (props) => {
               </div>
               <div className="col-sm-10">
                 <p>Created {title.created_time}</p>
-                <div className="card">
+                <div className="card card-questionlist">
                   <div
                     className="card-header"
                     style={{ backgroundColor: headerCard }}

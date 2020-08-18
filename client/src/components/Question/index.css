@@ -63,3 +63,7 @@ figure:hover::before {
     left: 125%;
   }
 }
+.card-questionlist
+{
+  box-shadow: 22px 39px 79px -31px rgba(0,0,0,0.75);
+}
