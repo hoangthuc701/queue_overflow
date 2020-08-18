@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import MarkDownEditer from './components/MarkdownEditer';
@@ -110,9 +110,11 @@ class AddQuestionPage extends Component {
           >
             Post
           </button>
-          <button type="button" className="btn">
-            Cancel
-          </button>
+          <Link to="/">
+            <button type="button" className="btn btn-secondary">
+              Cancel
+            </button>
+          </Link>
         </div>
       </>
     );
