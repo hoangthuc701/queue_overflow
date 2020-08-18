@@ -8,7 +8,6 @@ class CategoryBox extends Component {
     super();
     this.state = {
       list: [],
-      category: "",
     };
   }
 
@@ -19,22 +18,24 @@ class CategoryBox extends Component {
       }
     });
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps) {
-      this.setState({
-        category: nextProps.category.category_id,
-      });
-    }
-    console.log(nextProps.category);
-  }
+
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps) {
+  //     this.setState({
+  //       category: nextProps.category.category_id,
+  //     });
+  //   }
+  //   console.log(nextProps.category);
+  // }
 
   handleChange = (key, value) => {
     // eslint-disable-next-line react/destructuring-assignment
-    this.setState({
-      category:value,
-    });
-    console.log(this.state.category);
+    // this.setState({
+    //   category:value,
+    // });
+    //console.log(this.state.category);
     this.props.handleChange([key], value);
+    console.log(value);
   };
 
   render() {
@@ -50,8 +51,8 @@ class CategoryBox extends Component {
           className="form-control"
           name="category"
           id="category"
-          value={this.state.category}
-          onBlur={(e) => this.handleChange(e.target.name, e.target.value)}
+          value={this.props.category}
+          onChange={(e) => this.handleChange(e.target.name, e.target.value)}
         >
           {list.map((e) => {
             return (

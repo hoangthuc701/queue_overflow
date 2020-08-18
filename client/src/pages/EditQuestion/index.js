@@ -18,33 +18,35 @@ class EditQuestion extends Component {
     this.state = {
       tags: [],
       errors: {},
+      title: '',
+      category: '',
     };
   }
-  componentDidMount() {
+
+  async componentDidMount() {
     // eslint-disable-next-line react/prop-types
     const { match } = this.props;
     // eslint-disable-next-line react/prop-types
     const { questionId } = match.params;
     const { QuestionActionCreators } = this.props;
-    QuestionActionCreators.getQuestionDetail(questionId);
+    await QuestionActionCreators.getQuestionDetail(questionId);
+    const { title, content, category, tags } = this.props;
+    const tagsList = tags.map((tag) => tag.name);
+    const categoryId = category.category_id;
+    this.setState({
+      title,
+      category: categoryId,
+      content,
+      tags: tagsList,
+    });
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps) {
-      const listItems=nextProps.tags.map((e)=>e.name);
-      this.setState({
-        title:nextProps.title,
-        category:nextProps.category,
-        content:nextProps.content,
-        questionId:nextProps.questionId,
-        tags:[...listItems]
-      })
-    }
-  }
+
   handleChange = (key, value) => {
     this.setState({
       [key]: value,
     });
   };
+
   handleNewTag = (newtag) => {
     const { tags } = this.state;
     const Tags = [...tags, newtag];
@@ -62,12 +64,19 @@ class EditQuestion extends Component {
       tags: newTags,
     });
   };
+
   handleSubmit = () => {
-    const { title, category, tags, content,questionId } = this.state;
+    const { title, category, tags, content, questionId } = this.state;
     const error = CreateNewValidator(title, content, category);
     this.setState({ errors: error });
     if (Object.keys(error).length > 0) return;
-    QuestionService.updateQuestion(title, category.category_id, content, tags,questionId)
+    QuestionService.updateQuestion(
+      title,
+      category.category_id,
+      content,
+      tags,
+      questionId
+    )
       .then((data) => {
         if (data.error) {
           toast.error(data.error);
@@ -82,18 +91,9 @@ class EditQuestion extends Component {
         toast.warn(err);
       });
   };
+
   render() {
-    const { errors, tags } = this.state;
-    const {
-        title,
-        content,
-        author,
-        category,
-        // eslint-disable-next-line camelcase
-        created_time,
-        totalDislike,
-        totalLike,
-      } = this.props;
+    const { errors, tags, title, content, category } = this.state;
     return (
       <div>
         <h2>Edit question</h2>
@@ -106,7 +106,7 @@ class EditQuestion extends Component {
             className="form-control"
             name="title"
             id="title"
-            value={this.state.title}
+            value={title}
             placeholder="Enter your question's title"
             onChange={(e) => {
               this.handleChange(e.target.name, e.target.value);
@@ -116,12 +116,20 @@ class EditQuestion extends Component {
             <span style={{ color: 'red' }}> {errors.title} </span>
           )}
         </div>
-        <CategoryBox handleChange={this.handleChange} errors={errors} category={category}/>
+        <CategoryBox
+          handleChange={this.handleChange}
+          errors={errors}
+          category={category}
+        />
         <div className="form-group">
           <label htmlFor="content">
             <h5>Content</h5>
           </label>
-          <MarkDownEditer handleChange={this.handleChange} errors={errors} data={content} />
+          <MarkDownEditer
+            handleChange={this.handleChange}
+            errors={errors}
+            data={content}
+          />
         </div>
         <TagInput
           handleNewTag={this.handleNewTag}
