@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+
 Cookies.defaults = {
   expires: new Date().setDate(process.env.REACT_APP_EXPIRES_COOKIES),
   domain: process.env.REACT_APP_DOMAIN,

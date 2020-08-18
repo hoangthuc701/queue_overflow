@@ -105,6 +105,10 @@ class QuestionService {
     const token = getToken();
     const requestOptions = {
       method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
         question_id: questionId,
         type: '1',
