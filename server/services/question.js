@@ -151,8 +151,7 @@ class QuestionService {
 			like_index++
 		) {
 			if (
-				data.rating_detail.like_users[like_index].toString() ===
-				user_id
+				data.rating_detail.like_users[like_index].toString() === user_id
 			) {
 				is_like = true;
 				break;
@@ -209,12 +208,13 @@ class QuestionService {
 		let question;
 		let answer;
 		try {
-			answer = await AnswerModel.findOne({_id: answer_id}).exec();
+			answer = await AnswerModel.findOne({ _id: answer_id }).exec();
 			if (!answer) throw new Error('There is no answer.');
 			question = await QuestionModel.findOne({ _id: question_id }).exec();
 			if (!question.best_answer) question.best_answer = answer_id;
-			else{
-				if (question.best_answer.toString()===answer_id) question.best_answer = undefined;
+			else {
+				if (question.best_answer.toString() === answer_id)
+					question.best_answer = undefined;
 				else question.best_answer = answer_id;
 			}
 			await question.save();
@@ -222,6 +222,14 @@ class QuestionService {
 			throw new Error(error.message);
 		}
 		return question;
+	}
+	static async searchQuestion() {
+		const data = await QuestionModel.find()
+			.populate('author', 'display_name _id')
+			.populate('category', 'name _id')
+			.populate('tags', '_id name')
+			.exec();
+		return data;
 	}
 }
 
