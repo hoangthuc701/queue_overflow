@@ -1,18 +1,11 @@
 require('dotenv').config();
 const expires = require('expires');
-const { generateRandomPassword } = require('./password');
 const Cryptr = require('cryptr');
-let cryptr = new Cryptr(process.env.URL_LINK);
+let cryptr = new Cryptr(process.env.URL_KEY);
 
 exports.generateCode = (id) => {
-	let private_code = generateRandomPassword();
-	let code = cryptr.encrypt(
-		id + '.' + private_code + '.' + expires.after('3 hours')
-	);
-	return {
-		private_code,
-		code,
-	};
+	let code = cryptr.encrypt(id + '.' + expires.after('3 hours'));
+	return code;
 };
 
 exports.verifyCode = (code) => {
@@ -20,8 +13,7 @@ exports.verifyCode = (code) => {
 		let arr = cryptr.decrypt(code).split('.');
 		let result = {
 			id: arr[0],
-			private_code: arr[1],
-			expired: expires.expired(parseInt(arr[2])),
+			expired: expires.expired(parseInt(arr[1])),
 		};
 		return result;
 	} catch (errors) {
