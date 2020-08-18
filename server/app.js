@@ -45,6 +45,7 @@ const questionRouter = require('./routes/question');
 const answerRouter = require('./routes/answer');
 const ratingRouter = require('./routes/rating');
 const categoryRouter = require('./routes/category');
+const uploadRouter = require('./routes/upload');
 
 //Route
 app.use(authRouter);
@@ -53,6 +54,7 @@ app.use(questionRouter);
 app.use(answerRouter);
 app.use(ratingRouter);
 app.use(categoryRouter);
+app.use(uploadRouter);
 
 // catch 404 and forward to error handler
 // eslint-disable-next-line no-unused-vars
@@ -71,11 +73,6 @@ app.use((err, req, res, next) => {
 			data: {},
 		});
 	}
-	res.json({
-		message: '',
-		data: {},
-		error: err.message,
-	});
 });
 
 const port = process.env.PORT || 8080;

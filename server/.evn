@@ -1,0 +1,8 @@
+PORT=8080
+DATABASE_URL=mongodb+srv://queue-overflow:tuonggio@queue-overflow-database.tl7nr.gcp.mongodb.net/queue-overflow-database?retryWrites=true&w=majority
+NODE_ENV=dev
+PRIVATE_KEY=tuonggio
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=
+email_user=queueoverflow.tuonggio@gmail.com
+EMAIL_PASSWORD=tuonggio

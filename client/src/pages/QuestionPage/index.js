@@ -33,7 +33,6 @@ const QuestionPage = () => {
   let pageItems;
   // PAGINATION
   const paginate = (pageNumber) => {
-    // console.log('TEST TEST', flagCate);
     dispatch(questionAction.questionList(pageNumber, flagCate));
   };
   if (questionlist.questions) {
@@ -45,11 +44,11 @@ const QuestionPage = () => {
   // EVENT BUTTON
   function onClickFilter(filby) {
     setflagCate(filby);
-    if (filby.localeCompare(Newest)) {
+    if (filby === Newest) {
       dispatch(questionAction.questionList());
-    } else if (filby.localeCompare(Oldest)) {
+    } else if (filby === Oldest) {
       dispatch(questionAction.questionList(1, Oldest));
-    } else if (filby.localeCompare(Category)) {
+    } else if (filby === Category) {
       dispatch(questionAction.questionList(1, Category));
     }
   }
