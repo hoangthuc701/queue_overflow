@@ -1,4 +1,5 @@
 const UserModel = require('../models/user');
+const mongoose = require('mongoose');
 
 class UserService {
 	static async create({ email, hashed_password, display_name }) {
@@ -27,17 +28,19 @@ class UserService {
 
 	static async getUserById(id) {
 		let user;
-		try {
-			user = await UserModel.findById(id);
-		} catch (error) {
-			console.error(error);
-			throw new Error('Cannot get account.');
+		if (mongoose.Types.ObjectId.isValid(id)) {
+			try {
+				user = await UserModel.findById(id);
+			} catch (error) {
+				console.error(error);
+				throw new Error('Cannot get account.');
+			}
 		}
 
 		return user;
 	}
 
-	static async update(id, { hashed_password, display_name }) {
+	static async update(id, { hashed_password, display_name, description }) {
 		let user;
 		try {
 			user = await UserModel.findById(id);
@@ -48,6 +51,7 @@ class UserService {
 				user.display_name = display_name
 					? display_name
 					: user.display_name;
+				user.description = description ? description : user.description;
 				await user.save();
 			}
 		} catch (error) {

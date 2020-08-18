@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
 import authConstants from '../constants/auth';
 import UserService from '../services/userService';
+import { authenticate } from '../helper/auth';
 
 function request(user) {
   return { type: authConstants.SIGN_IN_REQUEST, user };
@@ -18,8 +19,7 @@ function signIn(email, password) {
     if (value.data.token) {
       toast.success(value.message);
       dispatch(success(value.data.user));
-      localStorage.setItem('token', JSON.stringify(value.data.token));
-      localStorage.setItem('user', JSON.stringify(value.data.user));
+      authenticate(value.data.token, value.data.user);
       return true;
     }
     toast.error(value.error);
