@@ -31,20 +31,36 @@ class UserService {
     return data;
   }
 
-  static async getInfo(id) {
+  static async resetPassword(password, code) {
     const requestOptions = {
-      method: 'GET',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password, code }),
     };
+
     const res = await fetch(
-      `${process.env.REACT_APP_SERVER_DOMAIN}/users/${id}`,
+      `${process.env.REACT_APP_SERVER_DOMAIN}/reset_password`,
       requestOptions
     );
     const data = await res.json();
     return data;
   }
 
-  // eslint-disable-next-line no-use-before-define
+  static async verifyAccount(code) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code }),
+    };
+
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/activate_account`,
+      requestOptions
+    );
+    const data = await res.json();
+    return data;
+  }
+
   static async updateInfo(displayName, description, password) {
     const token = getToken();
     const user = getUser();
@@ -64,6 +80,34 @@ class UserService {
     const res = await fetch(
       // eslint-disable-next-line no-underscore-dangle
       `${process.env.REACT_APP_SERVER_DOMAIN}/users/${user._id}`,
+      requestOptions
+    );
+    const data = await res.json();
+    return data;
+  }
+
+  static async forgotPassword(email) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    };
+
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/send_reset_password_mail`,
+      requestOptions
+    );
+    const data = await res.json();
+    return data;
+  }
+
+  static async getInfo(id) {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/users/${id}`,
       requestOptions
     );
     const data = await res.json();
