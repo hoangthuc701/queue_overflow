@@ -1,31 +1,26 @@
 const router = require('express').Router();
-const { sign_up, sign_in } = require('../controllers/auth');
-const { body } = require('express-validator');
-const { validate } = require('../middlewares/validateError');
-const { signinValidator, signupValidator } = require('../validators/auth');
-router.post(
-	'/signup',
-	[
-		body('email').isEmail().withMessage('This is not email.'),
-		body('password')
-			.isLength({ min: 7, max: undefined })
-			.withMessage('Password must be at least 7 character.')
-			.matches(/\d/)
-			.withMessage('Password must contain number.')
-			.matches(/[a-z]|[A-Z]/)
-			.withMessage('Password must contain character.'),
-		body('display_name')
-			.matches(/^[_A-z0-9]*((-|\s)[_A-z0-9]+)*$/)
-			.withMessage(
-				'Display name must not have special characters or too many spaces between words.'
-			),
-	],
-	validate,
-	sign_up
-);
+const {
+	sign_up,
+	sign_in,
+	sendResetPasswordMail,
+	resetPassword,
+	activateAccount,
+} = require('../controllers/auth');
+const {
+	signupValidator,
+	signinValidator,
+	sendResetPasswordMailValidator,
+	resetPasswordValidator,
+} = require('../validators/auth');
 
 router.post('/signup', signupValidator, sign_up);
-
 router.post('/signin', signinValidator, sign_in);
+router.post(
+	'/send_reset_password_mail',
+	sendResetPasswordMailValidator,
+	sendResetPasswordMail
+);
+router.post('/reset_password', resetPasswordValidator, resetPassword);
+router.post('/activate_account', activateAccount);
 
 module.exports = router;

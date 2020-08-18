@@ -73,11 +73,6 @@ app.use((err, req, res, next) => {
 			data: {},
 		});
 	}
-	res.json({
-		message: '',
-		data: {},
-		error: err.message,
-	});
 });
 
 const port = process.env.PORT || 8080;

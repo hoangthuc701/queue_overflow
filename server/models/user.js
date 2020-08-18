@@ -5,6 +5,10 @@ var schema = new Schema({
 	email: {
 		type: String,
 	},
+	verified: {
+		type: Boolean,
+		default: false,
+	},
 	hashed_password: {
 		type: String,
 	},
