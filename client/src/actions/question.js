@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify';
 import questionConstants from '../constants/question';
+import userQuestionConstants from '../constants/userQuestion';
 import QuestionService from '../services/questionService';
 
 function getQuestionDetail(questionId) {
@@ -112,12 +113,40 @@ function questionList(page = 1, filter = 'newest') {
   };
 }
 
+function requestUserQuestions() {
+  return {
+    type: userQuestionConstants.GET_USER_QUESTIONS_REQUEST,
+  };
+}
+function successUserQuestions(questionlist) {
+  return {
+    type: userQuestionConstants.GET_USER_QUESTIONS_SUCCESS,
+    questionlist,
+  };
+}
+function failureUserQuestions(error) {
+  return { type: userQuestionConstants.GET_USER_QUESTIONS_FAILURE, error };
+}
+
+function getUserQuestions(page = 1) {
+  return async (dispatch) => {
+    dispatch(requestUserQuestions());
+    const values = await QuestionService.getQuestionsByToken(page);
+    if (values.message) {
+      dispatch(successUserQuestions(values.data));
+    } else {
+      dispatch(failureUserQuestions(values.error));
+    }
+  };
+}
+
 const questionActions = {
   getQuestionDetail,
   LikeQuestion,
   DislikeQuestion,
   DeleteQuestion,
   questionList,
+  getUserQuestions,
 };
 
 export default questionActions;

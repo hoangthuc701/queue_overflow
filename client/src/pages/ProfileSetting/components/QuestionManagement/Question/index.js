@@ -1,14 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import ModelActionCreators from '../../../../../actions/modal';
+import { useDispatch } from 'react-redux';
 
-const Question = ({ title, time, category }) => {
+const Question = ({ id, title, time, categoryId, category }) => {
+  const dispatch = useDispatch();
+  const handleDelete = () => {
+    dispatch(
+      ModelActionCreators.showModal(
+        'Confirm Delete',
+        'Do you want to delete this question?',
+        'question',
+        id
+      )
+    );
+  };
   return (
     <>
       <tr className="row">
         <td className="col-7">
           <Link
-            to="/"
+            to={`/question/${id}`}
             className="question_info"
             style={{ wordWrap: 'break-word' }}
           >
@@ -23,13 +36,15 @@ const Question = ({ title, time, category }) => {
             </Link>
           </h4>
         </td>
-        <td>
-          <Link to="/" className="mr-4 col-1">
-            <img src="https://i.ibb.co/RNWjm8H/pencil.png" alt="" />
+        <td className="col-1">
+          <Link to={`/question/edit/${id}`}>
+            <img src="https://i.ibb.co/RNWjm8H/pencil.png" alt="edit" />
           </Link>
-          <Link to="/" className="col-1">
-            <img src="https://i.ibb.co/hgYsCP1/delete.png" alt="" />
-          </Link>
+        </td>
+        <td className="col-1">
+          <button onClick={handleDelete}>
+            <img src="https://i.ibb.co/hgYsCP1/delete.png" alt="delete" />
+          </button>
         </td>
       </tr>
     </>
@@ -37,8 +52,10 @@ const Question = ({ title, time, category }) => {
 };
 
 Question.propTypes = {
+  id: PropTypes.string,
   title: PropTypes.string,
   time: PropTypes.string,
+  categoryId: PropTypes.string,
   category: PropTypes.string,
 };
 
