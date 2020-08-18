@@ -39,7 +39,7 @@ class Question extends Component {
     // eslint-disable-next-line react/prop-types
     const { questionId } = match.params;
     ModelActionCreators.showModal(
-      'Alert',
+      'Confirm Delete',
       'Do you want to delete this question?',
       'question',
       questionId
@@ -121,7 +121,7 @@ class Question extends Component {
       // eslint-disable-next-line no-underscore-dangle
       <Link to={`/profile/${author.author_id}`} className="float-right">
         <img
-          src={` /upload/${author.author_id}`}
+          src={`/upload/${author.author_id}`}
           className="rounded-circle"
           alt={author.name}
           width={50}
