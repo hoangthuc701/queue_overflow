@@ -117,7 +117,6 @@ exports.resetPassword = async (req, res) => {
 	const password = req.body.password;
 
 	const code_data = verifyCode(code, resetPasswordCryptr);
-	console.log(code_data);
 	if (!code_data) {
 		res.json(response_format.error('This link is invalid.'));
 		return;
