@@ -28,7 +28,7 @@ class QuestionService {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ title, category, content, tags}),
+      body: JSON.stringify({ title, category, content, tags }),
     };
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_DOMAIN}/questions/${quesitonId}`,

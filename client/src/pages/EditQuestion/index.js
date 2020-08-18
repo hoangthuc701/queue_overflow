@@ -38,6 +38,7 @@ class EditQuestion extends Component {
       category: categoryId,
       content,
       tags: tagsList,
+      questionId,
     });
   }
 
@@ -70,13 +71,7 @@ class EditQuestion extends Component {
     const error = CreateNewValidator(title, content, category);
     this.setState({ errors: error });
     if (Object.keys(error).length > 0) return;
-    QuestionService.updateQuestion(
-      title,
-      category.category_id,
-      content,
-      tags,
-      questionId
-    )
+    QuestionService.updateQuestion(title, category, content, tags, questionId)
       .then((data) => {
         if (data.error) {
           toast.error(data.error);
@@ -98,9 +93,7 @@ class EditQuestion extends Component {
       <div>
         <h2>Edit question</h2>
         <div className="form-group">
-          <label htmlFor="title">
-            <h5>Title</h5>
-          </label>
+          <h5>Title</h5>
           <input
             type="text"
             className="form-control"
@@ -122,9 +115,7 @@ class EditQuestion extends Component {
           category={category}
         />
         <div className="form-group">
-          <label htmlFor="content">
-            <h5>Content</h5>
-          </label>
+          <h5>Content</h5>
           <MarkDownEditer
             handleChange={this.handleChange}
             errors={errors}
@@ -160,16 +151,10 @@ EditQuestion.propTypes = {
 EditQuestion.propTypes = {
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
-  author: PropTypes.objectOf(PropTypes.string).isRequired,
   tags: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string)).isRequired,
   category: PropTypes.objectOf(PropTypes.string).isRequired,
-  vote: PropTypes.string.isRequired,
-  totalLike: PropTypes.number.isRequired,
   questionId: PropTypes.string.isRequired,
-  totalDislike: PropTypes.number.isRequired,
-  created_time: PropTypes.string.isRequired,
   QuestionActionCreators: PropTypes.objectOf().isRequired,
-  ModelActionCreators: PropTypes.objectOf().isRequired,
 };
 const mapStateToProps = (state) => ({
   title: state.question.title,

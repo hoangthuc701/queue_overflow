@@ -19,28 +19,14 @@ class CategoryBox extends Component {
     });
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps) {
-  //     this.setState({
-  //       category: nextProps.category.category_id,
-  //     });
-  //   }
-  //   console.log(nextProps.category);
-  // }
-
   handleChange = (key, value) => {
-    // eslint-disable-next-line react/destructuring-assignment
-    // this.setState({
-    //   category:value,
-    // });
-    //console.log(this.state.category);
-    this.props.handleChange([key], value);
-    console.log(value);
+    const { handleChange } = this.props;
+    handleChange([key], value);
   };
 
   render() {
     const { list } = this.state;
-    const { errors } = this.props;
+    const { errors, category } = this.props;
     return (
       <div className="form-group">
         <label htmlFor="category">
@@ -51,8 +37,8 @@ class CategoryBox extends Component {
           className="form-control"
           name="category"
           id="category"
-          value={this.props.category}
-          onChange={(e) => this.handleChange(e.target.name, e.target.value)}
+          value={category}
+          onBlur={(e) => this.handleChange(e.target.name, e.target.value)}
         >
           {list.map((e) => {
             return (
@@ -73,5 +59,6 @@ class CategoryBox extends Component {
 CategoryBox.propTypes = {
   handleChange: PropTypes.func.isRequired,
   errors: PropTypes.objectOf(PropTypes.string).isRequired,
+  category: PropTypes.string.isRequired,
 };
 export default CategoryBox;

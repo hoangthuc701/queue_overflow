@@ -21,13 +21,6 @@ class MarkdownEditer extends Component {
     // eslint-disable-next-line react/destructuring-assignment
     this.props.handleChange('content', text);
   };
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.data!==this.props.data) {
-      this.setState({
-        content:nextProps.data
-      })
-    }
-  }
 
   render() {
     const { content } = this.state;
