@@ -16,6 +16,9 @@ import ProfileSetting from './pages/ProfileSetting';
 import TestSite from './pages/Test';
 import QuestionPage from './pages/QuestionPage';
 import AddQuestionPage from './pages/AddQuestion';
+import ForgotPasswordPage from './pages/ForgotPassword';
+import ResetPasswordPage from './pages/ResetPassword';
+import VerifyAccoutPage from './pages/VerifyAccount';
 import QuestionDetail from './pages/QuestionDetail';
 
 class App extends Component {
@@ -59,6 +62,17 @@ class App extends Component {
               component={QuestionDetail}
             />
             <PrivateRoute exact path="/test" component={TestSite} />
+            <Route exact path="/verify/:token" component={VerifyAccoutPage} />
+            <Route
+              exact
+              path="/forgotPassword"
+              component={ForgotPasswordPage}
+            />
+            <Route
+              exact
+              path="/resetPassword/:token"
+              component={ResetPasswordPage}
+            />
             <Route component={NotFoundPage} />
           </Switch>
         </div>
