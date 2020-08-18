@@ -67,6 +67,7 @@ class QuestionService {
       },
     };
     const res = await fetch(
+      // eslint-disable-next-line no-underscore-dangle
       `${process.env.REACT_APP_SERVER_DOMAIN}/users/${user._id}/questions?page=${page}`,
       requestOptions
     );

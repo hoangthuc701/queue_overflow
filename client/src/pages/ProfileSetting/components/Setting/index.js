@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import UserService from '../../../../services/userService';
@@ -12,6 +11,7 @@ const Setting = () => {
   const [user, setUser] = useState({});
   const [image, setImage] = useState();
   const [previewImageURL, setPreviewImageURL] = useState(
+    // eslint-disable-next-line no-underscore-dangle
     `${process.env.REACT_APP_SERVER_DOMAIN}/upload/${getUser()._id}`
   );
   const [errors, setErrors] = useState({});
@@ -41,8 +41,8 @@ const Setting = () => {
     if (event.target.files.length === 0) {
       return;
     }
-    let img = event.target.files[0];
-    let imgUrl = URL.createObjectURL(img);
+    const img = event.target.files[0];
+    const imgUrl = URL.createObjectURL(img);
 
     setImage(img);
     setPreviewImageURL(imgUrl);
@@ -62,7 +62,7 @@ const Setting = () => {
     const displayName = user.displayName || user.displayName;
     const description = user.description || user.description;
     const newPassword = user.newPassword || user.newPassword;
-    let isAllNull = (displayName || description || newPassword) === undefined;
+    const isAllNull = (displayName || description || newPassword) === undefined;
     if (isAllNull) return;
     UserService.updateInfo(displayName, description, newPassword).then(
       (data) => {
@@ -77,6 +77,7 @@ const Setting = () => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line no-underscore-dangle
     const userId = getUser()._id;
     if (needFetchData) dispatch(profileSettingAction.getUserInfo(userId));
   }, [needFetchData, dispatch]);
@@ -101,19 +102,20 @@ const Setting = () => {
           >
             <input
               type="file"
-              class="custom-file-input"
+              className="custom-file-input"
               id="image"
               name="avatar"
               accept=".png,.jpg,.gif,.jpeg"
-              hidden={true}
+              hidden
               onChange={handleImageSelected}
             />
           </form>
+          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label
             type="button"
             style={{ marginLeft: '2em' }}
             className="btn btn-lg btn-primary"
-            for="image"
+            htmlFor="image"
           >
             Change Avatar
           </label>
@@ -200,7 +202,4 @@ const Setting = () => {
   );
 };
 
-Setting.propTypes = {
-  userId: PropTypes.string,
-};
 export default Setting;

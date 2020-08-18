@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import ModelActionCreators from '../../../../../actions/modal';
 import { useDispatch } from 'react-redux';
+import ModelActionCreators from '../../../../../actions/modal';
 
 const Question = ({ id, title, time, categoryId, category }) => {
   const dispatch = useDispatch();
@@ -31,7 +31,10 @@ const Question = ({ id, title, time, categoryId, category }) => {
         </td>
         <td className="col-3 d-flex justify-content-center">
           <h4>
-            <Link to="/" className="badge badge-warning p-2">
+            <Link
+              to={`/category/${categoryId}`}
+              className="badge badge-warning p-2"
+            >
               {category}
             </Link>
           </h4>
@@ -42,7 +45,7 @@ const Question = ({ id, title, time, categoryId, category }) => {
           </Link>
         </td>
         <td className="col-1">
-          <button onClick={handleDelete}>
+          <button type="button" onClick={handleDelete}>
             <img src="https://i.ibb.co/hgYsCP1/delete.png" alt="delete" />
           </button>
         </td>
@@ -52,17 +55,11 @@ const Question = ({ id, title, time, categoryId, category }) => {
 };
 
 Question.propTypes = {
-  id: PropTypes.string,
-  title: PropTypes.string,
-  time: PropTypes.string,
-  categoryId: PropTypes.string,
-  category: PropTypes.string,
-};
-
-Question.defaultProps = {
-  title: '',
-  time: '',
-  category: '',
+  id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  time: PropTypes.string.isRequired,
+  categoryId: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
 };
 
 export default Question;

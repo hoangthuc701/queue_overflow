@@ -10,6 +10,7 @@ const Profile = () => {
           <img
             className="avatar"
             src={`${process.env.REACT_APP_SERVER_DOMAIN}/upload/${
+              // eslint-disable-next-line no-underscore-dangle
               userInfo._id
             }?${Date.now()}`}
             alt="avatar"
