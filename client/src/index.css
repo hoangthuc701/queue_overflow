@@ -37,3 +37,7 @@ table tr:nth-child(2n) {
 .active-dislike {
   color: red;
 }
+
+.result img{
+  max-width: 700px;
+}

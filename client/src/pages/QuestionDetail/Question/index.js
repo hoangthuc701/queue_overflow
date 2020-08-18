@@ -91,7 +91,7 @@ class Question extends Component {
             borderColor: '#03a9f4',
             marginLeft: '2px',
           }}
-          to={`/tags/${tag.tag_id}`}
+          to={`/tag/${tag.tag_id}`}
         >
           {tag.name}
         </Link>
@@ -105,7 +105,7 @@ class Question extends Component {
       <div className="text-right">
         <h5>
           <Link
-            to="/"
+            to={`/category/${category.category_id}`}
             className="badge badge-danger"
             style={{
               backgroundColor: `${category.color}`,

@@ -7,17 +7,8 @@ import 'react-markdown-editor-lite/lib/index.css';
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
 class MarkdownEditer extends Component {
-  // Finish!
-  constructor() {
-    super();
-    this.state = {
-      content: '',
-    };
-  }
-
   // eslint-disable-next-line no-unused-vars
   handleEditorChange = ({ html, text }) => {
-    this.setState({ content: text });
     // eslint-disable-next-line react/destructuring-assignment
     this.props.handleChange('content', text);
   };
