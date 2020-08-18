@@ -112,12 +112,38 @@ function questionList(page = 1, filter = 'newest') {
   };
 }
 
+function questionListByCate(page = 1, idCate) {
+  return async (dispatch) => {
+    dispatch(requestList(idCate));
+    const values = await QuestionService.getListQuestionByCate(page, idCate);
+    if (values.message) {
+      dispatch(successList(values.data));
+    } else {
+      dispatch(failureList());
+    }
+  };
+}
+
+function questionListByTag(page = 1, idTag) {
+  return async (dispatch) => {
+    dispatch(requestList(idTag));
+    const values = await QuestionService.getListQuestionByTag(page, idTag);
+    if (values.message) {
+      dispatch(successList(values.data));
+    } else {
+      dispatch(failureList());
+    }
+  };
+}
+
 const questionActions = {
   getQuestionDetail,
   LikeQuestion,
   DislikeQuestion,
   DeleteQuestion,
   questionList,
+  questionListByCate,
+  questionListByTag,
 };
 
 export default questionActions;

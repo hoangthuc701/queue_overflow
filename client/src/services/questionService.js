@@ -155,6 +155,30 @@ class QuestionService {
     );
     return data.json();
   }
+
+  static async getListQuestionByCate(page, idCate) {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
+    const data = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/questions/categories/${idCate.categoryId}?page=${page}`,
+      requestOptions
+    );
+    return data.json();
+  }
+
+  static async getListQuestionByTag(page, idTag) {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
+    const data = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/questions/tags/${idTag.tag}?page=${page}`,
+      requestOptions
+    );
+    return data.json();
+  }
 }
 
 export default QuestionService;
