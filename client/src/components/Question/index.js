@@ -6,7 +6,7 @@ import './index.css';
 const Question = (props) => {
   const { title } = props;
   const linkTitle = '/question/';
-  const linkUser = '/question/add';
+  const linkUser = `/profile/${title.author.author_id}`;
   const { color } = title.category;
   const point =
     title.rating_detail.totalLike - title.rating_detail.totalDislike;
