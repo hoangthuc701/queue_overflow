@@ -26,7 +26,7 @@ const QuestionPage = (props) => {
   const perPage = 10;
   useEffect(() => {
     dispatch(questionAction.questionListByTag(1, tag));
-  }, [dispatch]);
+  }, [tag]);
   const { questionlist, getting } = useSelector((state) => state.questionList);
   let questionitem;
   let pageItems;
