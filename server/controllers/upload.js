@@ -3,6 +3,7 @@ const response_format = require('../util/response_format');
 const UserService = require('../services/user');
 const fs = require('fs');
 const path = require('path');
+const mongoose = require('mongoose');
 exports.uploadImage = async (req, res) => {
 	if (!req.file) return res.json(response_format.error('You must upload an image.'));
 	const ext = path.extname(req.file.originalname);
@@ -18,6 +19,7 @@ exports.uploadImage = async (req, res) => {
 	return res.json(response_format.success('Upload photo succeed', user));
 };
 exports.getImage = async (req, res) => {
+	checkObjectId(res, req.params.user_id);
 	let user = await UserService.getUserById(req.params.user_id);
 	let filepath;
 	if (!user || !user.avatar) filepath = './images/default';
@@ -31,3 +33,8 @@ exports.getImage = async (req, res) => {
 		}
 	});
 };
+function checkObjectId(res, objectId) {
+	const isObjectId = mongoose.Types.ObjectId.isValid(objectId);
+	if (!isObjectId)
+		return res.json(response_format.error('Invalid objectId.'));
+}
