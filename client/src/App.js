@@ -16,13 +16,10 @@ import ProfileSetting from './pages/ProfileSetting';
 import TestSite from './pages/Test';
 import QuestionPage from './pages/QuestionPage';
 import AddQuestionPage from './pages/AddQuestion';
-<<<<<<< HEAD
 import ForgotPasswordPage from './pages/ForgotPassword';
 import ResetPasswordPage from './pages/ResetPassword';
 import VerifyAccoutPage from './pages/VerifyAccount';
-=======
 import QuestionDetail from './pages/QuestionDetail';
->>>>>>> develop
 
 class App extends Component {
   renderHeader = () => <Header />;
