@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -85,7 +86,7 @@ class Header extends Component {
           {' '}
         </button>
         <div className="dropdown-menu">
-          <Link className="dropdown-item" to="/profile">
+          <Link className="dropdown-item" to={`/profile/${getUser()._id}`}>
             Profile
           </Link>
           <div className="dropdown-divider" />
@@ -149,8 +150,6 @@ class Header extends Component {
                 {' '}
                 {this.renderLogo()} {this.renderSearchBar()}
               </form>
-              {isAuthenticate() && this.renderNotify()}
-              {isAuthenticate() && this.renderAddButton()}
             </div>
             {!isAuthenticate() && this.renderSignInSignUpButton()}
             {isAuthenticate() && this.renderProfile(history)}
