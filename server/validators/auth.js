@@ -27,3 +27,23 @@ exports.signinValidator = [
 	body('password').notEmpty().withMessage('Password is required'),
 	validate,
 ];
+
+exports.sendResetPasswordMailValidator = [
+	body('email')
+		.notEmpty()
+		.withMessage('Email is required')
+		.isEmail()
+		.withMessage('This is not email.'),
+	validate,
+];
+
+exports.resetPasswordValidator = [
+	body('password')
+		.isLength({ min: 7, max: undefined })
+		.withMessage('Password must be at least 7 character.')
+		.matches(/\d/)
+		.withMessage('Password must contain number.')
+		.matches(/[a-z]|[A-Z]/)
+		.withMessage('Password must contain character.'),
+	validate,
+];
