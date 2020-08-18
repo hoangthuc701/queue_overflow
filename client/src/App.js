@@ -21,6 +21,7 @@ import ResetPasswordPage from './pages/ResetPassword';
 import VerifyAccoutPage from './pages/VerifyAccount';
 import QuestionDetail from './pages/QuestionDetail';
 import EditQuestion from './pages/EditQuestion';
+import QuestionCategory from './pages/QuestionCategory';
 
 class App extends Component {
   renderHeader = () => <Header />;
@@ -66,6 +67,11 @@ class App extends Component {
               exact
               path="/question/edit/:questionId"
               component={EditQuestion}
+            />
+            <Route
+              exact
+              path="/category/:categoryId"
+              component={QuestionCategory}
             />
             <PrivateRoute exact path="/test" component={TestSite} />
             <Route exact path="/verify/:token" component={VerifyAccoutPage} />

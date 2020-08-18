@@ -82,8 +82,8 @@ const Question = (props) => {
                       <div className="col-sm-4">
                         <div className="text-right">
                           <h5>
-                            <a
-                              href
+                            <Link
+                              to={`/category/${title.category.category_id}`}
                               className="badge badge-danger"
                               style={{
                                 backgroundColor: color,
@@ -92,7 +92,7 @@ const Question = (props) => {
                               }}
                             >
                               {title.category.name}
-                            </a>
+                            </Link>
                           </h5>
                         </div>
                       </div>
