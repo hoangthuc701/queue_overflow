@@ -29,11 +29,11 @@ class UserService {
     return data;
   }
 
-  static async resetPassword(password, token) {
+  static async resetPassword(password, code) {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password, token }),
+      body: JSON.stringify({ password, code }),
     };
 
     const res = await fetch(
@@ -52,7 +52,7 @@ class UserService {
     };
 
     const res = await fetch(
-      `${process.env.REACT_APP_SERVER_DOMAIN}/forgot_password`,
+      `${process.env.REACT_APP_SERVER_DOMAIN}/send_reset_password_mail`,
       requestOptions
     );
     const data = await res.json();
@@ -60,14 +60,15 @@ class UserService {
   }
 
   // eslint-disable-next-line no-unused-vars
-  static async verifyAccount(token) {
+  static async verifyAccount(code) {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code }),
     };
 
     const res = await fetch(
-      `${process.env.REACT_APP_SERVER_DOMAIN}/forgot_password`,
+      `${process.env.REACT_APP_SERVER_DOMAIN}/activate_account`,
       requestOptions
     );
     const data = await res.json();

@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
-import ResetPasswordValidator from '../../validators/resetPassword';
+import ForgotValidator from '../../validators/forgotPassword';
 import UserService from '../../services/userService';
 
 const ResetPasswordPage = (props) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState({});
   const handleSubmit = () => {
-    const errors = ResetPasswordValidator(email);
+    const errors = ForgotValidator(email);
     setError(errors);
-    if (Object.keys(error).length > 0) return;
+    if (Object.keys(errors).length > 0) return;
     UserService.forgotPassword(email).then((data) => {
       if (data.message) {
         toast.success(data.message);

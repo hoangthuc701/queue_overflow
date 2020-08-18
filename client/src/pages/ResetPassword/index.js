@@ -1,29 +1,25 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import PropTypes from 'prop-types';
+import { useParams, useHistory } from 'react-router-dom';
 
 import ResetPasswordValidator from '../../validators/resetPassword';
 import UserService from '../../services/userService';
 
-const ResetPasswordPage = (props) => {
+const ResetPasswordPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState({});
+  const { token } = useParams();
+  const history = useHistory();
 
   const handleSubmit = () => {
     const errors = ResetPasswordValidator(password, confirmPassword);
     setError(errors);
     if (Object.keys(errors).length > 0) return;
-    // console.log(errors);
-    // eslint-disable-next-line react/prop-types
-    const { match } = props;
 
-    // eslint-disable-next-line react/prop-types
-    const { token } = match.params;
     UserService.resetPassword(password, token).then((data) => {
       if (data.message) {
         toast.success(data.message);
-        const { history } = props;
         history.push('/');
       } else {
         toast.error(data.error);
@@ -76,14 +72,14 @@ const ResetPasswordPage = (props) => {
                       type="password"
                       onChange={(e) => setConfirmPassword(e.target.value)}
                     />
-                    {error &&
-                      error.confirmPassword &&
-                      error.confirmPassword.length > 0 && (
-                        <span className="error" style={{ color: 'red' }}>
-                          {error.confirmPassword}
-                        </span>
-                      )}
                   </div>
+                  {error &&
+                    error.confirmPassword &&
+                    error.confirmPassword.length > 0 && (
+                      <span className="error" style={{ color: 'red' }}>
+                        {error.confirmPassword}
+                      </span>
+                    )}
                 </div>
                 <div className="form-group">
                   <input
@@ -107,12 +103,6 @@ const ResetPasswordPage = (props) => {
       </div>
     </div>
   );
-};
-
-ResetPasswordPage.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
 };
 
 export default ResetPasswordPage;
