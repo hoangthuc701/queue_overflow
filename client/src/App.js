@@ -22,6 +22,7 @@ import VerifyAccoutPage from './pages/VerifyAccount';
 import QuestionDetail from './pages/QuestionDetail';
 import EditQuestion from './pages/EditQuestion';
 import QuestionCategory from './pages/QuestionCategory';
+import QuestionTag from './pages/QuestionTag';
 
 class App extends Component {
   renderHeader = () => <Header />;
@@ -73,6 +74,7 @@ class App extends Component {
               path="/category/:categoryId"
               component={QuestionCategory}
             />
+            <Route exact path="/tag/:tag" component={QuestionTag} />
             <PrivateRoute exact path="/test" component={TestSite} />
             <Route exact path="/verify/:token" component={VerifyAccoutPage} />
             <Route

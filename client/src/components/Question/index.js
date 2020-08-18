@@ -99,8 +99,8 @@ const Question = (props) => {
                     </div>
                     <div className="text-right" style={{ marginTop: '0.5em' }}>
                       {title.tags.map((tag) => (
-                        <a
-                          href
+                        <Link
+                          to={`/tag/${tag.tag_id}`}
                           className="badge badge-secondary"
                           style={{
                             backgroundColor: '#03a9f4',
@@ -110,7 +110,7 @@ const Question = (props) => {
                           key={tag.tag_id}
                         >
                           {tag.name}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>

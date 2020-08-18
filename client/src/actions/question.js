@@ -124,6 +124,18 @@ function questionListByCate(page = 1, idCate) {
   };
 }
 
+function questionListByTag(page = 1, idTag) {
+  return async (dispatch) => {
+    dispatch(requestList(idTag));
+    const values = await QuestionService.getListQuestionByTag(page, idTag);
+    if (values.message) {
+      dispatch(successList(values.data));
+    } else {
+      dispatch(failureList());
+    }
+  };
+}
+
 const questionActions = {
   getQuestionDetail,
   LikeQuestion,
@@ -131,6 +143,7 @@ const questionActions = {
   DeleteQuestion,
   questionList,
   questionListByCate,
+  questionListByTag,
 };
 
 export default questionActions;
