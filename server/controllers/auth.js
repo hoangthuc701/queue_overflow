@@ -5,7 +5,12 @@ const EmailService = require('../services/email');
 const { getHashedPassword, comparePassword } = require('../util/password');
 const { createPasswordMail, createVerificationMail } = require('../util/email');
 const response_format = require('../util/response_format');
-const { generateCode, verifyCode } = require('../util/account');
+const {
+	generateCode,
+	verifyCode,
+	resetPasswordCryptr,
+	activationCryptr,
+} = require('../util/account');
 
 exports.sign_up = async (req, res) => {
 	let email_user = await UserService.getUserByEmail(req.body.email);
@@ -26,7 +31,7 @@ exports.sign_up = async (req, res) => {
 		}
 
 		//send verification mail to user
-		const code = await generateCode(new_user._id);
+		const code = await generateCode(new_user._id, activationCryptr);
 		const link = process.env.VERIFICATION_PAGE_URL + '/' + code;
 		EmailService.send(
 			createVerificationMail(new_user.email, new_user.display_name, link)
@@ -98,12 +103,12 @@ exports.sendResetPasswordMail = async (req, res) => {
 		);
 		return;
 	}
-	const code = generateCode(user._id);
-	const link = process.env.VERIFICATION_PAGE_URL + '/' + code;
+	const code = generateCode(user._id, resetPasswordCryptr);
+	const link = process.env.RESET_PASSWORD_PAGE_URL + '/' + code;
 	const mail = createPasswordMail(email, user.display_name, link);
 	EmailService.send(mail);
 	res.json(
-		response_format.success('Your new password has send to your email.', {})
+		response_format.success('Reset password mail has send to your email.')
 	);
 };
 
@@ -111,7 +116,8 @@ exports.resetPassword = async (req, res) => {
 	const code = req.body.code;
 	const password = req.body.password;
 
-	const code_data = verifyCode(code);
+	const code_data = verifyCode(code, resetPasswordCryptr);
+	console.log(code_data);
 	if (!code_data) {
 		res.json(response_format.error('This link is invalid.'));
 		return;
@@ -139,7 +145,7 @@ exports.resetPassword = async (req, res) => {
 
 exports.activateAccount = async (req, res) => {
 	const code = req.body.code;
-	const code_data = verifyCode(code);
+	const code_data = verifyCode(code, activationCryptr);
 	if (!code_data) {
 		res.json(response_format.error('This link is invalid.'));
 		return;

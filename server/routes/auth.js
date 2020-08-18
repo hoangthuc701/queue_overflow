@@ -16,7 +16,7 @@ const {
 router.post('/signup', signupValidator, sign_up);
 router.post('/signin', signinValidator, sign_in);
 router.post(
-	'/send_reset_password_email',
+	'/send_reset_password_mail',
 	sendResetPasswordMailValidator,
 	sendResetPasswordMail
 );

@@ -1,12 +1,12 @@
 exports.createPasswordMail = (receiver, name, link) => ({
 	receiver,
-	subject: '[QueueOverflow] Your password has changed',
+	subject: '[QueueOverflow] Please reset your password',
 	text: '',
 	html: `
-		<div style="font-family: Arial, Helvetica, sans-serif;"> +
+		<div style="font-family: Arial, Helvetica, sans-serif;">
 			<div>Hello ${name},</div>
-			<div>your password has recently changed</div>
-			<span>This is your new password:</span>
+			<div>We heard that you lost your QueueOverflow password. Sorry about that!</div>
+			<div>But don't worry! You can use the following link to reset your password:</div>
 			<a href="${link}">Please click this link to reset your password</a>
 			<div>If you don't use this link within 3 hours, it will expire.</div>
 		</div>
