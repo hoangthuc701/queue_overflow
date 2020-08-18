@@ -16,7 +16,7 @@ exports.uploadImage = async (req, res) => {
 	user = await UserService.update(req.res.user._id, {
 		avatar: req.file.filename,
 	});
-	return res.json(response_format.success('Upload photo succeed', user));
+	return res.json(response_format.success('Upload photo succeed', user._id));
 };
 exports.getImage = async (req, res) => {
 	checkObjectId(res, req.params.user_id);
