@@ -496,10 +496,9 @@ exports.chooseBestAnswer = async (req, res) => {
 };
 
 exports.search = async (req, res) => {
-	let { content } = req.query;
-
+	let  content  = req.query.content||'';
 	let data = await QuestionService.searchQuestion();
-	content = content.toLowerCase() || content;
+	content = content.toLowerCase();
 
 	const matched = (tag) => tag.name.toLowerCase().search(content) >= 0;
 	data = data.filter((item) => {
@@ -508,7 +507,10 @@ exports.search = async (req, res) => {
 		if (item.tags.some(matched)) return true;
 		return false;
 	});
-	return res.json(data);
+	return res.json(
+		response_format.success('Search questions succeed.', { questions:data, totalCount: data.length }
+		)
+	);
 };
 
 async function displayQuestions(data) {

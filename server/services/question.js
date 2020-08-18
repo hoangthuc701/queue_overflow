@@ -224,11 +224,68 @@ class QuestionService {
 		return question;
 	}
 	static async searchQuestion() {
-		const data = await QuestionModel.find()
-			.populate('author', 'display_name _id')
-			.populate('category', 'name _id')
-			.populate('tags', '_id name')
-			.exec();
+		const data = await QuestionModel.aggregate([
+			{
+				$lookup:{
+					from:'users',
+					localField: 'author',
+					foreignField: '_id',
+					as:'author'
+				}
+			},
+			{
+				$lookup:{
+					from:'tags',
+					localField: 'tags',
+					foreignField: '_id',
+					as:'tags'
+				}
+			},
+			{
+				$lookup:{
+					from:'categories',
+					localField: 'category',
+					foreignField: '_id',
+					as:'category'
+				}
+			},
+			{
+				'$unwind': '$category'
+			},
+			{
+				$project:{
+					_id:1,
+					rating_detail:{
+						totalLike: {  $size: '$rating_detail.like_users' },
+						totalDislike: {  $size: '$rating_detail.dislike_users' } 
+					},
+					tags:{
+						$map:{
+							'input':'$tags',
+							as: 'tag',
+							in:{
+								'tag_id':'$$tag._id',
+								'name':'$$tag.name'
+							}
+						}
+					},
+					title:1,
+					content:1,
+					author:{
+						_id:1,
+						display_name:1,
+						avatar:1
+					},
+					category:{
+						category_id: '$category._id',
+						name:1,
+						color:1
+					},
+					created_time:1,
+					updated_time:1
+				}
+			}
+		]);
 		return data;
 	}
 }
