@@ -12,6 +12,7 @@ import Modal from './components/Model';
 import SignInPage from './pages/SignIn';
 import NotFoundPage from './pages/NotFound';
 import SignUpPage from './pages/SignUp';
+import ProfileSetting from './pages/ProfileSetting';
 import TestSite from './pages/Test';
 import QuestionPage from './pages/QuestionPage';
 import AddQuestionPage from './pages/AddQuestion';
@@ -49,6 +50,8 @@ class App extends Component {
             <Route exact path="/" component={QuestionPage} />
             <Route exact path="/signin" component={SignInPage} />
             <Route exact path="/signup" component={SignUpPage} />
+            <Route exact path="/profile" component={ProfileSetting} />
+            <Route exact path="/profile/:userId" component={ProfileSetting} />
             <Route exact path="/question/add" component={AddQuestionPage} />
             <Route
               exact

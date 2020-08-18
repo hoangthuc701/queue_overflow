@@ -3,46 +3,17 @@ const QuestionService = require('../services/question');
 const TagService = require('../services/tag');
 const CategoryService = require('../services/category');
 const UserService = require('../services/user');
+const mongoose = require('mongoose');
+const {verifyUser} = require ('../util/auth');
 const jwt = require('jsonwebtoken');
 
 const response_format = require('../util/response_format');
 const AnswerService = require('../services/answer');
+const LIMIT = 10;
 exports.addNewQuestion = async (req, res) => {
-	let token = req.header('authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
 	let author;
-	// if (token) {
-	// 	let user;
-	// 	try{
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	let user = req.res.user;
 	author = user._id;
-	// 	}
-	// 	catch (error){
-	// 		return res.json(response_format.error('Token invalid.'));
-	// 	}
-	// 	if (user.email) {
-	// 		let user_db = await UserService.getUserByEmail(user.email);
-	// 		if (user_db){
-	// 			author = user._id;
-	// 		}
-	// 		else{
-	// 			return res.json(response_format.error('User does not exist.'));
-	// 		}
-	// 	} else {
-	// 		return res.json(response_format.error('Token is not right.'));
-	// 	}
-	// } else {
-	// 	return res.json(response_format.error('Cannot know what user is.'));
-	// }
 	let question = {
 		title: req.body.title,
 		content: req.body.content,
@@ -99,18 +70,7 @@ exports.addNewQuestion = async (req, res) => {
 	}
 };
 exports.editQuestion = async (req, res) => {
-	let token = req.header('authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	checkObjectId(res, req.params.question_id);
 	let data = {
 		title: req.body.title,
 		content: req.body.content,
@@ -118,6 +78,12 @@ exports.editQuestion = async (req, res) => {
 		tags: req.body.tags,
 		question_id: req.params.question_id,
 	};
+	let question = await QuestionService.getById(data.question_id);
+	if (!question) return res.status(500).json(
+		response_format.error('There is no question to edit.')
+	);
+	const is_verify = verifyUser(req, res, question.author.toString());
+	if(!is_verify) return;
 	for (
 		let index_of_tag_name = 0;
 		index_of_tag_name < data.tags.length;
@@ -137,14 +103,6 @@ exports.editQuestion = async (req, res) => {
 			});
 			data.tags[index_of_tag_name] = new_tag._id;
 		}
-	}
-	let question = await QuestionService.getById(data.question_id);
-	if (user._id != question.author.toString()) {
-		return res.json(
-			response_format.error(
-				'User does not have rights to edit this question.'
-			)
-		);
 	}
 	if (question) {
 		let index_of_tag_name;
@@ -184,18 +142,7 @@ exports.editQuestion = async (req, res) => {
 	}
 };
 exports.deleteQuestion = async (req, res) => {
-	let token = req.header('authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	checkObjectId(res, req.params.question_id);
 	let question;
 	try {
 		question = await QuestionService.getById(req.params.question_id);
@@ -204,15 +151,10 @@ exports.deleteQuestion = async (req, res) => {
 	}
 	if (!question)
 		return res.json(response_format.error('Question does not exist.'));
-	if (user._id != question.author.toString()) {
-		return res.json(
-			response_format.error(
-				'User does not have rights to delete this question.'
-			)
-		);
-	}
+	const is_verify = verifyUser(req, res, question.author.toString());
+	if(!is_verify) return;
 	try {
-		let is_delete = await QuestionService.delete(req.params.question_id);
+		const is_delete = await QuestionService.delete(req.params.question_id);
 		if (is_delete) {
 			let index_of_tag_name;
 			for (
@@ -245,8 +187,11 @@ exports.getQuestions = async (req, res) => {
 	try {
 		questions = await QuestionService.getQuestionsByFilter(
 			parseInt(req.query.page, 10),
-			10,
+			LIMIT,
 			req.query.filter
+		);
+		if (!questions.questions) return res.status(500).json(
+			response_format.error('There is no question.')
 		);
 		let questions_index;
 		for (
@@ -306,7 +251,8 @@ exports.getQuestions = async (req, res) => {
 	}
 };
 exports.getQuestionById = async (req, res) => {
-	let token = req.header('authorization');
+	checkObjectId(res, req.params.question_id);
+	let token = req.header('Authorization');
 	let user;
 	if (token) {
 		if (token.startsWith('Bearer ')) {
@@ -321,9 +267,22 @@ exports.getQuestionById = async (req, res) => {
 	let answers;
 	try {
 		question = await QuestionService.getById(req.params.question_id);
+		if (!question) return res.status(500).json(
+			response_format.error('There is no question.')
+		);
 		answers = await AnswerService.getByQuestionId(req.params.question_id);
 		let answer_index;
 		for (answer_index = 0; answer_index < answers.length; answer_index++) {
+			if (!question.best_answer)
+				answers[answer_index].isBestAnswer = false;
+			else {
+				if (
+					answers[answer_index]._id.toString() ==
+					question.best_answer.toString()
+				)
+					answers[answer_index].isBestAnswer = true;
+				else answers[answer_index].isBestAnswer = false;
+			}
 			let author_data = await UserService.getUserById(
 				answers[answer_index].author
 			);
@@ -338,15 +297,36 @@ exports.getQuestionById = async (req, res) => {
 				answers[answer_index].rating_detail.dislike_users.length;
 			if (token) {
 				answers[answer_index].vote = 'none';
-				for (let like_user in answers[answer_index].rating_detail
-					.like_users) {
-					if (like_user.toString() === user._id)
+				let like_index;
+				for (
+					like_index = 0;
+					like_index <
+					answers[answer_index].rating_detail.like_users.length;
+					like_index++
+				) {
+					if (
+						answers[answer_index].rating_detail.like_users[
+							like_index
+						].toString() === user._id
+					) {
 						answers[answer_index].vote = 'like';
+						break;
+					}
 				}
-				for (let dislike_user in answers[answer_index].rating_detail
-					.dislike_users) {
-					if (dislike_user.toString() === user._id)
+				for (
+					like_index = 0;
+					like_index <
+					answers[answer_index].rating_detail.dislike_users.length;
+					like_index++
+				) {
+					if (
+						answers[answer_index].rating_detail.dislike_users[
+							like_index
+						].toString() === user._id
+					) {
 						answers[answer_index].vote = 'dislike';
+						break;
+					}
 				}
 			} else answers[answer_index].vote = 'none';
 		}
@@ -413,26 +393,20 @@ exports.getQuestionById = async (req, res) => {
 	}
 };
 exports.getQuestionByAuthorId = async (req, res) => {
-	let token = req.header('authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	checkObjectId(res, req.params.user_id);
+	const is_verify = verifyUser(req, res, req.params.user_id);
+	if(!is_verify) return;
 	try {
-		let questions = await QuestionService.getByAuthorId(
+		let questions = await QuestionService.getQuestionsByOtherId(
 			req.query.page,
-			10,
-			user._id
+			LIMIT,
+			req.params.user_id,
+			'author'
+		);
+		if (!questions.questions) return res.status(500).json(
+			response_format.error('There is no question.')
 		);
 		let question_index;
-		// let res_questions = [];
 		for (
 			question_index = 0;
 			question_index < questions.questions.length;
@@ -457,18 +431,7 @@ exports.getQuestionByAuthorId = async (req, res) => {
 	}
 };
 exports.likeQuestion = async (req, res) => {
-	let token = req.header('authorization');
-	if (token) {
-		if (token.startsWith('Bearer ')) {
-			token = token.slice(7, token.length);
-		} else
-			return res.json(
-				response_format.error('Token format is not right.')
-			);
-	} else {
-		return res.json(response_format.error('User must sign in.'));
-	}
-	let user = jwt.verify(token, process.env.PRIVATE_KEY);
+	let user = req.res.user;
 	try {
 		let question = await QuestionService.likeQuestion(
 			req.body.question_id,
@@ -486,57 +449,22 @@ exports.likeQuestion = async (req, res) => {
 	}
 };
 exports.getQuestionsByCategoryId = async (req, res) => {
+	checkObjectId(res, req.params.category_id);
 	let questions;
 	let category;
 	try {
 		category = await CategoryService.getById(req.params.category_id);
-		questions = await QuestionService.getQuestionsByCategory(
+		questions = await QuestionService.getQuestionsByOtherId(
 			req.query.page,
-			10,
-			req.params.category_id
+			LIMIT,
+			req.params.category_id,
+			'category'
 		);
+		if (!questions.questions) return res.status(500).json(
+			response_format.error('There is no question.')
+		);
+		questions = await displayQuestions(questions);
 		questions.category_info = category;
-		let question_index;
-		for (
-			question_index = 0;
-			question_index < questions.questions.length;
-			question_index++
-		) {
-			questions.questions[question_index].rating_detail.totalLike =
-				questions.questions[
-					question_index
-				].rating_detail.like_users.length;
-			questions.questions[question_index].rating_detail.totalDislike =
-				questions.questions[
-					question_index
-				].rating_detail.dislike_users.length;
-			let tag_index;
-			let tags_data = [];
-			for (
-				tag_index = 0;
-				tag_index < questions.questions[question_index].tags.length;
-				tag_index++
-			) {
-				let tag_data = await TagService.getById({
-					tag_id: questions.questions[question_index].tags[tag_index],
-				});
-				tags_data.push({ tag_id: tag_data._id, name: tag_data.name });
-			}
-			questions.questions[question_index].tags = tags_data;
-			let author_data = await UserService.getUserById(
-				questions.questions[question_index].author
-			);
-			questions.questions[question_index].author = {
-				author_id: author_data._id,
-				display_name: author_data.display_name,
-				avatar: author_data.avatar,
-			};
-			questions.questions[question_index].category = {
-				category_id: category._id,
-				name: category.name,
-				color: category.color,
-			};
-		}
 		return res.json(
 			response_format.success('Get questions succeed.', questions)
 		);
@@ -546,60 +474,22 @@ exports.getQuestionsByCategoryId = async (req, res) => {
 	}
 };
 exports.getQuestionsByTagId = async (req, res) => {
+	checkObjectId(res, req.params.tag_id);
 	let questions;
 	let tag;
 	try {
 		tag = await TagService.getById({ tag_id: req.params.tag_id });
-		questions = await QuestionService.getQuestionsByTag(
+		questions = await QuestionService.getQuestionsByOtherId(
 			req.query.page,
-			10,
-			req.params.tag_id
+			LIMIT,
+			req.params.tag_id,
+			'tags'
 		);
+		if (!questions.questions) return res.status(500).json(
+			response_format.error('There is no question.')
+		);
+		questions = await displayQuestions(questions);
 		questions.tag_info = { tag_id: tag._id, name: tag.name };
-		let question_index;
-		for (
-			question_index = 0;
-			question_index < questions.questions.length;
-			question_index++
-		) {
-			questions.questions[question_index].rating_detail.totalLike =
-				questions.questions[
-					question_index
-				].rating_detail.like_users.length;
-			questions.questions[question_index].rating_detail.totalDislike =
-				questions.questions[
-					question_index
-				].rating_detail.dislike_users.length;
-			let tag_index;
-			let tags_data = [];
-			for (
-				tag_index = 0;
-				tag_index < questions.questions[question_index].tags.length;
-				tag_index++
-			) {
-				let tag_data = await TagService.getById({
-					tag_id: questions.questions[question_index].tags[tag_index],
-				});
-				tags_data.push({ tag_id: tag_data._id, name: tag_data.name });
-			}
-			questions.questions[question_index].tags = tags_data;
-			let author_data = await UserService.getUserById(
-				questions.questions[question_index].author
-			);
-			questions.questions[question_index].author = {
-				author_id: author_data._id,
-				display_name: author_data.display_name,
-				avatar: author_data.avatar,
-			};
-			let category = await CategoryService.getById(
-				questions.questions[question_index].category
-			);
-			questions.questions[question_index].category = {
-				category_id: category._id,
-				name: category.name,
-				color: category.color,
-			};
-		}
 		return res.json(
 			response_format.success('Get questions succeed.', questions)
 		);
@@ -608,3 +498,149 @@ exports.getQuestionsByTagId = async (req, res) => {
 		res.status(500).json(response_format.error(error.message));
 	}
 };
+exports.chooseBestAnswer = async (req, res) => {
+	checkObjectId(res, req.params.question_id);
+	checkObjectId(res, req.params.answer_id);
+	let question;
+	try {
+		question = await QuestionService.getById(req.params.question_id);
+		if (!question) return res.json(
+			response_format.error('There is no question.')
+		);
+		let answer_index;
+		let is_in_question = false;
+		for(answer_index=0;answer_index<question.answers.length;answer_index++){
+			if (question.answers[answer_index].toString()==req.params.answer_id){
+				is_in_question=true;
+				break;
+			}
+		}
+		if (!is_in_question) return res.json(
+			response_format.error('This answer does not belong to this question.')
+		);
+		const is_verify = verifyUser(req, res, question.author.toString());
+		if(!is_verify) return;
+		question = await QuestionService.chooseBestAnswer(
+			req.params.question_id,
+			req.params.answer_id
+		);
+		let answers = await AnswerService.getByQuestionId(
+			req.params.question_id
+		);
+		for (answer_index = 0; answer_index < answers.length; answer_index++) {
+			if (!question.best_answer)
+				answers[answer_index].isBestAnswer = false;
+			else {
+				if (
+					answers[answer_index]._id.toString() ==
+					question.best_answer.toString()
+				)
+					answers[answer_index].isBestAnswer = true;
+				else answers[answer_index].isBestAnswer = false;
+			}
+
+			let author_data = await UserService.getUserById(
+				answers[answer_index].author
+			);
+			answers[answer_index].author = {
+				author_id: author_data._id,
+				name: author_data.display_name,
+				avatar: author_data.avatar,
+			};
+			answers[answer_index].rating_detail.totalLike =
+				answers[answer_index].rating_detail.like_users.length;
+			answers[answer_index].rating_detail.totalDislike =
+				answers[answer_index].rating_detail.dislike_users.length;
+			if (is_verify) {
+				answers[answer_index].vote = 'none';
+				let like_index;
+				for (
+					like_index = 0;
+					like_index <
+					answers[answer_index].rating_detail.like_users.length;
+					like_index++
+				) {
+					if (
+						answers[answer_index].rating_detail.like_users[
+							like_index
+						].toString() === req.res.user._id
+					) {
+						answers[answer_index].vote = 'like';
+						break;
+					}
+				}
+				for (
+					like_index = 0;
+					like_index <
+					answers[answer_index].rating_detail.dislike_users.length;
+					like_index++
+				) {
+					if (
+						answers[answer_index].rating_detail.dislike_users[
+							like_index
+						].toString() === req.res.user._id
+					) {
+						answers[answer_index].vote = 'dislike';
+						break;
+					}
+				}
+			} else answers[answer_index].vote = 'none';
+		}
+		return res.json(
+			response_format.success('Get questions succeed.', answers)
+		);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json(response_format.error(error.message));
+	}
+};
+
+async function displayQuestions(data) {
+	let question_index;
+	for (
+		question_index = 0;
+		question_index < data.questions.length;
+		question_index++
+	) {
+		data.questions[question_index].rating_detail.totalLike =
+			data.questions[question_index].rating_detail.like_users.length;
+		data.questions[question_index].rating_detail.totalDislike =
+			data.questions[question_index].rating_detail.dislike_users.length;
+		let tag_index;
+		let tags_data = [];
+		for (
+			tag_index = 0;
+			tag_index < data.questions[question_index].tags.length;
+			tag_index++
+		) {
+			let tag_data = await TagService.getById({
+				tag_id: data.questions[question_index].tags[tag_index],
+			});
+			tags_data.push({ tag_id: tag_data._id, name: tag_data.name });
+		}
+		data.questions[question_index].tags = tags_data;
+		let author_data = await UserService.getUserById(
+			data.questions[question_index].author
+		);
+		data.questions[question_index].author = {
+			author_id: author_data._id,
+			display_name: author_data.display_name,
+			avatar: author_data.avatar,
+		};
+		let category = await CategoryService.getById(
+			data.questions[question_index].category
+		);
+		data.questions[question_index].category = {
+			category_id: category._id,
+			name: category.name,
+			color: category.color,
+		};
+	}
+	return data;
+}
+function checkObjectId(res, objectId) {
+	const isObjectId = mongoose.Types.ObjectId.isValid(objectId);
+	if (!isObjectId) return res.json(
+		response_format.error('Invalid objectId.')
+	);
+}

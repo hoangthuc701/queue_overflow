@@ -52,7 +52,7 @@ exports.sign_in = async (req, res) => {
 			display_name: user.display_name,
 		};
 		const token = jwt.sign(user_info, process.env.PRIVATE_KEY, {
-			expiresIn: '1h',
+			expiresIn: '5h',
 		});
 		res.json(
 			response_format.success('Sign in succeed', {

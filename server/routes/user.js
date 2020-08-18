@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { getUserInfoById, updateUserInfo } = require('../controllers/user');
+const { getUserInfoById, updateUserbyId } = require('../controllers/user');
 const { userValidator } = require('../validators/user');
-const { auth, verifyUser } = require('../middlewares/authentication');
+const { auth } = require('../middlewares/authentication');
 
 router
 	.route('/users/:user_id')
@@ -9,12 +9,11 @@ router
 	.put(
 		auth,
 		(req, res, next) => {
-			req.user_id = req.param.user_id;
+			req.user_id = req.params.user_id;
 			next();
 		},
-		verifyUser,
 		userValidator,
-		updateUserInfo
+		updateUserbyId
 	);
 
 module.exports = router;
