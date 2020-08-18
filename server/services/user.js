@@ -40,7 +40,7 @@ class UserService {
 		return user;
 	}
 
-	static async update(id, { hashed_password, display_name, description }) {
+	static async update(id, { hashed_password, display_name, description, avatar }) {
 		let user;
 		try {
 			user = await UserModel.findById(id);
@@ -52,6 +52,7 @@ class UserService {
 					? display_name
 					: user.display_name;
 				user.description = description ? description : user.description;
+				user.avatar = avatar ? avatar : user.avatar;
 				await user.save();
 			}
 		} catch (error) {
