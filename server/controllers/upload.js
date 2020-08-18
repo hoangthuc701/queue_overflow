@@ -6,7 +6,7 @@ const path = require('path');
 exports.uploadImage = async (req, res) => {
 	if (!req.file) return res.json(response_format.error('You must upload an image.'));
 	const ext = path.extname(req.file.originalname);
-	if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg' && ext !== '.zip'){
+	if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg'){
 		fs.unlinkSync(`./images/${req.file.filename}`);
 		return res.json(response_format.error('File must be image'));
 	}
@@ -20,7 +20,7 @@ exports.uploadImage = async (req, res) => {
 exports.getImage = async (req, res) => {
 	let user = await UserService.getUserById(req.params.user_id);
 	let filepath;
-	if (!user.avatar) filepath = './images/default';
+	if (!user || !user.avatar) filepath = './images/default';
 	else filepath = `./images/${user.avatar}`;
 	fs.readFile(filepath, function (err, content) {
 		if (err) {
