@@ -42,12 +42,11 @@ class MarkdownEditer extends Component {
   };
 
   render() {
-    const { content } = this.state;
-    const { errors } = this.props;
+    const { errors, data } = this.props;
     return (
       <>
         <MdEditor
-          value={content}
+          value={data}
           style={{ height: '500px' }}
           renderHTML={(text) => mdParser.render(text)}
           onChange={this.handleEditorChange}
@@ -64,6 +63,7 @@ class MarkdownEditer extends Component {
 MarkdownEditer.propTypes = {
   handleChange: PropTypes.func.isRequired,
   errors: PropTypes.objectOf(PropTypes.string).isRequired,
+  data: PropTypes.string.isRequired,
 };
 
 export default MarkdownEditer;

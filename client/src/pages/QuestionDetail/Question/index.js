@@ -47,9 +47,13 @@ class Question extends Component {
   };
 
   renderManager = () => {
+    // eslint-disable-next-line react/prop-types
+    const { match } = this.props;
+    // eslint-disable-next-line react/prop-types
+    const { questionId } = match.params;
     return (
       <>
-        <Link to="/">
+        <Link to={`/question/edit/${questionId}`}>
           <button type="button" className="btn btn-outline-success">
             Edit{' '}
           </button>
