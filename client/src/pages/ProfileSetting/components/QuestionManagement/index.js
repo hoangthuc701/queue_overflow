@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Question from './Question';
 import questionActions from '../../../../actions/question';
 import Pagination from '../../../../components/Pagination';
+import Loading from '../../../../components/Loading';
 
 const QuestionManagement = () => {
   const [questionsDisplay, setQuestionsDisplay] = useState([]);
@@ -20,7 +21,9 @@ const QuestionManagement = () => {
   }, [userInfoGetting, userInfoGetted, pageNum, dispatch]);
 
   useEffect(() => {
-    if (!userInfoGetted) return;
+    if (!userInfoGetted || userInfoGetting) {
+      return setQuestionsDisplay(<Loading />);
+    }
     const display = questionList.questions.map((question) => {
       return (
         <Question
@@ -37,7 +40,7 @@ const QuestionManagement = () => {
       );
     });
     setQuestionsDisplay(display);
-  }, [questionList, userInfoGetted]);
+  }, [questionList, userInfoGetted, userInfoGetting]);
 
   return (
     <div className="tab-pane" role="tabpanel" id="menu2">

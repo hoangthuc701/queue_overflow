@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import questionAction from '../../actions/question';
 import Question from '../../components/Question';
-import Pagination from '../../components/pagination';
+import Pagination from '../../components/Pagination';
 import Loading from '../../components/Loading';
 
 const QuestionPage = (props) => {
@@ -26,7 +26,7 @@ const QuestionPage = (props) => {
   const perPage = 10;
   useEffect(() => {
     dispatch(questionAction.questionListByCate(1, cateId));
-  }, [cateId]);
+  }, [cateId, dispatch]);
   const { questionlist, getting } = useSelector((state) => state.questionList);
   let questionitem;
   let pageItems;
