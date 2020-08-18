@@ -26,6 +26,25 @@ class AnswerEditer extends Component {
     // eslint-disable-next-line react/destructuring-assignment
   };
 
+  handleImageUpload = (file, callback) => {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const image = reader.result;
+      fetch(`${process.env.REACT_APP_SERVER_DOMAIN}/image-upload-single`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          callback(data.url);
+        });
+    };
+    reader.readAsDataURL(file);
+  };
+
   handleSubmit = async () => {
     const { content } = this.state;
     const errors = CommentValidator(content);
@@ -48,6 +67,7 @@ class AnswerEditer extends Component {
           style={{ height: '200px' }}
           renderHTML={(text) => mdParser.render(text)}
           onChange={this.handleEditorChange}
+          onImageUpload={this.handleImageUpload}
         />
         {errors && errors.content && (
           <span style={{ color: 'red' }}> {errors.content} </span>

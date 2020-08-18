@@ -139,7 +139,29 @@ function getUserQuestions(page = 1) {
     }
   };
 }
+function questionListByCate(page = 1, idCate) {
+  return async (dispatch) => {
+    dispatch(requestList(idCate));
+    const values = await QuestionService.getListQuestionByCate(page, idCate);
+    if (values.message) {
+      dispatch(successList(values.data));
+    } else {
+      dispatch(failureList());
+    }
+  };
+}
 
+function questionListByTag(page = 1, idTag) {
+  return async (dispatch) => {
+    dispatch(requestList(idTag));
+    const values = await QuestionService.getListQuestionByTag(page, idTag);
+    if (values.message) {
+      dispatch(successList(values.data));
+    } else {
+      dispatch(failureList());
+    }
+  };
+}
 const questionActions = {
   getQuestionDetail,
   LikeQuestion,
@@ -147,6 +169,8 @@ const questionActions = {
   DeleteQuestion,
   questionList,
   getUserQuestions,
+  questionListByCate,
+  questionListByTag,
 };
 
 export default questionActions;

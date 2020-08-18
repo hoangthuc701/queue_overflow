@@ -3,6 +3,10 @@
 }
 pre {
   border: 1px solid #ccc;
+  background-color: #f5f5f5;
+  font-size: 14px;
+  border-radius: 0;
+  overflow-x: auto;
 }
 
 blockquote {
@@ -34,3 +38,6 @@ table tr:nth-child(2n) {
   color: red;
 }
 
+.result img{
+  max-width: 700px;
+}

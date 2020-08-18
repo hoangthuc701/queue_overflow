@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MarkDownEditer from './components/MarkdownEditer';
 import CategoryBox from './components/CategoryBox';
@@ -88,7 +88,7 @@ class EditQuestion extends Component {
   };
 
   render() {
-    const { errors, tags, title, content, category } = this.state;
+    const { errors, tags, title, content, category, questionId } = this.state;
     return (
       <div>
         <h2>Edit question</h2>
@@ -133,11 +133,13 @@ class EditQuestion extends Component {
             className="btn btn-primary mr-2"
             onClick={this.handleSubmit}
           >
-            Post
+            Save
           </button>
-          <button type="button" className="btn">
-            Cancel
-          </button>
+          <Link to={`/question/${questionId}`}>
+            <button type="button" className="btn">
+              Cancel
+            </button>
+          </Link>
         </div>
       </div>
     );

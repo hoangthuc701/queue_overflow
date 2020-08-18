@@ -21,6 +21,8 @@ import ResetPasswordPage from './pages/ResetPassword';
 import VerifyAccoutPage from './pages/VerifyAccount';
 import QuestionDetail from './pages/QuestionDetail';
 import EditQuestion from './pages/EditQuestion';
+import QuestionCategory from './pages/QuestionCategory';
+import QuestionTag from './pages/QuestionTag';
 
 class App extends Component {
   renderHeader = () => <Header />;
@@ -56,7 +58,11 @@ class App extends Component {
             <Route exact path="/signup" component={SignUpPage} />
             <Route exact path="/profile" component={ProfileSetting} />
             <Route exact path="/profile/:userId" component={ProfileSetting} />
-            <Route exact path="/question/add" component={AddQuestionPage} />
+            <PrivateRoute
+              exact
+              path="/question/add"
+              component={AddQuestionPage}
+            />
             <Route
               exact
               path="/question/:questionId"
@@ -67,6 +73,12 @@ class App extends Component {
               path="/question/edit/:questionId"
               component={EditQuestion}
             />
+            <Route
+              exact
+              path="/category/:categoryId"
+              component={QuestionCategory}
+            />
+            <Route exact path="/tag/:tag" component={QuestionTag} />
             <PrivateRoute exact path="/test" component={TestSite} />
             <Route exact path="/verify/:token" component={VerifyAccoutPage} />
             <Route

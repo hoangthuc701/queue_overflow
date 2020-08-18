@@ -4,8 +4,10 @@ const response_format = require('../util/response_format');
 const AnswerService = require('../services/answer');
 const UserService = require('../services/user');
 const QuestionService = require('../services/question');
+const mongoose = require('mongoose');
 const {verifyUser} = require ('../util/auth');
 exports.addNewAnswer = async (req, res) => {
+	checkObjectId(res, req.params.question_id);
 	let author;
 	let user = req.res.user;
 	author = user._id;
@@ -99,6 +101,7 @@ exports.likeAnswer = async (req, res) => {
 	}
 };
 exports.deleteAnswer = async (req, res) => {
+	checkObjectId(res, req.params.answer_id);
 	let answer;
 	try {
 		answer = await AnswerService.getById(req.params.answer_id);
@@ -121,3 +124,8 @@ exports.deleteAnswer = async (req, res) => {
 		res.status(500).json(response_format.error(error.message));
 	}
 };
+function checkObjectId(res, objectId) {
+	const isObjectId = mongoose.Types.ObjectId.isValid(objectId);
+	if (!isObjectId)
+		return res.json(response_format.error('Invalid objectId.'));
+}

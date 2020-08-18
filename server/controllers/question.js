@@ -4,7 +4,7 @@ const TagService = require('../services/tag');
 const CategoryService = require('../services/category');
 const UserService = require('../services/user');
 const mongoose = require('mongoose');
-const {verifyUser} = require ('../util/auth');
+const { verifyUser } = require('../util/auth');
 const jwt = require('jsonwebtoken');
 
 const response_format = require('../util/response_format');
@@ -21,40 +21,19 @@ exports.addNewQuestion = async (req, res) => {
 		category: req.body.category,
 		tags: req.body.tags,
 	};
-	let index_of_tag_name;
-	for (
-		index_of_tag_name = 0;
-		index_of_tag_name < question.tags.length;
-		index_of_tag_name++
-	) {
-		question.tags[index_of_tag_name] = question.tags[index_of_tag_name]
-			.toUpperCase()
-			.replace(/  +/g, ' ');
-		let new_tag = await TagService.getByName({
-			name: question.tags[index_of_tag_name],
-		});
-		if (new_tag) {
-			question.tags[index_of_tag_name] = new_tag._id;
-		} else {
-			new_tag = await TagService.create({
-				name: question.tags[index_of_tag_name],
-			});
-			question.tags[index_of_tag_name] = new_tag._id;
-		}
-	}
+	let tag_to_id = await tagNameToId(question.tags);
+	question.tags = tag_to_id;
 	try {
 		let new_question = await QuestionService.create(question);
 		if (new_question) {
-			for (
-				index_of_tag_name = 0;
-				index_of_tag_name < new_question.tags.length;
-				index_of_tag_name++
-			) {
-				await TagService.addNewQuestion({
-					question_id: new_question._id,
-					tag_id: new_question.tags[index_of_tag_name],
-				});
-			}
+			await Promise.all(
+				new_question.tags.map(async (element) => {
+					await TagService.addNewQuestion({
+						question_id: new_question._id,
+						tag_id: element,
+					});
+				})
+			);
 			return res.json(
 				response_format.success('Add new question succeed.', {
 					_id: new_question._id,
@@ -79,57 +58,32 @@ exports.editQuestion = async (req, res) => {
 		question_id: req.params.question_id,
 	};
 	let question = await QuestionService.getById(data.question_id);
-	if (!question) return res.status(500).json(
-		response_format.error('There is no question to edit.')
-	);
+	if (!question)
+		return res
+			.status(500)
+			.json(response_format.error('There is no question to edit.'));
 	const is_verify = verifyUser(req, res, question.author.toString());
-	if(!is_verify) return;
-	for (
-		let index_of_tag_name = 0;
-		index_of_tag_name < data.tags.length;
-		index_of_tag_name++
-	) {
-		data.tags[index_of_tag_name] = data.tags[index_of_tag_name]
-			.toUpperCase()
-			.replace(/  +/g, ' ');
-		let new_tag = await TagService.getByName({
-			name: data.tags[index_of_tag_name],
-		});
-		if (new_tag) {
-			data.tags[index_of_tag_name] = new_tag._id;
-		} else {
-			new_tag = await TagService.create({
-				name: data.tags[index_of_tag_name],
-			});
-			data.tags[index_of_tag_name] = new_tag._id;
-		}
-	}
-	if (question) {
-		let index_of_tag_name;
-		for (
-			index_of_tag_name = 0;
-			index_of_tag_name < question.tags.length;
-			index_of_tag_name++
-		) {
+	if (!is_verify) return;
+	let tag_to_id = await tagNameToId(data.tags);
+	data.tags = tag_to_id;
+	await Promise.all(
+		question.tags.map(async (element) => {
 			await TagService.removeQuestion({
 				question_id: question._id,
-				tag_id: question.tags[index_of_tag_name],
+				tag_id: element,
 			});
-		}
-	} else return res.json(response_format.error('Question does not exist.'));
+		})
+	);
 	try {
 		question = await QuestionService.update(data);
-		let index_of_tag_name;
-		for (
-			index_of_tag_name = 0;
-			index_of_tag_name < question.tags.length;
-			index_of_tag_name++
-		) {
-			await TagService.addNewQuestion({
-				question_id: question._id,
-				tag_id: question.tags[index_of_tag_name],
-			});
-		}
+		await Promise.all(
+			question.tags.map(async (element) => {
+				await TagService.addNewQuestion({
+					question_id: question._id,
+					tag_id: element,
+				});
+			})
+		);
 		return res.json(
 			response_format.success('Edit question succeed.', {
 				_id: question._id,
@@ -152,21 +106,18 @@ exports.deleteQuestion = async (req, res) => {
 	if (!question)
 		return res.json(response_format.error('Question does not exist.'));
 	const is_verify = verifyUser(req, res, question.author.toString());
-	if(!is_verify) return;
+	if (!is_verify) return;
 	try {
 		const is_delete = await QuestionService.delete(req.params.question_id);
 		if (is_delete) {
-			let index_of_tag_name;
-			for (
-				index_of_tag_name = 0;
-				index_of_tag_name < question.tags.length;
-				index_of_tag_name++
-			) {
-				await TagService.removeQuestion({
-					question_id: question._id,
-					tag_id: question.tags[index_of_tag_name],
-				});
-			}
+			await Promise.all(
+				question.tags.map(async (element) => {
+					await TagService.removeQuestion({
+						question_id: question._id,
+						tag_id: element,
+					});
+				})
+			);
 			return res.json(
 				response_format.success('Delete question succeed.', {
 					_id: question._id,
@@ -190,57 +141,11 @@ exports.getQuestions = async (req, res) => {
 			LIMIT,
 			req.query.filter
 		);
-		if (!questions.questions) return res.status(500).json(
-			response_format.error('There is no question.')
-		);
-		let questions_index;
-		for (
-			questions_index = 0;
-			questions_index < questions.questions.length;
-			questions_index++
-		) {
-			let tags_index;
-			let tags_data = [];
-			let tag_data;
-			for (
-				tags_index = 0;
-				tags_index < questions.questions[questions_index].tags.length;
-				tags_index++
-			) {
-				tag_data = await TagService.getById({
-					tag_id:
-						questions.questions[questions_index].tags[tags_index],
-				});
-				tags_data.push({ tag_id: tag_data._id, name: tag_data.name });
-			}
-			questions.questions[questions_index].tags = tags_data;
-			let category_data = await CategoryService.getById(
-				questions.questions[questions_index].category
-			);
-			let res_category = {
-				category_id: category_data._id,
-				name: category_data.name,
-				color: category_data.color,
-			};
-			questions.questions[questions_index].category = res_category;
-			let user_data = await UserService.getUserById(
-				questions.questions[questions_index].author
-			);
-			let res_author = {
-				author_id: user_data._id,
-				display_name: user_data.display_name,
-				avatar: user_data.avatar,
-			};
-			questions.questions[questions_index].author = res_author;
-			questions.questions[questions_index].rating_detail.totalLike =
-				questions.questions[
-					questions_index
-				].rating_detail.like_users.length;
-			questions.questions[questions_index].rating_detail.totalDislike =
-				questions.questions[
-					questions_index
-				].rating_detail.dislike_users.length;
-		}
+		if (!questions.questions)
+			return res
+				.status(500)
+				.json(response_format.error('There is no question.'));
+		questions = await displayQuestions(questions);
 		return res.json(
 			response_format.success('Get question succeed.', questions)
 		);
@@ -267,9 +172,10 @@ exports.getQuestionById = async (req, res) => {
 	let answers;
 	try {
 		question = await QuestionService.getById(req.params.question_id);
-		if (!question) return res.status(500).json(
-			response_format.error('There is no question.')
-		);
+		if (!question)
+			return res
+				.status(500)
+				.json(response_format.error('There is no question.'));
 		answers = await AnswerService.getByQuestionId(req.params.question_id);
 		let answer_index;
 		for (answer_index = 0; answer_index < answers.length; answer_index++) {
@@ -297,36 +203,11 @@ exports.getQuestionById = async (req, res) => {
 				answers[answer_index].rating_detail.dislike_users.length;
 			if (token) {
 				answers[answer_index].vote = 'none';
-				let like_index;
-				for (
-					like_index = 0;
-					like_index <
-					answers[answer_index].rating_detail.like_users.length;
-					like_index++
-				) {
-					if (
-						answers[answer_index].rating_detail.like_users[
-							like_index
-						].toString() === user._id
-					) {
-						answers[answer_index].vote = 'like';
-						break;
-					}
+				if(answers[answer_index].rating_detail.like_users.some(user_id => user_id.toString()==user._id)){
+					answers[answer_index].vote = 'like';
 				}
-				for (
-					like_index = 0;
-					like_index <
-					answers[answer_index].rating_detail.dislike_users.length;
-					like_index++
-				) {
-					if (
-						answers[answer_index].rating_detail.dislike_users[
-							like_index
-						].toString() === user._id
-					) {
-						answers[answer_index].vote = 'dislike';
-						break;
-					}
+				if(answers[answer_index].rating_detail.dislike_users.some(user_id => user_id.toString()==user._id)){
+					answers[answer_index].vote = 'dislike';
 				}
 			} else answers[answer_index].vote = 'none';
 		}
@@ -343,6 +224,8 @@ exports.getQuestionById = async (req, res) => {
 			name: category_data.name,
 			color: category_data.color,
 		};
+		question.created_time = question.created_time.toISOString().split('T')[0];
+		question.updated_time = question.updated_time.toISOString().split('T')[0];
 		let tags_data = [];
 		let tag_index;
 		for (tag_index = 0; tag_index < question.tags.length; tag_index++) {
@@ -358,29 +241,11 @@ exports.getQuestionById = async (req, res) => {
 			question.rating_detail.dislike_users.length;
 		if (token) {
 			question.vote = 'none';
-			let user_index;
-			for (
-				user_index = 0;
-				user_index < question.rating_detail.like_users.length;
-				user_index++
-			) {
-				if (
-					question.rating_detail.like_users[user_index].toString() ===
-					user._id
-				)
-					question.vote = 'like';
+			if(question.rating_detail.like_users.some(user_id => user_id.toString()==user._id)){
+				question.vote = 'like';
 			}
-			for (
-				user_index = 0;
-				user_index < question.rating_detail.dislike_users.length;
-				user_index++
-			) {
-				if (
-					question.rating_detail.dislike_users[
-						user_index
-					].toString() === user._id
-				)
-					question.vote = 'dislike';
+			if(question.rating_detail.dislike_users.some(user_id => user_id.toString()==user._id)){
+				question.vote = 'dislike';
 			}
 		} else question.vote = 'none';
 		return res.json(
@@ -395,7 +260,7 @@ exports.getQuestionById = async (req, res) => {
 exports.getQuestionByAuthorId = async (req, res) => {
 	checkObjectId(res, req.params.user_id);
 	const is_verify = verifyUser(req, res, req.params.user_id);
-	if(!is_verify) return;
+	if (!is_verify) return;
 	try {
 		let questions = await QuestionService.getQuestionsByOtherId(
 			req.query.page,
@@ -403,9 +268,10 @@ exports.getQuestionByAuthorId = async (req, res) => {
 			req.params.user_id,
 			'author'
 		);
-		if (!questions.questions) return res.status(500).json(
-			response_format.error('There is no question.')
-		);
+		if (!questions.questions)
+			return res
+				.status(500)
+				.json(response_format.error('There is no question.'));
 		let question_index;
 		for (
 			question_index = 0;
@@ -420,6 +286,8 @@ exports.getQuestionByAuthorId = async (req, res) => {
 				name: category_data.name,
 				color: category_data.color,
 			};
+			questions.questions[question_index].created_time = questions.questions[question_index].created_time.toISOString().split('T')[0];
+			questions.questions[question_index].updated_time = questions.questions[question_index].updated_time.toISOString().split('T')[0];
 		}
 		return res.json(
 			response_format.success('Get questions succeed.', questions)
@@ -460,9 +328,10 @@ exports.getQuestionsByCategoryId = async (req, res) => {
 			req.params.category_id,
 			'category'
 		);
-		if (!questions.questions) return res.status(500).json(
-			response_format.error('There is no question.')
-		);
+		if (!questions.questions)
+			return res
+				.status(500)
+				.json(response_format.error('There is no question.'));
 		questions = await displayQuestions(questions);
 		questions.category_info = category;
 		return res.json(
@@ -485,9 +354,10 @@ exports.getQuestionsByTagId = async (req, res) => {
 			req.params.tag_id,
 			'tags'
 		);
-		if (!questions.questions) return res.status(500).json(
-			response_format.error('There is no question.')
-		);
+		if (!questions.questions)
+			return res
+				.status(500)
+				.json(response_format.error('There is no question.'));
 		questions = await displayQuestions(questions);
 		questions.tag_info = { tag_id: tag._id, name: tag.name };
 		return res.json(
@@ -504,22 +374,31 @@ exports.chooseBestAnswer = async (req, res) => {
 	let question;
 	try {
 		question = await QuestionService.getById(req.params.question_id);
-		if (!question) return res.json(
-			response_format.error('There is no question.')
-		);
+		if (!question)
+			return res.json(response_format.error('There is no question.'));
 		let answer_index;
 		let is_in_question = false;
-		for(answer_index=0;answer_index<question.answers.length;answer_index++){
-			if (question.answers[answer_index].toString()==req.params.answer_id){
-				is_in_question=true;
+		for (
+			answer_index = 0;
+			answer_index < question.answers.length;
+			answer_index++
+		) {
+			if (
+				question.answers[answer_index].toString() ==
+				req.params.answer_id
+			) {
+				is_in_question = true;
 				break;
 			}
 		}
-		if (!is_in_question) return res.json(
-			response_format.error('This answer does not belong to this question.')
-		);
+		if (!is_in_question)
+			return res.json(
+				response_format.error(
+					'This answer does not belong to this question.'
+				)
+			);
 		const is_verify = verifyUser(req, res, question.author.toString());
-		if(!is_verify) return;
+		if (!is_verify) return;
 		question = await QuestionService.chooseBestAnswer(
 			req.params.question_id,
 			req.params.answer_id
@@ -551,38 +430,15 @@ exports.chooseBestAnswer = async (req, res) => {
 				answers[answer_index].rating_detail.like_users.length;
 			answers[answer_index].rating_detail.totalDislike =
 				answers[answer_index].rating_detail.dislike_users.length;
+			answers[answer_index].created_time = answers[answer_index].created_time.toISOString().split('T')[0];
+			answers[answer_index].updated_time = answers[answer_index].updated_time.toISOString().split('T')[0];
 			if (is_verify) {
 				answers[answer_index].vote = 'none';
-				let like_index;
-				for (
-					like_index = 0;
-					like_index <
-					answers[answer_index].rating_detail.like_users.length;
-					like_index++
-				) {
-					if (
-						answers[answer_index].rating_detail.like_users[
-							like_index
-						].toString() === req.res.user._id
-					) {
-						answers[answer_index].vote = 'like';
-						break;
-					}
+				if(answers[answer_index].rating_detail.like_users.some(user_id => user_id.toString()==req.res.user._id)){
+					answers[answer_index].vote = 'like';
 				}
-				for (
-					like_index = 0;
-					like_index <
-					answers[answer_index].rating_detail.dislike_users.length;
-					like_index++
-				) {
-					if (
-						answers[answer_index].rating_detail.dislike_users[
-							like_index
-						].toString() === req.res.user._id
-					) {
-						answers[answer_index].vote = 'dislike';
-						break;
-					}
+				if(answers[answer_index].rating_detail.dislike_users.some(user_id => user_id.toString()==req.res.user._id)){
+					answers[answer_index].vote = 'dislike';
 				}
 			} else answers[answer_index].vote = 'none';
 		}
@@ -635,12 +491,34 @@ async function displayQuestions(data) {
 			name: category.name,
 			color: category.color,
 		};
+		data.questions[question_index].created_time = data.questions[question_index].created_time.toISOString().split('T')[0];
+		data.questions[question_index].updated_time = data.questions[question_index].updated_time.toISOString().split('T')[0];
 	}
 	return data;
 }
 function checkObjectId(res, objectId) {
 	const isObjectId = mongoose.Types.ObjectId.isValid(objectId);
-	if (!isObjectId) return res.json(
-		response_format.error('Invalid objectId.')
+	if (!isObjectId)
+		return res.json(response_format.error('Invalid objectId.'));
+}
+async function tagNameToId(tagArr) {
+	return await Promise.all(
+		tagArr.map(async (element, index) => {
+			tagArr[index] = element
+				.toUpperCase()
+				.replace()
+				.replace(/  +/g, ' ');
+			let current_tag = await TagService.getByName({
+				name: tagArr[index],
+			});
+			if (current_tag) {
+				return current_tag._id;
+			} else {
+				let new_tag = await TagService.create({
+					name: tagArr[index],
+				});
+				return new_tag._id;
+			}
+		})
 	);
 }
