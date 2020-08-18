@@ -1,42 +1,43 @@
+import Cookies from 'js-cookie';
+
+Cookies.defaults = {
+  expires: new Date().setDate(process.env.REACT_APP_EXPIRES_COOKIES),
+  domain: process.env.REACT_APP_DOMAIN,
+};
+
 export const isAuthenticate = () => {
-  if (typeof window === 'undefined') {
-    return false;
-  }
-  if (localStorage.getItem('token')) {
+  if (Cookies.get('token')) {
     return true;
   }
   return false;
 };
 
 export const getToken = () => {
-  if (typeof window === 'undefined') {
-    return '';
-  }
-  if (localStorage.getItem('token')) {
-    return JSON.parse(localStorage.getItem('token'));
+  if (Cookies.get('token')) {
+    return Cookies.getJSON('token');
   }
   return '';
 };
 export const getUser = () => {
-  if (typeof window === 'undefined') {
-    return '';
-  }
-  if (localStorage.getItem('user')) {
-    return JSON.parse(localStorage.getItem('user'));
+  if (Cookies.get('user')) {
+    return Cookies.getJSON('user');
   }
   return '';
 };
 
-export const authenticate = (token, next) => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('token', JSON.stringify(token));
-    next();
-  }
+export const authenticate = (token, user, next) => {
+  Cookies.set('token', token);
+  Cookies.set('user', user);
+  if (next) next();
+};
+
+export const isAuthor = (userId) => {
+  const currentUser = getUser();
+  // eslint-disable-next-line no-underscore-dangle
+  return currentUser._id === userId;
 };
 export const signout = (next) => {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    next();
-  }
+  Cookies.remove('token');
+  Cookies.remove('user');
+  next();
 };

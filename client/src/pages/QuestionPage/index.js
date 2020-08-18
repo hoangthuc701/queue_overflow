@@ -27,7 +27,7 @@ const QuestionPage = () => {
   const [flagCate, setflagCate] = useState(Newest);
   useEffect(() => {
     dispatch(questionAction.questionList());
-  }, []);
+  }, [dispatch]);
   const { questionlist, getting } = useSelector((state) => state.questionList);
   let questionitem;
   let pageItems;

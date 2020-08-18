@@ -16,5 +16,9 @@ exports.userValidator = [
 		.withMessage('Password must contain number.')
 		.matches(/[a-z]|[A-Z]/)
 		.withMessage('Password must contain character.'),
+	body('description')
+		.optional({ nullable: true })
+		.isLength({ min: 0, max: 500 })
+		.withMessage('Description must be less than 500 character.'),
 	validate,
 ];

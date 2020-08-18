@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-// import CategoryService from '../../../../services/categoryService';
+import CategoryService from '../../../../services/categoryService';
 
 class CategoryBox extends Component {
   constructor() {
@@ -12,9 +12,11 @@ class CategoryBox extends Component {
   }
 
   componentDidMount() {
-    // CategoryService.getCategory().then((data) => {
-    //   this.setState({ list: data });
-    // });
+    CategoryService.getCategory().then((data) => {
+      if (data.data) {
+        this.setState({ list: data.data });
+      }
+    });
   }
 
   handleChange = (key, value) => {
@@ -24,6 +26,7 @@ class CategoryBox extends Component {
 
   render() {
     const { list } = this.state;
+    const { errors } = this.props;
     return (
       <div className="form-group">
         <label htmlFor="category">
@@ -36,16 +39,26 @@ class CategoryBox extends Component {
           id="category"
           onBlur={(e) => this.handleChange(e.target.name, e.target.value)}
         >
+          <option value=""> </option>
+
           {list.map((category) => {
-            // eslint-disable-next-line no-underscore-dangle
-            return <option key={category._id}>{category.name}</option>;
+            return (
+              // eslint-disable-next-line no-underscore-dangle
+              <option key={category._id} value={category._id}>
+                {category.name}
+              </option>
+            );
           })}
         </select>
+        {errors && errors.category && (
+          <span style={{ color: 'red' }}> {errors.category} </span>
+        )}
       </div>
     );
   }
 }
 CategoryBox.propTypes = {
   handleChange: PropTypes.func.isRequired,
+  errors: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 export default CategoryBox;

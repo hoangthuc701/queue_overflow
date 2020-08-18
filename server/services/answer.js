@@ -1,5 +1,6 @@
 const AnswerModel = require('../models/answer');
 const QuestionModel = require('../models/question');
+const QuestionService = require('./question');
 
 class AnswerService {
 	static async create({ content, author, question }) {
@@ -7,7 +8,10 @@ class AnswerService {
 		try {
 			new_answer = new AnswerModel({ content, author, question });
 			await new_answer.save();
-			let update_question = await QuestionModel.findOne({_id: question});
+			new_answer = await AnswerModel.findOne({_id: new_answer._id}).lean().exec();
+			let update_question = await QuestionModel.findOne({
+				_id: question,
+			}).exec();
 			update_question.answers.push(new_answer._id);
 			await update_question.save();
 		} catch (error) {
@@ -15,19 +19,41 @@ class AnswerService {
 		}
 		return new_answer;
 	}
-	// static async deleteAnswer(answer_id) {
-	// 	let answer;
-	// 	try {
-	// 		answer = await AnswerModel.get
-	// 	} catch (error) {
-	// 		throw new Error('Cannot create new answer.');
-	// 	}
-	// 	return new_answer;
-	// }
+	static async delete(answer_id) {
+		try {
+			let answer = await AnswerModel.findOne({ _id: answer_id });
+			if (answer) {
+				let question = await QuestionModel.findOne({_id: answer.question});
+				question.answers.pull(answer_id);
+				if (question.best_answer){
+					if (answer_id == question.best_answer.toString()) question.best_answer = undefined;
+				}
+				await question.save();
+			}
+			const result = await AnswerModel.deleteOne({ _id: answer_id });
+			if (result.deletedCount > 0) {
+				return true;
+			}
+			return false;
+		} catch (error) {
+			throw new Error('Cannot delete answer.');
+		}
+	}
+	static async getById(answer_id) {
+		let answer;
+		try {
+			answer = await AnswerModel.findOne({ _id: answer_id }).exec();
+		} catch (error) {
+			throw new Error('Cannot get answer.');
+		}
+		return answer;
+	}
 	static async getByQuestionId(question_id) {
 		let answers;
 		try {
-			answers = await AnswerModel.find({ question: question_id }).lean().exec();
+			answers = await AnswerModel.find({ question: question_id })
+				.lean()
+				.exec();
 		} catch (error) {
 			throw new Error('Cannot get answers for this question.');
 		}
@@ -35,66 +61,14 @@ class AnswerService {
 	}
 	static async likeAnswer(answer_id, user_id, type) {
 		let answer;
-		let vote='none';
+		let data;
 		try {
 			answer = await AnswerModel.findOne({ _id: answer_id }).exec();
-			if (answer){
-				let like_index;
-				let is_like = false;
-				let is_dislike = false;
-				for (like_index=0;like_index<answer.rating_detail.like_users.length;like_index++){
-					if (answer.rating_detail.like_users[like_index].toString()===user_id) {
-						is_like = true;
-						break;
-					}
-				}
-				for(like_index=0;like_index<answer.rating_detail.dislike_users.length;like_index++){
-					if (answer.rating_detail.dislike_users[like_index].toString()===user_id){
-						is_dislike = true;
-						break;
-					}
-				}
-				if (parseInt(type, 10) === 1) {
-					if (!is_like && !is_dislike) {
-						vote = 'like';
-						answer.rating_detail.like_users.push(user_id);
-						answer.save();
-					} else if (is_like) {
-						vote = 'none';
-						answer.rating_detail.like_users.pull(user_id);
-						answer.save();
-					} else if (is_dislike) {
-						vote = 'like';
-						answer.rating_detail.dislike_users.pull(user_id);
-						answer.rating_detail.like_users.push(user_id);
-						answer.save();
-					}
-				} else {
-					if(!is_like&&!is_dislike){
-						vote = 'dislike';
-						answer.rating_detail.dislike_users.push(user_id);
-						answer.save();
-					}
-					else if(is_like){
-						vote='dislike';
-						answer.rating_detail.dislike_users.push(user_id);
-						answer.rating_detail.like_users.pull(user_id);
-						answer.save();
-					}
-					else if(is_dislike){
-						vote='none';
-						answer.rating_detail.dislike_users.pull(user_id);
-						answer.save();
-					}
-				}
-			}
-			else{
-				throw new Error('Threr is no answer.');
-			}
+			data = await QuestionService.rate(answer, user_id, type);
 		} catch (error) {
 			throw new Error('You can not rate.');
 		}
-		return {totalLike: answer.rating_detail.like_users.length, totalDislike: answer.rating_detail.dislike_users.length,vote: vote};
+		return data;
 	}
 }
 
