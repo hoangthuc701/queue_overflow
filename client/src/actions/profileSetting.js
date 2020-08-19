@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
 import userConstants from '../constants/user';
 import UserService from '../services/userService';
+import { getUser, setUser } from '../helper/auth';
 
 function request() {
   return { type: userConstants.GET_USER_INFO_REQUEST };
@@ -18,6 +19,10 @@ function getUserInfo(userId) {
     const value = await UserService.getInfo(userId);
     if (!value.error) {
       dispatch(success(value.data));
+      const cookie_user = getUser();
+      if (cookie_user._id === userId) {
+        setUser({ ...cookie_user, display_name: value.data.display_name });
+      }
       return true;
     }
     toast.error(value.error);
