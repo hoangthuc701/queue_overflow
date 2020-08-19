@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import ModelActionCreators from '../../../../../actions/modal';
 
-const Question = ({ id, title, time, categoryId, category }) => {
+const Question = ({ id, title, time, categoryId, category, categoryColor }) => {
   const dispatch = useDispatch();
   const handleDelete = () => {
     dispatch(
@@ -34,6 +34,7 @@ const Question = ({ id, title, time, categoryId, category }) => {
             <Link
               to={`/category/${categoryId}`}
               className="badge badge-warning p-2"
+              style={{ backgroundColor: categoryColor, color: 'white' }}
             >
               {category}
             </Link>
@@ -60,6 +61,7 @@ Question.propTypes = {
   time: PropTypes.string.isRequired,
   categoryId: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
+  categoryColor: PropTypes.string.isRequired,
 };
 
 export default Question;

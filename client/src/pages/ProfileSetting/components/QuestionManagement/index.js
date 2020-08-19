@@ -36,6 +36,7 @@ const QuestionManagement = () => {
           // eslint-disable-next-line no-underscore-dangle
           categoryId={question.category.category_id}
           category={question.category.name}
+          categoryColor={question.category.color}
         />
       );
     });
