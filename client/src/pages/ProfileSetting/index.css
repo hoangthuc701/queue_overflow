@@ -8,9 +8,9 @@ a {
   padding: 40px;
   margin-top: -20px;
 }
-.avatar {
-  width: 17em;
-  height: 17em;
+.avatar{
+  width:200px;
+  height:200px;
 }
 .question {
   color: rgb(0, 0, 0);

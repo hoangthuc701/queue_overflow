@@ -12,6 +12,7 @@ const Question = (props) => {
     title.rating_detail.totalLike - title.rating_detail.totalDislike;
   const headerCard = '#e1f2fb';
   const bodyCard = '#f1f9f9';
+  const avatarUrl = `${process.env.REACT_APP_SERVER_DOMAIN}/upload/${title.author.author_id}`;
   const bestAnswered = title.best_answer ? (
     <p
       className="fas fa-check"
@@ -31,17 +32,9 @@ const Question = (props) => {
     </p>
   );
 
-  const avatar = title.author.avatar ? (
+  const avatar = (
     <img
-      src={title.author.avatar}
-      className="rounded-circle"
-      alt="Cinque Terre"
-      width={200}
-      height={2000}
-    />
-  ) : (
-    <img
-      src="https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/86811916/original/5d2499b138522f3486159269b72ca2c7d5ea86f1/illustrate-an-amazing-flat-avatar-for-you.jpg"
+      src={avatarUrl}
       className="rounded-circle"
       alt="Cinque Terre"
       width={50}

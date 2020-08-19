@@ -113,7 +113,7 @@ const Setting = () => {
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label
             type="button"
-            style={{ marginLeft: '2em' }}
+            style={{ marginLeft: '1em' }}
             className="btn btn-lg btn-primary"
             htmlFor="image"
           >
