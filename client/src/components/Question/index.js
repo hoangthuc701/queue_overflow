@@ -35,10 +35,10 @@ const Question = (props) => {
   const avatar = (
     <img
       src={avatarUrl}
-      className="rounded-circle avatar"
+      className="rounded-circle"
       alt="Cinque Terre"
-      width={200}
-      height={2000}
+      width={50}
+      height={50}
     />
   );
   const vote = point;

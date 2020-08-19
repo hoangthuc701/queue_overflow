@@ -67,7 +67,4 @@ figure:hover::before {
 {
   box-shadow: 22px 39px 79px -31px rgba(0,0,0,0.75);
 }
-.avatar{
-  width:50px;
-  height: 50px;
-}
+
