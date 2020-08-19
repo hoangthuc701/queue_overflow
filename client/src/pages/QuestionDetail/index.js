@@ -40,7 +40,7 @@ class QuestionDetailPage extends Component {
           <div className="row">
             <div className="col-sm-2"> </div>
             <div className="col-sm-8">
-              <h2>Answer:</h2>
+              <h2 className="mt-4">Answer:</h2>
             </div>
             <div className="col-sm-2"> </div>
           </div>
@@ -50,7 +50,7 @@ class QuestionDetailPage extends Component {
           <div className="row">
             <div className="col-sm-2"> </div>
             <div className="col-sm-8">
-              <h2>Your answer:</h2>
+              <h2 className="mt-5">Your answer:</h2>
               {this.renderAnswerEditor()}
             </div>
             <div className="col-sm-2"> </div>
