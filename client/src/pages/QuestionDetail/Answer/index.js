@@ -77,7 +77,7 @@ class Answer extends Component {
       // eslint-disable-next-line no-underscore-dangle
       <Link to={`/profile/${author.author_id}`} className="float-right">
         <img
-          src={author.avatar}
+          src={`${process.env.REACT_APP_SERVER_DOMAIN}/upload/${author.author_id}`}
           className="rounded-circle"
           alt={author.name}
           width={50}
