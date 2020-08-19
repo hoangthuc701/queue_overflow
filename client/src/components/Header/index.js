@@ -17,8 +17,7 @@ function Header() {
   useEffect(() => {
     username = getUser().display_name;
     setUserDisplay(username);
-    console.log(userDisplay);
-  }, [username, reload]);
+  }, [reload]);
 
   const renderSignInSignUpButton = () => (
     <div>
@@ -38,9 +37,9 @@ function Header() {
     </div>
   );
 
-  const renderProfile = (userName) => (
+  const renderProfile = () => (
     <div>
-      <b style={{ color: 'white', marginRight: '10px' }}>{userName} </b>
+      <b style={{ color: 'white', marginRight: '10px' }}>{userDisplay} </b>
       <div className="btn-group">
         <button
           type="button"
@@ -123,13 +122,13 @@ function Header() {
       >
         <div className="container justify-content-between">
           <div className="row">
-            <form className="form-inline">
+            <div className="form-inline">
               {' '}
               {renderLogo()} {renderSearchBar()}
-            </form>
+            </div>
           </div>
           {!isAuthenticate() && renderSignInSignUpButton()}
-          {isAuthenticate() && renderProfile(userDisplay)}
+          {isAuthenticate() && renderProfile()}
         </div>
       </div>
     </>
