@@ -281,8 +281,18 @@ class QuestionService {
 						name:1,
 						color:1
 					},
-					created_time:1,
-					updated_time:1
+					created_time: {
+						$dateToString: {
+							format: '%Y-%m-%d',
+							date: '$created_time'
+						}
+					},
+					updated_time:{
+						$dateToString: {
+							format: '%Y-%m-%d',
+							date: '$updated_time'
+						}
+					}
 				}
 			}
 		]);

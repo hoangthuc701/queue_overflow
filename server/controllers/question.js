@@ -508,7 +508,7 @@ exports.search = async (req, res) => {
 		return false;
 	});
 	return res.json(
-		response_format.success('Search questions succeed.', { questions:data, totalCount: data.length }
+		response_format.success('Search questions succeed.', { questions:data, totalCount: data.length,search_info:{ keyword: content}  }
 		)
 	);
 };
