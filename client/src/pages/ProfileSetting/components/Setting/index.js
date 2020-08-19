@@ -97,8 +97,12 @@ const Setting = () => {
   return (
     <div className="tab-pane" role="tabpanel" id="menu4">
       <div className="row">
-        <div className="col-4">
-          <img className="avatar" src={previewImageURL} alt="avatar" />
+        <div className="col-4 ">
+          <img
+            className="avatar rounded-circle"
+            src={previewImageURL}
+            alt="avatar"
+          />
           <form>
             <input
               type="file"
