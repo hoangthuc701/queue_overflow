@@ -18,11 +18,12 @@ import QuestionPage from './pages/QuestionPage';
 import AddQuestionPage from './pages/AddQuestion';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import ResetPasswordPage from './pages/ResetPassword';
-import VerifyAccoutPage from './pages/VerifyAccount';
+import VerifyAccountPage from './pages/VerifyAccount';
 import QuestionDetail from './pages/QuestionDetail';
 import EditQuestion from './pages/EditQuestion';
 import QuestionCategory from './pages/QuestionCategory';
 import QuestionTag from './pages/QuestionTag';
+import SearchResult from './pages/SearchResult';
 
 class App extends Component {
   renderHeader = () => <Header />;
@@ -79,8 +80,9 @@ class App extends Component {
               component={QuestionCategory}
             />
             <Route exact path="/tag/:tag" component={QuestionTag} />
+            <Route exact path="/search/:keyword" component={SearchResult} />
             <PrivateRoute exact path="/test" component={TestSite} />
-            <Route exact path="/verify/:token" component={VerifyAccoutPage} />
+            <Route exact path="/verify/:token" component={VerifyAccountPage} />
             <Route
               exact
               path="/forgotPassword"

@@ -253,6 +253,9 @@ class QuestionService {
 				'$unwind': '$category'
 			},
 			{
+				'$unwind': '$author'
+			},
+			{
 				$project:{
 					_id:1,
 					rating_detail:{
@@ -272,10 +275,11 @@ class QuestionService {
 					title:1,
 					content:1,
 					author:{
-						_id:1,
+						author_id: '$author._id',
 						display_name:1,
 						avatar:1
 					},
+					answers:1,
 					category:{
 						category_id: '$category._id',
 						name:1,
