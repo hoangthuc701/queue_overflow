@@ -14,7 +14,7 @@ const QuestionPage = (props) => {
 
   useEffect(() => {
     dispatch(questionAction.questionSearch(keyword));
-  }, [keyword]);
+  }, [keyword, dispatch]);
   const { questionlist, getting } = useSelector((state) => state.questionList);
   let questionitem;
   let pageItems;

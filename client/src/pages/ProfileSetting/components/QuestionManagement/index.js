@@ -34,7 +34,7 @@ const QuestionManagement = () => {
           title={question.title}
           time={question.created_time}
           // eslint-disable-next-line no-underscore-dangle
-          categoryId={question.category._id}
+          categoryId={question.category.category_id}
           category={question.category.name}
         />
       );

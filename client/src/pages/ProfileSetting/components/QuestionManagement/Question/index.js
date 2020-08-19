@@ -25,7 +25,7 @@ const Question = ({ id, title, time, categoryId, category }) => {
             className="question_info"
             style={{ wordBreak: 'break-all' }}
           >
-            <h4 className="question">{title}</h4>
+            <h4 style={{ color: 'black' }}>{title}</h4>
             <div style={{ color: 'black' }}>{time}</div>
           </Link>
         </td>
