@@ -9,6 +9,13 @@ import NotificationBox from '../Notification';
 import { isAuthenticate, getUser, signout } from '../../helper/auth';
 
 class Header extends Component {
+  constructor() {
+    super();
+    this.state = {
+      keyword: '',
+    };
+  }
+
   renderNotify = () => {
     return (
       <div className="btn-group  btn my-2   my-sm-0 rounded ml-3" role="group">
@@ -107,17 +114,32 @@ class Header extends Component {
     </div>
   );
 
+  handleChange = (e) => {
+    this.setState({ keyword: e.target.value });
+  };
+
+  handleSubmit = () => {
+    const { history } = this.props;
+    const { keyword } = this.state;
+    history.push(`/search/${keyword}`);
+    this.setState({ keyword: '' });
+  };
+
   renderSearchBar = () => (
     <>
       <input
         className="form-control mr-sm-2"
-        type="search"
         placeholder="Search"
         aria-label="Search"
+        name="search"
+        // eslint-disable-next-line react/destructuring-assignment
+        value={this.state.keyword}
+        onChange={this.handleChange}
       />
       <button
         className="btn my-2  my-sm-0 rounded btn-outline-secondary "
-        type="submit"
+        type="button"
+        onClick={this.handleSubmit}
       >
         <i className="fas fa-search" />
       </button>
@@ -146,10 +168,10 @@ class Header extends Component {
         >
           <div className="container justify-content-between">
             <div className="row">
-              <form className="form-inline">
+              <div className="form-inline">
                 {' '}
                 {this.renderLogo()} {this.renderSearchBar()}
-              </form>
+              </div>
             </div>
             {!isAuthenticate() && this.renderSignInSignUpButton()}
             {isAuthenticate() && this.renderProfile(history)}

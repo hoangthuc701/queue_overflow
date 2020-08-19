@@ -162,6 +162,19 @@ function questionListByTag(page = 1, idTag) {
     }
   };
 }
+
+function questionSearch(keyword) {
+  return async (dispatch) => {
+    dispatch(requestList(keyword));
+    const values = await QuestionService.getSearchResult(keyword);
+    if (values.message) {
+      dispatch(successList(values.data));
+    } else {
+      dispatch(failureList());
+    }
+  };
+}
+
 const questionActions = {
   getQuestionDetail,
   LikeQuestion,
@@ -171,6 +184,7 @@ const questionActions = {
   getUserQuestions,
   questionListByCate,
   questionListByTag,
+  questionSearch,
 };
 
 export default questionActions;
