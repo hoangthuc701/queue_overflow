@@ -196,7 +196,7 @@ class Question extends Component {
         <div className="col-sm-8 question">
           <div className="row">
             <div className="col-sm-10 align-self-end">
-              <h1>{title}</h1>
+              <h1 style={{ wordBreak: 'break-all' }}>{title}</h1>
             </div>
             <div className="col-sm-2 align-self-end">
               {this.renderCategory()}
