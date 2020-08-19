@@ -7,12 +7,23 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
+import Modal from './components/Model';
 
-import HomePage from './pages/Home';
 import SignInPage from './pages/SignIn';
 import NotFoundPage from './pages/NotFound';
 import SignUpPage from './pages/SignUp';
+import ProfileSetting from './pages/ProfileSetting';
 import TestSite from './pages/Test';
+import QuestionPage from './pages/QuestionPage';
+import AddQuestionPage from './pages/AddQuestion';
+import ForgotPasswordPage from './pages/ForgotPassword';
+import ResetPasswordPage from './pages/ResetPassword';
+import VerifyAccountPage from './pages/VerifyAccount';
+import QuestionDetail from './pages/QuestionDetail';
+import EditQuestion from './pages/EditQuestion';
+import QuestionCategory from './pages/QuestionCategory';
+import QuestionTag from './pages/QuestionTag';
+import SearchResult from './pages/SearchResult';
 
 class App extends Component {
   renderHeader = () => <Header />;
@@ -33,17 +44,55 @@ class App extends Component {
 
   renderFooter = () => <Footer />;
 
+  renderModal = () => <Modal />;
+
   render() {
     return (
       <BrowserRouter>
         {this.renderToastMessage()}
+        {this.renderModal()}
         {this.renderHeader()}
-        <div className="container">
+        <div className="container" id="content">
           <Switch>
-            <Route exact path="/" component={HomePage} />
+            <Route exact path="/" component={QuestionPage} />
             <Route exact path="/signin" component={SignInPage} />
             <Route exact path="/signup" component={SignUpPage} />
+            <Route exact path="/profile" component={ProfileSetting} />
+            <Route exact path="/profile/:userId" component={ProfileSetting} />
+            <PrivateRoute
+              exact
+              path="/question/add"
+              component={AddQuestionPage}
+            />
+            <Route
+              exact
+              path="/question/:questionId"
+              component={QuestionDetail}
+            />
+            <Route
+              exact
+              path="/question/edit/:questionId"
+              component={EditQuestion}
+            />
+            <Route
+              exact
+              path="/category/:categoryId"
+              component={QuestionCategory}
+            />
+            <Route exact path="/tag/:tag" component={QuestionTag} />
+            <Route exact path="/search/:keyword" component={SearchResult} />
             <PrivateRoute exact path="/test" component={TestSite} />
+            <Route exact path="/verify/:token" component={VerifyAccountPage} />
+            <Route
+              exact
+              path="/forgotPassword"
+              component={ForgotPasswordPage}
+            />
+            <Route
+              exact
+              path="/resetPassword/:token"
+              component={ResetPasswordPage}
+            />
             <Route component={NotFoundPage} />
           </Switch>
         </div>

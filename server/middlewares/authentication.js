@@ -1,9 +1,8 @@
 const express_jwt = require('express-jwt');
+require('dotenv').config();
 
-const auth = express_jwt({
+exports.auth = express_jwt({
 	secret: process.env.PRIVATE_KEY,
 	algorithms: ['HS256'],
 	resultProperty: 'user',
 });
-
-module.exports = auth;

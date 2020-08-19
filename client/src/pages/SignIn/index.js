@@ -5,9 +5,12 @@ import './index.css';
 import { useDispatch } from 'react-redux';
 import authActions from '../../actions/auth';
 import { isAuthenticate } from '../../helper/auth';
+import SignInValidator from '../../validators/signin';
 
 const SignInForm = (props) => {
   const [user, setUser] = useState({});
+  const [errors, setErrors] = useState({});
+  const [isLogin, setLogin] = useState(false);
   const dispatch = useDispatch();
 
   const handleOnChange = (event) => {
@@ -16,10 +19,15 @@ const SignInForm = (props) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const error = SignInValidator(user.email, user.password);
+    setErrors(error);
+    if (Object.keys(error).length > 0) return;
+    setLogin(true);
     const value = await dispatch(authActions.signIn(user.email, user.password));
+    await setLogin(false);
     if (value) {
       // eslint-disable-next-line react/prop-types
-      props.history.push('/test');
+      props.history.push('/');
     }
   };
   if (!isAuthenticate()) {
@@ -44,6 +52,9 @@ const SignInForm = (props) => {
                   placeholder="Enter Email"
                   onChange={handleOnChange}
                 />
+                {errors && errors.email && errors.email.length > 0 && (
+                  <span className="error">{errors.email}</span>
+                )}
               </div>
               <div className="form-group">
                 <label htmlFor="password">Password</label>
@@ -56,6 +67,9 @@ const SignInForm = (props) => {
                   placeholder="Enter Password"
                   onChange={handleOnChange}
                 />
+                {errors && errors.password && errors.password.length > 0 && (
+                  <span className="error">{errors.password}</span>
+                )}
               </div>
               <div className="form-group">
                 <p className="text-right">
@@ -67,6 +81,7 @@ const SignInForm = (props) => {
                   type="submit"
                   className=" btn btn-block mybtn btn-primary tx-tfm"
                   onClick={handleSubmit}
+                  disabled={isLogin}
                 >
                   Submit
                 </button>

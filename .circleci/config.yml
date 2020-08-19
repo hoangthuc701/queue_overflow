@@ -36,7 +36,7 @@ jobs:
           command: npm install 
       - run: 
           working_directory: /home/circleci/project/client
-          command: npm run build
+          command: GENERATE_SOURCEMAP=false npm run build
       - run:
           working_directory: /home/circleci/project/client
           command: npm run deploy

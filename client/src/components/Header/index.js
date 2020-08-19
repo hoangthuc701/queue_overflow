@@ -1,57 +1,26 @@
-import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
+/* eslint-disable no-underscore-dangle */
+import React, { useEffect, useState } from 'react';
+import { Link, withRouter, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 import Logo from '../../assets/images/logo.png';
-import NotificationBox from '../Notification';
 import { isAuthenticate, getUser, signout } from '../../helper/auth';
 
-class Header extends Component {
-  renderNotify = () => {
-    return (
-      <div className="btn-group  btn my-2   my-sm-0 rounded ml-3" role="group">
-        <button
-          id="btnGroupDrop1"
-          type="button"
-          style={{ color: 'white' }}
-          className="btn "
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          <i className="fas fa-bell" />
-          <span className="badge badge-danger">9</span>
-        </button>
-        <div className="dropdown-menu" aria-labelledby="btnGroupDrop1">
-          <NotificationBox
-            action="comment on"
-            actor="Hoàng Anh Tuấn"
-            content="I totally donot wanna do it. Rimmer can do it."
-            question="How to learn..."
-          />
-          <NotificationBox
-            action="comment on"
-            actor="Hoàng Anh Tuấn"
-            content="I totally donot wanna do it. Rimmer can do it."
-            question="How to learn..."
-          />
-        </div>
-      </div>
-    );
-  };
+function Header() {
+  const reload = useSelector((state) => state.header.show);
+  const [userDisplay, setUserDisplay] = useState('');
+  const [keyword, setKeyword] = useState('');
 
-  renderAddButton = () => (
-    <button
-      className="btn my-2 my-sm-0 rounded ml-3"
-      style={{ color: 'white' }}
-      type="submit"
-    >
-      <i className="far fa-plus-square" />
-    </button>
-  );
+  const history = useHistory();
+  let username;
+  useEffect(() => {
+    username = getUser().display_name;
+    setUserDisplay(username);
+    console.log(userDisplay);
+  }, [username, reload]);
 
-  renderSignInSignUpButton = () => (
+  const renderSignInSignUpButton = () => (
     <div>
       <Link type="button" className="btn btn-success" to="/signin">
         {' '}
@@ -69,11 +38,9 @@ class Header extends Component {
     </div>
   );
 
-  renderProfile = (history) => (
+  const renderProfile = (userName) => (
     <div>
-      <b style={{ color: 'white', marginRight: '10px' }}>
-        {getUser().display_name}{' '}
-      </b>
+      <b style={{ color: 'white', marginRight: '10px' }}>{userName} </b>
       <div className="btn-group">
         <button
           type="button"
@@ -85,7 +52,7 @@ class Header extends Component {
           {' '}
         </button>
         <div className="dropdown-menu">
-          <Link className="dropdown-item" to="/profile">
+          <Link className="dropdown-item" to={`/profile/${getUser()._id}`}>
             Profile
           </Link>
           <div className="dropdown-divider" />
@@ -106,24 +73,37 @@ class Header extends Component {
     </div>
   );
 
-  renderSearchBar = () => (
+  const handleChange = (e) => {
+    setKeyword(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    history.push(`/search/${keyword}`);
+    setKeyword('');
+  };
+
+  const renderSearchBar = () => (
     <>
       <input
         className="form-control mr-sm-2"
-        type="search"
         placeholder="Search"
         aria-label="Search"
+        name="search"
+        // eslint-disable-next-line react/destructuring-assignment
+        value={keyword}
+        onChange={handleChange}
       />
       <button
         className="btn my-2  my-sm-0 rounded btn-outline-secondary "
-        type="submit"
+        type="button"
+        onClick={handleSubmit}
       >
         <i className="fas fa-search" />
       </button>
     </>
   );
 
-  renderLogo = () => (
+  const renderLogo = () => (
     <Link to="/">
       <img
         width="200px"
@@ -135,35 +115,25 @@ class Header extends Component {
     </Link>
   );
 
-  render() {
-    const { history } = this.props;
-    return (
-      <>
-        <div
-          className="navbar navbar-dark bg-dark"
-          style={{ marginBottom: '10px' }}
-        >
-          <div className="container justify-content-between">
-            <div className="row">
-              <form className="form-inline">
-                {' '}
-                {this.renderLogo()} {this.renderSearchBar()}
-              </form>
-              {isAuthenticate() && this.renderNotify()}
-              {isAuthenticate() && this.renderAddButton()}
-            </div>
-            {!isAuthenticate() && this.renderSignInSignUpButton()}
-            {isAuthenticate() && this.renderProfile(history)}
+  return (
+    <>
+      <div
+        className="navbar navbar-dark bg-dark"
+        style={{ marginBottom: '10px' }}
+      >
+        <div className="container justify-content-between">
+          <div className="row">
+            <form className="form-inline">
+              {' '}
+              {renderLogo()} {renderSearchBar()}
+            </form>
           </div>
+          {!isAuthenticate() && renderSignInSignUpButton()}
+          {isAuthenticate() && renderProfile(userDisplay)}
         </div>
-      </>
-    );
-  }
+      </div>
+    </>
+  );
 }
 
-Header.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
 export default withRouter(Header);
