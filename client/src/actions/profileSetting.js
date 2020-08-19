@@ -19,9 +19,10 @@ function getUserInfo(userId) {
     const value = await UserService.getInfo(userId);
     if (!value.error) {
       dispatch(success(value.data));
-      const cookie_user = getUser();
-      if (cookie_user._id === userId) {
-        setUser({ ...cookie_user, display_name: value.data.display_name });
+      const cookieUser = getUser();
+      // eslint-disable-next-line no-underscore-dangle
+      if (cookieUser._id === userId) {
+        setUser({ ...cookieUser, display_name: value.data.display_name });
       }
       return true;
     }
