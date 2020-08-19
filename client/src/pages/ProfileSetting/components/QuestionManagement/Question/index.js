@@ -23,7 +23,7 @@ const Question = ({ id, title, time, categoryId, category }) => {
           <Link
             to={`/question/${id}`}
             className="question_info"
-            style={{ wordWrap: 'break-word' }}
+            style={{ wordBreak: 'break-all' }}
           >
             <h4 className="question">{title}</h4>
             <div style={{ color: 'black' }}>{time}</div>

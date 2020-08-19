@@ -10,6 +10,8 @@ import { isAuthenticate, getUser, signout } from '../../helper/auth';
 function Header() {
   const reload = useSelector((state) => state.header.show);
   const [userDisplay, setUserDisplay] = useState('');
+  const [keyword, setKeyword] = useState('');
+
   const history = useHistory();
   let username;
   useEffect(() => {
@@ -71,17 +73,30 @@ function Header() {
     </div>
   );
 
+  const handleChange = (e) => {
+    setKeyword(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    history.push(`/search/${keyword}`);
+    setKeyword('');
+  };
+
   const renderSearchBar = () => (
     <>
       <input
         className="form-control mr-sm-2"
-        type="search"
         placeholder="Search"
         aria-label="Search"
+        name="search"
+        // eslint-disable-next-line react/destructuring-assignment
+        value={keyword}
+        onChange={handleChange}
       />
       <button
         className="btn my-2  my-sm-0 rounded btn-outline-secondary "
-        type="submit"
+        type="button"
+        onClick={handleSubmit}
       >
         <i className="fas fa-search" />
       </button>

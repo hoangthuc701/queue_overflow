@@ -82,7 +82,10 @@ const Setting = () => {
   useEffect(() => {
     // eslint-disable-next-line no-underscore-dangle
     const userId = getUser()._id;
-    if (needFetchData) dispatch(profileSettingAction.getUserInfo(userId));
+    if (needFetchData) {
+      dispatch(profileSettingAction.getUserInfo(userId));
+      setNeedFetchData(false);
+    }
   }, [needFetchData, dispatch]);
 
   useEffect(() => {
@@ -99,10 +102,7 @@ const Setting = () => {
       <div className="row">
         <div className="col-4">
           <img className="avatar" src={previewImageURL} alt="avatar" />
-          <form
-            action={`${process.env.REACT_APP_SERVER_DOMAIN}/upload`}
-            method="post"
-          >
+          <form>
             <input
               type="file"
               className="custom-file-input"
@@ -116,7 +116,7 @@ const Setting = () => {
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label
             type="button"
-            style={{ marginLeft: '2em' }}
+            style={{ marginLeft: '1em' }}
             className="btn btn-lg btn-primary"
             htmlFor="image"
           >
@@ -153,7 +153,7 @@ const Setting = () => {
                 name="description"
                 id="description"
                 onChange={handleOnChange}
-              />{' '}
+              />
               {errors && errors.description && (
                 <span style={{ color: 'red' }}> {errors.description} </span>
               )}

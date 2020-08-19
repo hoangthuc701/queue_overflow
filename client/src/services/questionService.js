@@ -182,6 +182,18 @@ class QuestionService {
     );
     return data.json();
   }
+
+  static async getSearchResult(keyword) {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
+    const data = await fetch(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/questions/search?content=${keyword}`,
+      requestOptions
+    );
+    return data.json();
+  }
 }
 
 export default QuestionService;

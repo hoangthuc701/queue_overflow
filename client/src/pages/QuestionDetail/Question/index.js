@@ -12,6 +12,8 @@ import formatDate from '../../../helper/formatDate';
 import questionAction from '../../../actions/question';
 import modalAction from '../../../actions/modal';
 
+import './index.css';
+
 class Question extends Component {
   constructor() {
     super();
@@ -125,7 +127,7 @@ class Question extends Component {
       // eslint-disable-next-line no-underscore-dangle
       <Link to={`/profile/${author.author_id}`} className="float-right">
         <img
-          src={`/upload/${author.author_id}`}
+          src={`${process.env.REACT_APP_SERVER_DOMAIN}/upload/${author.author_id}`}
           className="rounded-circle"
           alt={author.name}
           width={50}
@@ -191,10 +193,10 @@ class Question extends Component {
     return (
       <div className="row">
         <div className="col-sm-2"> </div>
-        <div className="col-sm-8">
+        <div className="col-sm-8 question">
           <div className="row">
             <div className="col-sm-10 align-self-end">
-              <h1>{title}</h1>
+              <h1 style={{ wordBreak: 'break-all' }}>{title}</h1>
             </div>
             <div className="col-sm-2 align-self-end">
               {this.renderCategory()}
@@ -207,7 +209,7 @@ class Question extends Component {
             <div className="col-sm-6"> </div>
             <div className="col-sm-6 text-right"> </div>
           </div>
-          <div className="card">
+          <div className="card card-question">
             <div className="card-body">
               <p className="card-text">
                 <Markdown content={content} />
@@ -221,7 +223,7 @@ class Question extends Component {
               {this.renderLikeButton()}
               {this.renderDisLikeButton()}
             </div>
-            <div className="col-sm-6 text-right mt-3">
+            <div className="col-sm-6 text-right mt-1">
               {isAuthor(authorId) && this.renderManager()}
             </div>
           </div>

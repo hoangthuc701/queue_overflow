@@ -151,8 +151,7 @@ class QuestionService {
 			like_index++
 		) {
 			if (
-				data.rating_detail.like_users[like_index].toString() ===
-				user_id
+				data.rating_detail.like_users[like_index].toString() === user_id
 			) {
 				is_like = true;
 				break;
@@ -209,12 +208,13 @@ class QuestionService {
 		let question;
 		let answer;
 		try {
-			answer = await AnswerModel.findOne({_id: answer_id}).exec();
+			answer = await AnswerModel.findOne({ _id: answer_id }).exec();
 			if (!answer) throw new Error('There is no answer.');
 			question = await QuestionModel.findOne({ _id: question_id }).exec();
 			if (!question.best_answer) question.best_answer = answer_id;
-			else{
-				if (question.best_answer.toString()===answer_id) question.best_answer = undefined;
+			else {
+				if (question.best_answer.toString() === answer_id)
+					question.best_answer = undefined;
 				else question.best_answer = answer_id;
 			}
 			await question.save();
@@ -222,6 +222,85 @@ class QuestionService {
 			throw new Error(error.message);
 		}
 		return question;
+	}
+	static async searchQuestion() {
+		const data = await QuestionModel.aggregate([
+			{
+				$lookup:{
+					from:'users',
+					localField: 'author',
+					foreignField: '_id',
+					as:'author'
+				}
+			},
+			{
+				$lookup:{
+					from:'tags',
+					localField: 'tags',
+					foreignField: '_id',
+					as:'tags'
+				}
+			},
+			{
+				$lookup:{
+					from:'categories',
+					localField: 'category',
+					foreignField: '_id',
+					as:'category'
+				}
+			},
+			{
+				'$unwind': '$category'
+			},
+			{
+				'$unwind': '$author'
+			},
+			{
+				$project:{
+					_id:1,
+					rating_detail:{
+						totalLike: {  $size: '$rating_detail.like_users' },
+						totalDislike: {  $size: '$rating_detail.dislike_users' } 
+					},
+					tags:{
+						$map:{
+							'input':'$tags',
+							as: 'tag',
+							in:{
+								'tag_id':'$$tag._id',
+								'name':'$$tag.name'
+							}
+						}
+					},
+					title:1,
+					content:1,
+					author:{
+						author_id: '$author._id',
+						display_name:1,
+						avatar:1
+					},
+					answers:1,
+					category:{
+						category_id: '$category._id',
+						name:1,
+						color:1
+					},
+					created_time: {
+						$dateToString: {
+							format: '%Y-%m-%d',
+							date: '$created_time'
+						}
+					},
+					updated_time:{
+						$dateToString: {
+							format: '%Y-%m-%d',
+							date: '$updated_time'
+						}
+					}
+				}
+			}
+		]);
+		return data;
 	}
 }
 
