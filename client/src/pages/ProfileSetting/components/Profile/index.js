@@ -13,7 +13,7 @@ const Profile = () => {
         <div className="row">
           <div className="col-4">
             <img
-              className="avatar"
+              className="avatar rounded-circle"
               src={`${process.env.REACT_APP_SERVER_DOMAIN}/upload/${
                 // eslint-disable-next-line no-underscore-dangle
                 userInfo._id

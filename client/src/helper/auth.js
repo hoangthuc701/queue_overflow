@@ -25,10 +25,14 @@ export const getUser = () => {
   return '';
 };
 
-export const authenticate = (token, user, next) => {
+export const setUser = (user) => {
+  Cookies.set('user', user);
+  return Cookies.getJSON(user);
+};
+
+export const authenticate = (token, user) => {
   Cookies.set('token', token);
   Cookies.set('user', user);
-  if (next) next();
 };
 
 export const isAuthor = (userId) => {
@@ -36,6 +40,7 @@ export const isAuthor = (userId) => {
   // eslint-disable-next-line no-underscore-dangle
   return currentUser._id === userId;
 };
+
 export const signout = (next) => {
   Cookies.remove('token');
   Cookies.remove('user');

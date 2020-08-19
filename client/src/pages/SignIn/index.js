@@ -27,7 +27,7 @@ const SignInForm = (props) => {
     await setLogin(false);
     if (value) {
       // eslint-disable-next-line react/prop-types
-      props.history.push('/test');
+      props.history.push('/');
     }
   };
   if (!isAuthenticate()) {
