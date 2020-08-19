@@ -203,10 +203,18 @@ exports.getQuestionById = async (req, res) => {
 				answers[answer_index].rating_detail.dislike_users.length;
 			if (token) {
 				answers[answer_index].vote = 'none';
-				if(answers[answer_index].rating_detail.like_users.some(user_id => user_id.toString()==user._id)){
+				if (
+					answers[answer_index].rating_detail.like_users.some(
+						(user_id) => user_id.toString() == user._id
+					)
+				) {
 					answers[answer_index].vote = 'like';
 				}
-				if(answers[answer_index].rating_detail.dislike_users.some(user_id => user_id.toString()==user._id)){
+				if (
+					answers[answer_index].rating_detail.dislike_users.some(
+						(user_id) => user_id.toString() == user._id
+					)
+				) {
 					answers[answer_index].vote = 'dislike';
 				}
 			} else answers[answer_index].vote = 'none';
@@ -224,8 +232,12 @@ exports.getQuestionById = async (req, res) => {
 			name: category_data.name,
 			color: category_data.color,
 		};
-		question.created_time = question.created_time.toISOString().split('T')[0];
-		question.updated_time = question.updated_time.toISOString().split('T')[0];
+		question.created_time = question.created_time
+			.toISOString()
+			.split('T')[0];
+		question.updated_time = question.updated_time
+			.toISOString()
+			.split('T')[0];
 		let tags_data = [];
 		let tag_index;
 		for (tag_index = 0; tag_index < question.tags.length; tag_index++) {
@@ -241,10 +253,18 @@ exports.getQuestionById = async (req, res) => {
 			question.rating_detail.dislike_users.length;
 		if (token) {
 			question.vote = 'none';
-			if(question.rating_detail.like_users.some(user_id => user_id.toString()==user._id)){
+			if (
+				question.rating_detail.like_users.some(
+					(user_id) => user_id.toString() == user._id
+				)
+			) {
 				question.vote = 'like';
 			}
-			if(question.rating_detail.dislike_users.some(user_id => user_id.toString()==user._id)){
+			if (
+				question.rating_detail.dislike_users.some(
+					(user_id) => user_id.toString() == user._id
+				)
+			) {
 				question.vote = 'dislike';
 			}
 		} else question.vote = 'none';
@@ -286,8 +306,16 @@ exports.getQuestionByAuthorId = async (req, res) => {
 				name: category_data.name,
 				color: category_data.color,
 			};
-			questions.questions[question_index].created_time = questions.questions[question_index].created_time.toISOString().split('T')[0];
-			questions.questions[question_index].updated_time = questions.questions[question_index].updated_time.toISOString().split('T')[0];
+			questions.questions[
+				question_index
+			].created_time = questions.questions[question_index].created_time
+				.toISOString()
+				.split('T')[0];
+			questions.questions[
+				question_index
+			].updated_time = questions.questions[question_index].updated_time
+				.toISOString()
+				.split('T')[0];
 		}
 		return res.json(
 			response_format.success('Get questions succeed.', questions)
@@ -430,14 +458,30 @@ exports.chooseBestAnswer = async (req, res) => {
 				answers[answer_index].rating_detail.like_users.length;
 			answers[answer_index].rating_detail.totalDislike =
 				answers[answer_index].rating_detail.dislike_users.length;
-			answers[answer_index].created_time = answers[answer_index].created_time.toISOString().split('T')[0];
-			answers[answer_index].updated_time = answers[answer_index].updated_time.toISOString().split('T')[0];
+			answers[answer_index].created_time = answers[
+				answer_index
+			].created_time
+				.toISOString()
+				.split('T')[0];
+			answers[answer_index].updated_time = answers[
+				answer_index
+			].updated_time
+				.toISOString()
+				.split('T')[0];
 			if (is_verify) {
 				answers[answer_index].vote = 'none';
-				if(answers[answer_index].rating_detail.like_users.some(user_id => user_id.toString()==req.res.user._id)){
+				if (
+					answers[answer_index].rating_detail.like_users.some(
+						(user_id) => user_id.toString() == req.res.user._id
+					)
+				) {
 					answers[answer_index].vote = 'like';
 				}
-				if(answers[answer_index].rating_detail.dislike_users.some(user_id => user_id.toString()==req.res.user._id)){
+				if (
+					answers[answer_index].rating_detail.dislike_users.some(
+						(user_id) => user_id.toString() == req.res.user._id
+					)
+				) {
 					answers[answer_index].vote = 'dislike';
 				}
 			} else answers[answer_index].vote = 'none';
@@ -449,6 +493,24 @@ exports.chooseBestAnswer = async (req, res) => {
 		console.log(error);
 		res.status(500).json(response_format.error(error.message));
 	}
+};
+
+exports.search = async (req, res) => {
+	let  content  = req.query.content||'';
+	let data = await QuestionService.searchQuestion();
+	content = content.toLowerCase();
+
+	const matched = (tag) => tag.name.toLowerCase().search(content) >= 0;
+	data = data.filter((item) => {
+		if (item.title.toLowerCase().search(content) >= 0) return true;
+		if (item.category.name.toLowerCase().search(content) >= 0) return true;
+		if (item.tags.some(matched)) return true;
+		return false;
+	});
+	return res.json(
+		response_format.success('Search questions succeed.', { questions:data, totalCount: data.length,search_info:{ keyword: content}  }
+		)
+	);
 };
 
 async function displayQuestions(data) {
@@ -491,8 +553,16 @@ async function displayQuestions(data) {
 			name: category.name,
 			color: category.color,
 		};
-		data.questions[question_index].created_time = data.questions[question_index].created_time.toISOString().split('T')[0];
-		data.questions[question_index].updated_time = data.questions[question_index].updated_time.toISOString().split('T')[0];
+		data.questions[question_index].created_time = data.questions[
+			question_index
+		].created_time
+			.toISOString()
+			.split('T')[0];
+		data.questions[question_index].updated_time = data.questions[
+			question_index
+		].updated_time
+			.toISOString()
+			.split('T')[0];
 	}
 	return data;
 }
