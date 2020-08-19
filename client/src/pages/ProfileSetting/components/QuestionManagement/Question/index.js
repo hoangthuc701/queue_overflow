@@ -1,14 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import ModelActionCreators from '../../../../../actions/modal';
 
-const Question = ({ title, time, category }) => {
+const Question = ({ id, title, time, categoryId, category }) => {
+  const dispatch = useDispatch();
+  const handleDelete = () => {
+    dispatch(
+      ModelActionCreators.showModal(
+        'Confirm Delete',
+        'Do you want to delete this question?',
+        'question',
+        id
+      )
+    );
+  };
   return (
     <>
       <tr className="row">
         <td className="col-7">
           <Link
-            to="/"
+            to={`/question/${id}`}
             className="question_info"
             style={{ wordWrap: 'break-word' }}
           >
@@ -18,18 +31,23 @@ const Question = ({ title, time, category }) => {
         </td>
         <td className="col-3 d-flex justify-content-center">
           <h4>
-            <Link to="/" className="badge badge-warning p-2">
+            <Link
+              to={`/category/${categoryId}`}
+              className="badge badge-warning p-2"
+            >
               {category}
             </Link>
           </h4>
         </td>
-        <td>
-          <Link to="/" className="mr-4 col-1">
-            <img src="https://i.ibb.co/RNWjm8H/pencil.png" alt="" />
+        <td className="col-1">
+          <Link to={`/question/edit/${id}`} className="ml-3">
+            <img src="https://i.ibb.co/RNWjm8H/pencil.png" alt="edit" />
           </Link>
-          <Link to="/" className="col-1">
-            <img src="https://i.ibb.co/hgYsCP1/delete.png" alt="" />
-          </Link>
+        </td>
+        <td className="col-1">
+          <button type="button" onClick={handleDelete}>
+            <img src="https://i.ibb.co/hgYsCP1/delete.png" alt="delete" />
+          </button>
         </td>
       </tr>
     </>
@@ -37,15 +55,11 @@ const Question = ({ title, time, category }) => {
 };
 
 Question.propTypes = {
-  title: PropTypes.string,
-  time: PropTypes.string,
-  category: PropTypes.string,
-};
-
-Question.defaultProps = {
-  title: '',
-  time: '',
-  category: '',
+  id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  time: PropTypes.string.isRequired,
+  categoryId: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
 };
 
 export default Question;

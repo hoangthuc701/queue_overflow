@@ -1,4 +1,4 @@
-import { getToken } from '../helper/auth';
+import { getToken, getUser } from '../helper/auth';
 
 class QuestionService {
   static async createNewQuestion(title, category, content, tags) {
@@ -56,7 +56,9 @@ class QuestionService {
     return data;
   }
 
-  static async getQuestionsByToken(token) {
+  static async getQuestionsByToken(page) {
+    const token = getToken();
+    const user = getUser();
     const requestOptions = {
       method: 'GET',
       headers: {
@@ -65,7 +67,8 @@ class QuestionService {
       },
     };
     const res = await fetch(
-      `${process.env.REACT_APP_SERVER_DOMAIN}/user/questions`,
+      // eslint-disable-next-line no-underscore-dangle
+      `${process.env.REACT_APP_SERVER_DOMAIN}/users/${user._id}/questions?page=${page}`,
       requestOptions
     );
     const data = await res.json();
