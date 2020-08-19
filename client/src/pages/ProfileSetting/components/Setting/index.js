@@ -72,18 +72,19 @@ const Setting = () => {
         } else {
           toast.success(data.message);
           setNeedFetchData(true);
-          dispatch(HeaderAction.reloadHeader());
-          console.log('run');
         }
       }
     );
   };
-
+  const fetchData = async (userId) => {
+    await dispatch(profileSettingAction.getUserInfo(userId));
+    dispatch(HeaderAction.reloadHeader());
+  };
   useEffect(() => {
     // eslint-disable-next-line no-underscore-dangle
     const userId = getUser()._id;
     if (needFetchData) {
-      dispatch(profileSettingAction.getUserInfo(userId));
+      fetchData(userId);
       setNeedFetchData(false);
     }
   }, [needFetchData, dispatch]);
