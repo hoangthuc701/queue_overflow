@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import './index.css';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import questionAction from '../../actions/question';
@@ -38,16 +39,7 @@ const QuestionPage = (props) => {
       <div className="row">
         <div className="col-sm-2"> </div>
         <div className="col-sm-8">
-          <div>
-            <Link
-              to="/question/add"
-              type="button"
-              className="btn btn-primary float-right"
-              style={{ backgroundColor: '#5bc0de', borderColor: 'black' }}
-            >
-              <b>Add new question</b>
-            </Link>
-          </div>
+          <div></div>
         </div>
         <div className="col-sm-2"> </div>
       </div>
@@ -55,8 +47,28 @@ const QuestionPage = (props) => {
         <div className="col-sm-2"> </div>
         <div className="col-sm-8">
           {' '}
-          <h3> Search result for key word `{keyword}` </h3>{' '}
-          <h3>{questionlist.questions.length === 0 ? 'No result' : ''}</h3>
+          <h3>
+            <span class="badge badge-pill badge-light">
+              Search result for key word{' '}
+            </span>
+            <span class="badge badge-pill badge-info">{keyword}</span>
+          </h3>{' '}
+          <h3>
+            {questionlist.questions.length === 0 ? (
+              <div id="notfound">
+                <div class="notfound">
+                  <div class="notfound-404"></div>
+                  <h1>Oops!</h1>
+                  <h2>No results found</h2>
+                  <p>
+                    Please,Try again!
+                  </p>
+                </div>
+              </div>
+            ) : (
+              ''
+            )}
+          </h3>
         </div>
         <div className="col-sm-2"> </div>
       </div>
