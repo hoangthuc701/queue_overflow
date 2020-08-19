@@ -22,7 +22,7 @@ const QuestionManagement = () => {
 
   useEffect(() => {
     if (!userInfoGetted || userInfoGetting) {
-      return setQuestionsDisplay(<Loading />);
+      setQuestionsDisplay(<Loading />);
     }
     const display = questionList.questions.map((question) => {
       return (
