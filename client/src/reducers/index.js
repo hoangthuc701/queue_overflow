@@ -4,6 +4,7 @@ import userInfoReducer from './user_info';
 import questionReducer from './question';
 import modalReducer from './modal';
 import questionListReducer from './questionlist';
+import headerReducer from './header';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   question: questionReducer,
   modal: modalReducer,
   questionList: questionListReducer,
+  header: headerReducer,
 });
 
 export default rootReducer;
