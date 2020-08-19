@@ -1,0 +1,19 @@
+
+.question{
+    background:#f1f9f9;
+    box-shadow: 17px 17px 54px -24px rgba(38,32,38,0.83);
+    border: 4px groove rgba(28,110,164,0.36);
+border-radius: 4px 30px 29px 2px;
+}
+.card-question{
+    background:#e1f2fb
+}
+.card-answer{
+    background:#f0f0f0;
+    margin-top:2em;
+    box-shadow: 17px 17px 54px -24px rgba(38,32,38,0.83);
+}
+.card-answer-body
+{
+    background:#ffffff
+}

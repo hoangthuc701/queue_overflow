@@ -77,7 +77,7 @@ class Answer extends Component {
       // eslint-disable-next-line no-underscore-dangle
       <Link to={`/profile/${author.author_id}`} className="float-right">
         <img
-          src={author.avatar}
+          src={`${process.env.REACT_APP_SERVER_DOMAIN}/upload/${author.author_id}`}
           className="rounded-circle"
           alt={author.name}
           width={50}
@@ -149,7 +149,7 @@ class Answer extends Component {
             </p>
           )}
         </div>
-        <div className="col-sm-8">
+        <div className="col-sm-8 card-answer">
           <div className="row">
             <div className="col-sm-6 align-self-end"> </div>
             <div className="col-sm-6 align-self-end"> </div>
@@ -160,7 +160,7 @@ class Answer extends Component {
             <div className="col-sm-6 text-right"> </div>
           </div>
           <div className="card">
-            <div className="card-body">
+            <div className="card-body card-answer-body">
               <p className="card-text">
                 <Markdown content={content} />
               </p>
