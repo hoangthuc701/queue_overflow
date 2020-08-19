@@ -6,6 +6,7 @@ import ImageService from '../../../../services/imageService';
 import { getUser } from '../../../../helper/auth';
 import profileSettingAction from '../../../../actions/profileSetting';
 import createNewValidator from '../../../../validators/setting';
+import HeaderAction from '../../../../actions/header';
 
 const Setting = () => {
   const [user, setUser] = useState({});
@@ -71,6 +72,8 @@ const Setting = () => {
         } else {
           toast.success(data.message);
           setNeedFetchData(true);
+          dispatch(HeaderAction.reloadHeader());
+          console.log('run');
         }
       }
     );
