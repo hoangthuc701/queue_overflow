@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import './index.css';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import questionAction from '../../actions/question';
 import Question from '../../components/Question';
@@ -39,7 +38,7 @@ const QuestionPage = (props) => {
       <div className="row">
         <div className="col-sm-2"> </div>
         <div className="col-sm-8">
-          <div></div>
+          <div />
         </div>
         <div className="col-sm-2"> </div>
       </div>
@@ -48,21 +47,19 @@ const QuestionPage = (props) => {
         <div className="col-sm-8">
           {' '}
           <h3>
-            <span class="badge badge-pill badge-light">
+            <span className="badge badge-pill badge-light">
               Search result for key word{' '}
             </span>
-            <span class="badge badge-pill badge-info">{keyword}</span>
+            <span className="badge badge-pill badge-info">{keyword}</span>
           </h3>{' '}
           <h3>
             {questionlist.questions.length === 0 ? (
               <div id="notfound">
-                <div class="notfound">
-                  <div class="notfound-404"></div>
+                <div className="notfound">
+                  <div className="notfound-404" />
                   <h1>Oops!</h1>
                   <h2>No results found</h2>
-                  <p>
-                    Please,Try again!
-                  </p>
+                  <p>Please,Try again!</p>
                 </div>
               </div>
             ) : (
