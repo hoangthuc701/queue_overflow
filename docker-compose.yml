@@ -1,0 +1,64 @@
+version: "3.7"
+services:
+  front-end:
+    image: queuepverflow_client
+    environment: 
+      - REACT_APP_SERVER_DOMAIN=${REACT_APP_SERVER_DOMAIN}
+    ports:
+      - "5000:80"
+    restart: unless-stopped
+    depends_on: 
+      - back-end
+      networks: 
+        -  app-network
+  back-end:
+    image: queueoverflow_server
+    volumes: 
+      - ./:/app
+    environment: 
+      - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
+      - VERIFICATION_PAGE_URL=${VERIFICATION_PAGE_URL}
+      - RESET_PASSWORD_PAGE_URL=${RESET_PASSWORD_PAGE_URL}
+      - NODE_ENV=dev
+      - RESET_PASSWORD_KEY=${RESET_PASSWORD_KEY}
+      - ACTIVATION_KEY=${ACTIVATION_KEY}
+      - PRIVATE_KEY=${PRIVATE_KEY}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - CLOUD_NAME=${CLOUD_NAME}
+      - API_KEY=${API_KEY}
+      - API_SECRET=${API_SECRET}
+    ports: 
+      - "${PORT}:${PORT}"
+    restart: unless-stopped
+    depends_on: 
+      - db
+      - redis
+    networks: 
+      - cache-network
+      - db-network
+      - app-network
+  db:
+    image: mongo
+    volumes: 
+      - .docker/data/db:/data/db
+    restart: unless-stopped
+    networks: 
+      - db-network
+  redis:
+    image: redis:5-alpine
+    volumes: 
+      - .docker/data/redis:/data
+    restart: unless-stopped
+    networks: 
+      - cache-network
+networks: 
+  cache-network:
+    driver: bridge
+  db-network:
+    driver: bridge
+  app-network:
+    driver: bridge
