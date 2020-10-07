@@ -16,18 +16,22 @@ cloudinary.config({
 });
 
 // connect to DB
-mongoose
-	.connect(process.env.DATABASE_URL, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-		useCreateIndex: true,
-	})
-	.then(() => console.log('DB connected.'));
+const dbHost = process.env.DB_HOST || 'localhost'
+const dbPort = process.env.DB_PORT || 27017
+const dbName = process.env.DB_NAME || 'queueoverflow'
+const mongoUrl = `mongodb://${dbHost}:${dbPort}/${dbName}`
+//connect to db 
+const connectWithRetry = function () { // when using with docker, at the time we up containers. Mongodb take few seconds to starting, during that time NodeJS server will try to connect MongoDB until success.
+    return mongoose.connect(mongoUrl, { useNewUrlParser: true, useFindAndModify: false }, (err) => {
+        if (err) {
+            console.error('Failed to connect to mongo on startup - retrying in 5 sec', err)
+            setTimeout(connectWithRetry, 5000)
+        }
+    })
+}
+connectWithRetry()
 
-mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
-mongoose.connection.on('error', (err) => {
-	console.error(err.message);
-});
+
 
 const app = express();
 
