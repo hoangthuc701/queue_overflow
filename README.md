@@ -9,6 +9,10 @@
 ## Make file .env (see file .env.example)
 ## Run
 > docker-compose up
+
+In the browser type localhost:5000, you will see the application is running
+
+
 ## Stop
 > docker-compose down
 ## Remove image
